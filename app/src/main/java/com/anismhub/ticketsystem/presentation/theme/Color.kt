@@ -1,4 +1,4 @@
-package com.anismhub.ticketsystem.ui.theme
+package com.anismhub.ticketsystem.presentation.theme
 
 import androidx.compose.ui.graphics.Color
 

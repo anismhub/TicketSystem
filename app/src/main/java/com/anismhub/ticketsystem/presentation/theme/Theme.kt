@@ -1,4 +1,4 @@
-package com.anismhub.ticketsystem.ui.theme
+package com.anismhub.ticketsystem.presentation.theme
 
 import android.app.Activity
 import android.os.Build
