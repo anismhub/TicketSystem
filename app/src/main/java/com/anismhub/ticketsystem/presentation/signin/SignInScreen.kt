@@ -42,6 +42,7 @@ import com.anismhub.ticketsystem.presentation.theme.fontFamily
 
 @Composable
 fun SignInScreen(
+    navigateToHome: () -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -58,6 +59,7 @@ fun SignInScreen(
     }
 
     SignInContent(
+        navigateToHome = navigateToHome,
         username = username,
         password = password,
         passwordVisibility = passwordVisibility,
@@ -76,6 +78,7 @@ fun SignInContent(
     onPasswordVisibilityChange: (Boolean) -> Unit,
     onUsernameChange: (InputTextState) -> Unit,
     onPasswordChange: (InputTextState) -> Unit,
+    navigateToHome: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -159,9 +162,9 @@ fun SignInContent(
         )
 
         Spacer(modifier = Modifier.weight(1f))
-
+        
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { navigateToHome() },
             shape = RoundedCornerShape(16.dp),
             contentPadding = PaddingValues(14.dp),
             modifier = Modifier
@@ -182,6 +185,7 @@ fun SignInContent(
 private fun SignInPreview() {
     TicketSystemTheme {
         SignInContent(
+            navigateToHome = {},
             username = InputTextState(),
             password = InputTextState(),
             onUsernameChange = {},

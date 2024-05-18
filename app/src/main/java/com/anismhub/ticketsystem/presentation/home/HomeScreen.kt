@@ -1,6 +1,7 @@
 package com.anismhub.ticketsystem.presentation.home
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,15 +30,36 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.anismhub.ticketsystem.data.DataDummy
+import com.anismhub.ticketsystem.navigation.graph.HomeNavGraph
+import com.anismhub.ticketsystem.presentation.components.BottomBar
 import com.anismhub.ticketsystem.presentation.components.TicketItem
 import com.anismhub.ticketsystem.presentation.theme.TicketSystemTheme
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController()
 ) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+    val currentRoute = currentDestination?.route
 
+    Scaffold(
+        bottomBar = {
+            BottomBar(
+                navHostController = navController,
+                currentDestination = currentDestination
+            )
+        }
+    ) { paddingValues ->
+        Box(modifier = modifier.padding(paddingValues)) {
+            HomeNavGraph(navController = navController)
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,7 +76,7 @@ fun HomeContent(
         modifier = modifier
             .fillMaxSize()
             .padding(24.dp)
-            //.verticalScroll(rememberScrollState())
+        //.verticalScroll(rememberScrollState())
     ) {
         Row(
             verticalAlignment = Alignment.Bottom,
@@ -116,7 +139,13 @@ fun HomeContent(
                 .padding(top = 24.dp)
         ) {
             items(DataDummy.dummyTickets, key = { it.title }) {
-                TicketItem(number = DataDummy.dummyTickets.indexOf(it) + 1, title = it.title, date = it.date, priority = it.priority, status = it.status)
+                TicketItem(
+                    number = DataDummy.dummyTickets.indexOf(it) + 1,
+                    title = it.title,
+                    date = it.date,
+                    priority = it.priority,
+                    status = it.status
+                )
             }
         }
     }
