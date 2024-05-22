@@ -38,6 +38,7 @@ import com.anismhub.ticketsystem.R
 import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.components.InputText
 import com.anismhub.ticketsystem.presentation.theme.TicketSystemTheme
+import com.anismhub.ticketsystem.presentation.theme.Typography
 import com.anismhub.ticketsystem.presentation.theme.fontFamily
 
 @Composable
@@ -89,10 +90,7 @@ fun SignInContent(
     ) {
         Text(
             text = "Sign In",
-            fontFamily = fontFamily,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
+            style = Typography.titleLarge,
             modifier = Modifier.fillMaxWidth()
         )
 

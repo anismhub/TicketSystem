@@ -23,7 +23,7 @@ fun BottomBar(
             NavigationBarItem(
                 selected = selected,
                 onClick = { navHostController.navigate(item.route) },
-                icon = { Icon(Icons.Rounded.ConfirmationNumber,
+                icon = { Icon(item.icon,
                     contentDescription = item.title) })
         }
     }

@@ -1,20 +1,30 @@
 package com.anismhub.ticketsystem.navigation
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ConfirmationNumber
+import androidx.compose.material.icons.rounded.Notifications
+import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.ui.graphics.vector.ImageVector
+
 sealed class BottomNav(
     val route: String,
-    val title: String
+    val title: String,
+    val icon: ImageVector
 ) {
     data object Home : BottomNav(
         route = "home",
-        title = "Home"
+        title = "Home",
+        icon = Icons.Rounded.ConfirmationNumber
     )
     data object Notification : BottomNav(
         route = "notification",
-        title = "Notification"
+        title = "Notification",
+        icon = Icons.Rounded.Notifications
     )
     data object Settings : BottomNav(
         route = "settings",
-        title = "Settings"
+        title = "Settings",
+        icon = Icons.Rounded.Settings
     )
 }
 
