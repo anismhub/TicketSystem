@@ -10,6 +10,7 @@ import com.anismhub.ticketsystem.presentation.addticket.AddTicketContent
 import com.anismhub.ticketsystem.presentation.home.HomeContent
 import com.anismhub.ticketsystem.presentation.home.HomeScreen
 import com.anismhub.ticketsystem.presentation.notification.NotificationContent
+import com.anismhub.ticketsystem.presentation.settings.SettingsContent
 
 @Composable
 fun HomeNavGraph(
@@ -29,7 +30,7 @@ fun HomeNavGraph(
             NotificationContent()
         }
         composable(route = BottomNav.Settings.route) {
-            AddTicketContent()
+            SettingsContent()
         }
 
     }
