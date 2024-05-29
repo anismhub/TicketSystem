@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material.icons.automirrored.rounded.OpenInNew
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.ManageAccounts
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -44,6 +45,10 @@ fun SettingsContent(modifier: Modifier = Modifier) {
         Text(text = "Pengaturan", style = Typography.titleLarge)
         ProfilCard(nama = "Nama", peran = "Peran Pengguna")
         SettingsMenu(
+            icon = Icons.Rounded.ManageAccounts,
+            text = "Kelola Pengguna",
+            onClick = { /*TODO*/ })
+        SettingsMenu(
             icon = Icons.AutoMirrored.Rounded.OpenInNew,
             text = "Ekspor Laporan",
             onClick = { /*TODO*/ })
@@ -61,7 +66,7 @@ fun ProfilCard(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 32.dp),
+            .padding(vertical = 42.dp),
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
         Column(
@@ -87,12 +92,12 @@ fun SettingsMenu(
         onClick = { onClick() },
         elevation = CardDefaults.cardElevation(0.dp),
         modifier = modifier
-            .padding(bottom = 8.dp)
+            .padding(bottom = 16.dp)
             .fillMaxWidth(),
     ) {
         Row(
             modifier = Modifier
-                .padding(vertical = 10.dp, horizontal = 14.dp)
+                .padding(vertical = 14.dp, horizontal = 18.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -106,10 +111,10 @@ fun SettingsMenu(
                     Icon(
                         imageVector = icon,
                         contentDescription = "",
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(6.dp)
                     )
                 }
-                Spacer(modifier = Modifier.width(14.dp))
+                Spacer(modifier = Modifier.width(12.dp))
 
                 Text(text = text, style = Typography.bodyLarge)
             }
