@@ -4,7 +4,7 @@ import com.anismhub.ticketsystem.domain.Ticket
 
 object DataDummy {
     val dummyTickets: List<Ticket> by lazy {
-        (1..100).map { index ->
+        (1..25).map { index ->
             Ticket(
                 title = "Title $index",
                 description = "Description $index",

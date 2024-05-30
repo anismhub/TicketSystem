@@ -24,13 +24,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,7 +38,7 @@ import com.anismhub.ticketsystem.R
 import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.components.InputText
 import com.anismhub.ticketsystem.presentation.theme.TicketSystemTheme
-import com.anismhub.ticketsystem.presentation.theme.Typography
+import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.presentation.theme.fontFamily
 
 @Composable
@@ -90,8 +90,8 @@ fun SignInContent(
     ) {
         Text(
             text = "Sign In",
-            style = Typography.titleLarge,
-            modifier = Modifier.fillMaxWidth()
+            style = MyTypography.displaySmall.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
         Image(
@@ -123,7 +123,7 @@ fun SignInContent(
             },
             supportingText = {
                 if (username.isError) {
-                    Text(text = "Username can't be empty", fontFamily = fontFamily)
+                    Text(text = "Username can't be empty")
                 }
             }
         )
@@ -154,7 +154,7 @@ fun SignInContent(
             },
             supportingText = {
                 if (password.isError) {
-                    Text(text = "Password at least 6 characters", fontFamily = fontFamily)
+                    Text(text = "Password at least 6 characters")
                 }
             }
         )
@@ -170,9 +170,7 @@ fun SignInContent(
         ) {
             Text(
                 text = "Sign In",
-                fontFamily = fontFamily,
-                fontWeight = FontWeight.Medium,
-                fontSize = 18.sp
+                style = MyTypography.bodyLarge.copy(fontWeight = FontWeight.Medium)
             )
         }
     }

@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.components.InputText
+import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.presentation.theme.TicketSystemTheme
 import com.anismhub.ticketsystem.presentation.theme.fontFamily
 
@@ -49,15 +50,30 @@ fun AddTicketContent(
     modifier: Modifier = Modifier
 ) {
 
-    val departmentOptions = listOf("HRD", "Office", "Marketing")
-    var expandedDepartment by remember { mutableStateOf(false) }
-    var selectedDepartment by remember { mutableStateOf(departmentOptions[0]) }
+    val areaOptions = listOf(
+        "Admin Building",
+        "Air Compressor Room",
+        "Coal & Ash Handling Control Room",
+        "GIS",
+        "Jetty",
+        "Jakarta Office",
+        "Maingate security",
+        "Turbine Building",
+        "Warehouse Building",
+        "Workshop Building"
+    )
+    var expandedArea by remember { mutableStateOf(false) }
+    var selectedArea by remember { mutableStateOf(areaOptions[0]) }
 
-    val priorityOptions = listOf("Low", "Medium", "High")
+    val priorityOptions = listOf("Rendah", "Sedang", "Tinggi")
     var expandedPriority by remember { mutableStateOf(false) }
     var selectedPriority by remember { mutableStateOf(priorityOptions[0]) }
 
-    var title by remember { mutableStateOf(InputTextState()) }
+    val typeTicketOptions = listOf("Install", "Config", "Troubleshoot")
+    var expandedTypeTicket by remember { mutableStateOf(false) }
+    var selectedTypeTicket by remember { mutableStateOf(typeTicketOptions[0]) }
+
+    var subject by remember { mutableStateOf(InputTextState()) }
     var description by remember { mutableStateOf(InputTextState()) }
 
     Column(
@@ -66,25 +82,62 @@ fun AddTicketContent(
             .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        Text(
+            text = "Buat Tiket Baru",
+            style = MyTypography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Department", fontFamily = fontFamily, modifier = Modifier.weight(0.4f))
+            Text(text = "Subjek", modifier = Modifier.weight(0.4f))
+            InputText(
+                value = subject.value,
+                onChange = { newValue ->
+                    subject = subject.copy(
+                        value = newValue,
+                        isError = newValue.isEmpty()
+                    )
+                },
+                label = "",
+                isError = subject.isError,
+                trailingIcon = {
+                    if (subject.value.isNotEmpty()) {
+                        IconButton(onClick = { subject = subject.copy(value = "") }) {
+                            Icon(imageVector = Icons.Outlined.Clear, contentDescription = "")
+                        }
+                    }
+                },
+                supportingText = {
+                    if (subject.isError) {
+                        Text(text = "Subjek harus diisi")
+                    }
+                },
+                modifier = Modifier.weight(0.6f)
+            )
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "Area", modifier = Modifier.weight(0.4f))
 
             ExposedDropdownMenuBox(
-                expanded = expandedDepartment,
-                onExpandedChange = { expandedDepartment = it },
+                expanded = expandedArea,
+                onExpandedChange = { expandedArea = it },
                 modifier = Modifier.weight(0.6f)
             ) {
                 OutlinedTextField(
-                    value = selectedDepartment,
+                    value = selectedArea,
                     onValueChange = {},
                     readOnly = true,
                     shape = RoundedCornerShape(16.dp),
                     trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedDepartment)
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedArea)
                     },
                     modifier = Modifier
                         .menuAnchor()
@@ -92,14 +145,14 @@ fun AddTicketContent(
                 )
 
                 ExposedDropdownMenu(
-                    expanded = expandedDepartment,
-                    onDismissRequest = { expandedDepartment = false }) {
-                    departmentOptions.forEach { option ->
+                    expanded = expandedArea,
+                    onDismissRequest = { expandedArea = false }) {
+                    areaOptions.forEach { option ->
                         DropdownMenuItem(
                             text = { Text(text = option) },
                             onClick = {
-                                selectedDepartment = option
-                                expandedDepartment = false
+                                selectedArea = option
+                                expandedArea = false
                             }
                         )
                     }
@@ -112,7 +165,7 @@ fun AddTicketContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Priority", fontFamily = fontFamily, modifier = Modifier.weight(0.4f))
+            Text(text = "Prioritas", modifier = Modifier.weight(0.4f))
 
             ExposedDropdownMenuBox(
                 expanded = expandedPriority,
@@ -135,7 +188,7 @@ fun AddTicketContent(
                 ExposedDropdownMenu(
                     expanded = expandedPriority,
                     onDismissRequest = { expandedPriority = false }) {
-                    priorityOptions.forEach { option ->
+                    areaOptions.forEach { option ->
                         DropdownMenuItem(
                             text = { Text(text = option) },
                             onClick = {
@@ -148,39 +201,48 @@ fun AddTicketContent(
             }
         }
 
+
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Title", fontFamily = fontFamily, modifier = Modifier.weight(0.4f))
+            Text(text = "Tipe Tiket", fontFamily = fontFamily, modifier = Modifier.weight(0.4f))
 
-            InputText(
-                value = title.value,
-                onChange = { newValue ->
-                    title = title.copy(
-                        value = newValue,
-                        isError = newValue.isEmpty()
-                    )
-                },
-                label = "",
-                isError = title.isError,
-                trailingIcon = {
-                    if (title.value.isNotEmpty()) {
-                        IconButton(onClick = { title = title.copy(value = "") }) {
-                            Icon(imageVector = Icons.Outlined.Clear, contentDescription = "")
-                        }
-                    }
-                },
-                supportingText = {
-                    if (title.isError) {
-                        Text(text = "Title cannot be empty", fontFamily = fontFamily)
-                    }
-                },
+            ExposedDropdownMenuBox(
+                expanded = expandedTypeTicket,
+                onExpandedChange = { expandedTypeTicket = it },
                 modifier = Modifier.weight(0.6f)
-            )
-        }
+            ) {
+                OutlinedTextField(
+                    value = selectedTypeTicket,
+                    onValueChange = {},
+                    readOnly = true,
+                    shape = RoundedCornerShape(16.dp),
+                    trailingIcon = {
+                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedTypeTicket)
+                    },
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth()
+                )
 
+                ExposedDropdownMenu(
+                    expanded = expandedTypeTicket,
+                    onDismissRequest = { expandedTypeTicket = false }) {
+                    typeTicketOptions.forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(text = option) },
+                            onClick = {
+                                selectedTypeTicket = option
+                                expandedTypeTicket = false
+                            }
+                        )
+                    }
+                }
+            }
+        }
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,

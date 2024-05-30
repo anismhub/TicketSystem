@@ -21,8 +21,20 @@ fun RootNavGraph(
         modifier = modifier
     ) {
         authNavGraph(navController = navController)
+        ticketNavGraph(navController = navController)
         composable(route = Graph.MAIN) {
-            HomeScreen()
+            HomeScreen(
+                navigateToLogin = {
+                    navController.popBackStack()
+                    navController.navigate(Graph.AUTHENTICATION)
+                },
+                navigateToCreate = {
+                    navController.navigate(Graph.TICKET)
+                },
+                navigateToDetailTicket = {
+                    navController.navigate(TicketScreen.Detail.route)
+                }
+            )
         }
 
     }
@@ -32,4 +44,5 @@ object Graph {
     const val ROOT = "root"
     const val AUTHENTICATION = "authentication"
     const val MAIN = "main"
+    const val TICKET = "ticket"
 }

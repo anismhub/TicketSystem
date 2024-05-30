@@ -29,25 +29,31 @@ val fontFamily = FontFamily(
     androidx.compose.ui.text.font.Font(
         resId = R.font.poppins_semibold,
         weight = FontWeight.SemiBold
-    )
+    ),
 )
 
-val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = fontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    ),
-    titleLarge = TextStyle(
-        fontFamily = fontFamily,
-        fontWeight = FontWeight.Bold,
-        fontSize = 24.sp,
-        textAlign = TextAlign.Center,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
-    ),
+private val defaultTypography = Typography()
+val MyTypography = Typography(
+    // Urutan ukuran font : Display, Headline, Title, Body, Label
+    displayLarge = defaultTypography.displayLarge.copy(fontFamily = fontFamily),
+    displayMedium = defaultTypography.displayMedium.copy(fontFamily = fontFamily),
+    displaySmall = defaultTypography.displaySmall.copy(fontFamily = fontFamily),
+
+    headlineLarge = defaultTypography.headlineLarge.copy(fontFamily = fontFamily),
+    headlineMedium = defaultTypography.headlineMedium.copy(fontFamily = fontFamily),
+    headlineSmall = defaultTypography.headlineSmall.copy(fontFamily = fontFamily),
+
+    titleLarge = defaultTypography.titleLarge.copy(fontFamily = fontFamily),
+    titleMedium = defaultTypography.titleMedium.copy(fontFamily = fontFamily),
+    titleSmall = defaultTypography.titleSmall.copy(fontFamily = fontFamily),
+
+    bodyLarge = defaultTypography.bodyLarge.copy(fontFamily = fontFamily),
+    bodyMedium = defaultTypography.bodyMedium.copy(fontFamily = fontFamily),
+    bodySmall = defaultTypography.bodySmall.copy(fontFamily = fontFamily),
+
+    labelLarge = defaultTypography.labelLarge.copy(fontFamily = fontFamily),
+    labelMedium = defaultTypography.labelMedium.copy(fontFamily = fontFamily),
+    labelSmall = defaultTypography.labelSmall.copy(fontFamily = fontFamily)
     /* Other default text styles to override
 
     labelSmall = TextStyle(

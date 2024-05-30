@@ -1,5 +1,6 @@
 package com.anismhub.ticketsystem.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,9 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.presentation.theme.TicketSystemTheme
-import com.anismhub.ticketsystem.presentation.theme.fontFamily
 
 @Composable
 fun TicketItem(
@@ -24,27 +24,33 @@ fun TicketItem(
     date: String,
     priority: String,
     status: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
         modifier = modifier
             .fillMaxWidth()
+            .clickable { onClick() }
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.padding(16.dp)
         ) {
-            Text(
-                text = "#$number",
-                fontFamily = fontFamily,
-                fontWeight = FontWeight.Medium
-            )
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "#$number", style = MyTypography.bodyLarge
+                )
+                Text(
+                    text = date, style = MyTypography.bodySmall
+                )
+            }
 
             Text(
-                text = "$title - $date",
-                fontFamily = fontFamily,
-                fontSize = 18.sp
+                text = title, style = MyTypography.bodyLarge.copy(fontWeight = FontWeight.Medium)
             )
 
             Row(
@@ -52,14 +58,11 @@ fun TicketItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = priority,
-                    fontFamily = fontFamily
+                    text = priority, style = MyTypography.bodyMedium
                 )
 
                 Text(
-                    text = status,
-                    fontFamily = fontFamily,
-                    fontWeight = FontWeight.Bold
+                    text = status, style = MyTypography.bodyMedium
                 )
             }
         }
@@ -70,6 +73,6 @@ fun TicketItem(
 @Composable
 private fun TicketItemPreview() {
     TicketSystemTheme {
-        TicketItem(1, "Title", "Date", "Level", "Status")
+        TicketItem(1, "Title", "Date", "Level", "Status", {})
     }
 }
