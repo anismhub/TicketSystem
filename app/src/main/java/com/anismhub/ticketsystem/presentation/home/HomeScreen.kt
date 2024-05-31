@@ -36,6 +36,7 @@ import com.anismhub.ticketsystem.data.DataDummy
 import com.anismhub.ticketsystem.navigation.graph.HomeNavGraph
 import com.anismhub.ticketsystem.presentation.components.BottomBar
 import com.anismhub.ticketsystem.presentation.components.CreateFAB
+import com.anismhub.ticketsystem.presentation.components.MySearchBar
 import com.anismhub.ticketsystem.presentation.components.TabItem
 import com.anismhub.ticketsystem.presentation.components.TicketItem
 
@@ -95,20 +96,7 @@ fun HomeContent(
         verticalArrangement = Arrangement.spacedBy(2.dp)
         //.verticalScroll(rememberScrollState())
     ) {
-        SearchBar(
-            query = "",
-            onQueryChange = {},
-            onSearch = {},
-            active = false,
-            onActiveChange = {},
-            leadingIcon = {
-                Icon(imageVector = Icons.Rounded.Search, contentDescription = "Search Icon")
-            },
-            placeholder = {
-                Text(text = "Search")
-            },
-            modifier = Modifier.padding(horizontal = 24.dp)
-        ) { }
+        MySearchBar(modifier = Modifier.padding(horizontal = 24.dp))
         TabRow(selectedTabIndex = selectedTabIndex) {
             TabItem.entries.forEachIndexed { index, currentTab ->
                 Tab(

@@ -84,7 +84,7 @@ fun AddTicketContent(
     ) {
         Text(
             text = "Buat Tiket Baru",
-            style = MyTypography.titleLarge.copy(fontWeight = FontWeight.SemiBold),
+            style = MyTypography.headlineMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
         Row(
