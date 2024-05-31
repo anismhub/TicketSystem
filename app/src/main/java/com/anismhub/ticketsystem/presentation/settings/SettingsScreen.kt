@@ -23,7 +23,9 @@ fun SettingsScreen(modifier: Modifier = Modifier) {
 
 @Composable
 fun SettingsContent(
-    navigateToLogin: () -> Unit,
+    navigateToAuth: () -> Unit,
+    navigateToManageAccount: () -> Unit,
+    navigateToExport: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -38,13 +40,13 @@ fun SettingsContent(
         SettingsMenu(
             icon = Icons.Rounded.ManageAccounts,
             text = "Kelola Pengguna",
-            onClick = { /*TODO*/ })
+            onClick = { navigateToManageAccount() })
         SettingsMenu(
             icon = Icons.AutoMirrored.Rounded.OpenInNew,
             text = "Ekspor Laporan",
-            onClick = { /*TODO*/ })
+            onClick = { navigateToExport() })
         SettingsMenu(icon = Icons.Rounded.Close, text = "Sign Out", onClick = {
-            navigateToLogin()
+            navigateToAuth()
         })
 
     }

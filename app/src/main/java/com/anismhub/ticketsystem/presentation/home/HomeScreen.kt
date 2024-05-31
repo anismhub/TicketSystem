@@ -43,7 +43,7 @@ import com.anismhub.ticketsystem.presentation.components.TicketItem
 fun HomeScreen(
     navigateToLogin: () -> Unit,
     navigateToCreate: () -> Unit,
-    navigateToDetailTicket: () -> Unit,
+//    navigateToDetailTicket: () -> Unit,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
@@ -67,7 +67,7 @@ fun HomeScreen(
         Box(modifier = modifier.padding(paddingValues)) {
             HomeNavGraph(navController = navController,
                 navigateToLogin = navigateToLogin,
-                navigateToDetailTicket = navigateToDetailTicket
+//                navigateToDetailTicket = navigateToDetailTicket
             )
         }
     }

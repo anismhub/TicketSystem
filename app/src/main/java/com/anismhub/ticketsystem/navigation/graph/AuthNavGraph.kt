@@ -9,9 +9,9 @@ import com.anismhub.ticketsystem.presentation.signin.SignInScreen
 fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
     navigation(
         route = Graph.AUTHENTICATION,
-        startDestination = AuthScreen.Signin.route
+        startDestination = AuthNav.Signin.route
     ) {
-        composable(route = AuthScreen.Signin.route) {
+        composable(route = AuthNav.Signin.route) {
             SignInScreen(
                 navigateToHome = { navController.navigate(Graph.MAIN) }
             )
@@ -19,6 +19,6 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
     }
 }
 
-sealed class AuthScreen(val route: String) {
-    data object Signin : AuthScreen("signin")
+sealed class AuthNav(val route: String) {
+    data object Signin : AuthNav("signin")
 }
