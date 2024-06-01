@@ -1,5 +1,6 @@
 package com.anismhub.ticketsystem.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,11 +30,16 @@ fun ProfilCard(
     modifier: Modifier = Modifier,
     icon: @Composable () -> Unit = {},
     onClickIcon: () -> Unit = {},
+    onClick: () -> Unit = {},
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .clickable {
+                onClick()
+            }
+            .padding(vertical = 4.dp)
+            ,
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
         Row(
@@ -73,6 +79,7 @@ private fun ProfilCardPreview() {
     ProfilCard(
         title = "Nama",
         subtitle = "Peran",
+        onClick = {},
         icon = { Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Edit") },
         onClickIcon = {})
 }

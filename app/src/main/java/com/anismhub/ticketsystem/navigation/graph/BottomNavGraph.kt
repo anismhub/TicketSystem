@@ -8,7 +8,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.anismhub.ticketsystem.navigation.BottomNav
+import com.anismhub.ticketsystem.presentation.screen.accounts.create.AccountsCreateContent
 import com.anismhub.ticketsystem.presentation.screen.accounts.manage.AccountManageContent
+import com.anismhub.ticketsystem.presentation.screen.accounts.update.AccountsUpdateContent
 import com.anismhub.ticketsystem.presentation.screen.tickets.addticket.AddTicketContent
 import com.anismhub.ticketsystem.presentation.screen.tickets.detailticket.DetailTicketContent
 import com.anismhub.ticketsystem.presentation.screen.settings.exportreport.ExportReportScreen
@@ -67,7 +69,16 @@ fun NavGraphBuilder.ticketNavGraph(navController: NavHostController) {
             ExportReportScreen()
         }
         composable(route = TicketNav.ManageAccount.route) {
-            AccountManageContent()
+            AccountManageContent(
+                navigateToCreateAccount = { navController.navigate(TicketNav.CreateAccount.route) },
+                navigateToUpdateAccount = { navController.navigate(TicketNav.UpdateAccount.route) }
+            )
+        }
+        composable(route = TicketNav.CreateAccount.route) {
+            AccountsCreateContent()
+        }
+        composable(route = TicketNav.UpdateAccount.route) {
+            AccountsUpdateContent()
         }
     }
 }
@@ -78,4 +89,6 @@ sealed class TicketNav(val route: String) {
     data object Create : TicketNav("create")
     data object Export : TicketNav("export")
     data object ManageAccount : TicketNav("manage_account")
+    data object CreateAccount : TicketNav("create_account")
+    data object UpdateAccount : TicketNav("update_account")
 }

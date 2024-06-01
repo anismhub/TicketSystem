@@ -32,6 +32,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.anismhub.ticketsystem.presentation.common.InputTextState
+import com.anismhub.ticketsystem.presentation.common.areaOptions
+import com.anismhub.ticketsystem.presentation.common.priorityOptions
+import com.anismhub.ticketsystem.presentation.common.typeTicketOptions
 import com.anismhub.ticketsystem.presentation.components.InputText
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.presentation.theme.TicketSystemTheme
@@ -50,26 +53,13 @@ fun AddTicketContent(
     modifier: Modifier = Modifier
 ) {
 
-    val areaOptions = listOf(
-        "Admin Building",
-        "Air Compressor Room",
-        "Coal & Ash Handling Control Room",
-        "GIS",
-        "Jetty",
-        "Jakarta Office",
-        "Maingate security",
-        "Turbine Building",
-        "Warehouse Building",
-        "Workshop Building"
-    )
+
     var expandedArea by remember { mutableStateOf(false) }
     var selectedArea by remember { mutableStateOf(areaOptions[0]) }
 
-    val priorityOptions = listOf("Rendah", "Sedang", "Tinggi")
     var expandedPriority by remember { mutableStateOf(false) }
     var selectedPriority by remember { mutableStateOf(priorityOptions[0]) }
 
-    val typeTicketOptions = listOf("Install", "Config", "Troubleshoot")
     var expandedTypeTicket by remember { mutableStateOf(false) }
     var selectedTypeTicket by remember { mutableStateOf(typeTicketOptions[0]) }
 

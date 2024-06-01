@@ -144,7 +144,7 @@ fun SignInContent(
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 val icon =
-                    if (passwordVisibility) Icons.Outlined.VisibilityOff else Icons.Outlined.Visibility
+                    if (passwordVisibility) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff
                 val desc =
                     if (passwordVisibility) "Hide password" else "Show password"
 
