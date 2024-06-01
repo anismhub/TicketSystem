@@ -6,7 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.anismhub.ticketsystem.presentation.home.HomeScreen
+import com.anismhub.ticketsystem.presentation.screen.home.HomeScreen
+import com.anismhub.ticketsystem.presentation.screen.main.MainScreen
 
 @Composable
 fun RootNavGraph(
@@ -22,17 +23,14 @@ fun RootNavGraph(
         authNavGraph(navController = navController)
         ticketNavGraph(navController = navController)
         composable(route = Graph.MAIN) {
-            HomeScreen(
+            MainScreen(
                 navigateToLogin = {
                     navController.popBackStack()
                     navController.navigate(Graph.AUTHENTICATION)
                 },
                 navigateToCreate = {
-                    navController.navigate(Graph.TICKET)
+                    navController.navigate(TicketNav.Create.route)
                 },
-//                navigateToDetailTicket = {
-//                    navController.navigate(TicketNav.Detail.route)
-//                }
             )
         }
     }
@@ -43,5 +41,4 @@ object Graph {
     const val AUTHENTICATION = "authentication"
     const val MAIN = "main"
     const val TICKET = "ticket"
-    const val SETTINGS = "settings"
 }

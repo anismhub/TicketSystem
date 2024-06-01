@@ -1,4 +1,4 @@
-package com.anismhub.ticketsystem.presentation.addticket
+package com.anismhub.ticketsystem.presentation.screen.tickets.addticket
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

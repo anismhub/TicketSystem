@@ -8,18 +8,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.anismhub.ticketsystem.navigation.BottomNav
-import com.anismhub.ticketsystem.presentation.addticket.AddTicketContent
-import com.anismhub.ticketsystem.presentation.detailticket.DetailTicketContent
-import com.anismhub.ticketsystem.presentation.exportreport.ExportReportScreen
-import com.anismhub.ticketsystem.presentation.home.HomeContent
-import com.anismhub.ticketsystem.presentation.notification.NotificationContent
-import com.anismhub.ticketsystem.presentation.settings.SettingsContent
+import com.anismhub.ticketsystem.presentation.screen.accounts.manage.AccountManageContent
+import com.anismhub.ticketsystem.presentation.screen.tickets.addticket.AddTicketContent
+import com.anismhub.ticketsystem.presentation.screen.tickets.detailticket.DetailTicketContent
+import com.anismhub.ticketsystem.presentation.screen.settings.exportreport.ExportReportScreen
+import com.anismhub.ticketsystem.presentation.screen.home.HomeContent
+import com.anismhub.ticketsystem.presentation.screen.notification.NotificationContent
+import com.anismhub.ticketsystem.presentation.screen.settings.setting.SettingsContent
 
 @Composable
-fun HomeNavGraph(
+fun BottomNavGraph(
     navController: NavHostController,
     navigateToLogin: () -> Unit,
-//    navigateToDetailTicket: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -28,12 +28,10 @@ fun HomeNavGraph(
         route = Graph.MAIN,
         modifier = modifier
     ) {
-        ticketNavGraph(navController = navController)
         composable(route = BottomNav.Home.route) {
             HomeContent(
                 navigateToDetailTicket = {
-//                    navigateToDetailTicket()
-                    navController.navigate(TicketNav.Detail.route)
+                    navController.navigate(Graph.TICKET)
                 })
         }
         composable(route = BottomNav.Notification.route) {
@@ -50,13 +48,14 @@ fun HomeNavGraph(
                 }
             )
         }
+        ticketNavGraph(navController = navController)
     }
 }
 
 fun NavGraphBuilder.ticketNavGraph(navController: NavHostController) {
     navigation(
         route = Graph.TICKET,
-        startDestination = TicketNav.Create.route
+        startDestination = TicketNav.Detail.route
     ) {
         composable(route = TicketNav.Detail.route) {
             DetailTicketContent()
@@ -68,7 +67,7 @@ fun NavGraphBuilder.ticketNavGraph(navController: NavHostController) {
             ExportReportScreen()
         }
         composable(route = TicketNav.ManageAccount.route) {
-            ExportReportScreen()
+            AccountManageContent()
         }
     }
 }

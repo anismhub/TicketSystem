@@ -1,4 +1,4 @@
-package com.anismhub.ticketsystem.presentation.signin
+package com.anismhub.ticketsystem.presentation.screen.signin
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column

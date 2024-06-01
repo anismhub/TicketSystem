@@ -1,8 +1,7 @@
-package com.anismhub.ticketsystem.presentation.home
+package com.anismhub.ticketsystem.presentation.screen.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,13 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -29,52 +22,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.anismhub.ticketsystem.data.DataDummy
-import com.anismhub.ticketsystem.navigation.graph.HomeNavGraph
-import com.anismhub.ticketsystem.presentation.components.BottomBar
-import com.anismhub.ticketsystem.presentation.components.CreateFAB
 import com.anismhub.ticketsystem.presentation.components.MySearchBar
 import com.anismhub.ticketsystem.presentation.components.TabItem
 import com.anismhub.ticketsystem.presentation.components.TicketItem
 
 @Composable
 fun HomeScreen(
-    navigateToLogin: () -> Unit,
-    navigateToCreate: () -> Unit,
-//    navigateToDetailTicket: () -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-    val currentRoute = currentDestination?.route
 
-    Scaffold(
-        bottomBar = {
-            BottomBar(
-                navHostController = navController,
-                currentDestination = currentDestination
-            )
-        },
-        floatingActionButton = {
-            if (currentRoute == "home") {
-                CreateFAB { navigateToCreate() }
-            }
-        }
-    ) { paddingValues ->
-        Box(modifier = modifier.padding(paddingValues)) {
-            HomeNavGraph(navController = navController,
-                navigateToLogin = navigateToLogin,
-//                navigateToDetailTicket = navigateToDetailTicket
-            )
-        }
-    }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeContent(
     navigateToDetailTicket: () -> Unit,

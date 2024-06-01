@@ -1,6 +1,8 @@
-package com.anismhub.ticketsystem.presentation.settings
+package com.anismhub.ticketsystem.presentation.screen.settings.setting
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.OpenInNew
@@ -36,7 +38,7 @@ fun SettingsContent(
             text = "Pengaturan",
             style = MyTypography.headlineMedium.copy(fontWeight = FontWeight.Bold)
         )
-        ProfilCard(nama = "Nama", peran = "Peran Pengguna")
+        ProfilCard(title = "Nama", subtitle = "Peran Pengguna", modifier = Modifier.padding(vertical = 36.dp))
         SettingsMenu(
             icon = Icons.Rounded.ManageAccounts,
             text = "Kelola Pengguna",

@@ -1,7 +1,5 @@
 package com.anismhub.ticketsystem.presentation.components
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ConfirmationNumber
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -12,7 +10,7 @@ import androidx.navigation.NavHostController
 import com.anismhub.ticketsystem.navigation.BottomNavItem
 
 @Composable
-fun BottomBar(
+fun BottomNavBar(
     navHostController: NavHostController,
     currentDestination: NavDestination?,
     modifier: Modifier = Modifier
@@ -22,7 +20,11 @@ fun BottomBar(
             val selected = item.route == currentDestination?.route
             NavigationBarItem(
                 selected = selected,
-                onClick = { navHostController.navigate(item.route) },
+                onClick = { navHostController.navigate(item.route)
+                {
+                    popUpTo(navHostController.graph.startDestinationId)
+                    launchSingleTop = true
+                }},
                 icon = { Icon(item.icon,
                     contentDescription = item.title) })
         }

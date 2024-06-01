@@ -1,4 +1,4 @@
-package com.anismhub.ticketsystem.presentation.exportreport
+package com.anismhub.ticketsystem.presentation.screen.settings.exportreport
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

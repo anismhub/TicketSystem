@@ -1,4 +1,4 @@
-package com.anismhub.ticketsystem.presentation.notification
+package com.anismhub.ticketsystem.presentation.screen.notification
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
