@@ -82,6 +82,8 @@ fun InputTextWithLabel(
     title: String,
     initialTextState: String,
     modifier: Modifier = Modifier,
+    minLines: Int = 1,
+    singleLine: Boolean = true,
     enabled: Boolean = true,
     keyboardOption: KeyboardOptions = KeyboardOptions.Default,
     trailingIcon: @Composable () -> Unit = {}
@@ -103,6 +105,8 @@ fun InputTextWithLabel(
             },
             label = "",
             isError = isError,
+            minLines = minLines,
+            singleLine = singleLine,
             keyboardOption = keyboardOption,
             trailingIcon = {
                 trailingIcon()

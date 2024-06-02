@@ -79,7 +79,7 @@ fun AddTicketContent(
         DropdownMenuWithLabel(title = "Area", selectedValue = selectedArea, options = areaOptions)
         DropdownMenuWithLabel(title = "Prioritas", selectedValue = selectedPriority, options = priorityOptions)
         DropdownMenuWithLabel(title = "Tipe Tiket", selectedValue = selectedTypeTicket, options = typeTicketOptions)
-        InputTextWithLabel(title = "Deskripsi", initialTextState = description)
+        InputTextWithLabel(title = "Deskripsi", initialTextState = description, minLines = 7, singleLine = false)
 
         Spacer(modifier = Modifier.weight(1f))
 

@@ -3,11 +3,11 @@ package com.anismhub.ticketsystem.presentation.common
 val areaOptions = listOf(
     "Admin Building",
     "Air Compressor Room",
-    "Coal & Ash Handling Control Room",
+    "CH Control Room",
     "GIS",
     "Jetty",
     "Jakarta Office",
-    "Maingate security",
+    "Maingate Security",
     "Turbine Building",
     "Warehouse Building",
     "Workshop Building"
