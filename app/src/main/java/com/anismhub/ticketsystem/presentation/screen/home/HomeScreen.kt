@@ -30,7 +30,6 @@ import com.anismhub.ticketsystem.presentation.components.TicketItem
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
 ) {
 
 }

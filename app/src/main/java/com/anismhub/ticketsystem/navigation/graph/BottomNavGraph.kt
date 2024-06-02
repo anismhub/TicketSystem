@@ -8,9 +8,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.anismhub.ticketsystem.navigation.BottomNav
-import com.anismhub.ticketsystem.presentation.screen.accounts.create.AccountsCreateContent
-import com.anismhub.ticketsystem.presentation.screen.accounts.manage.AccountManageContent
-import com.anismhub.ticketsystem.presentation.screen.accounts.update.AccountsUpdateContent
+import com.anismhub.ticketsystem.presentation.screen.settings.accounts.create.AccountsCreateContent
+import com.anismhub.ticketsystem.presentation.screen.settings.accounts.manage.AccountManageContent
+import com.anismhub.ticketsystem.presentation.screen.settings.accounts.update.AccountsUpdateContent
 import com.anismhub.ticketsystem.presentation.screen.tickets.addticket.AddTicketContent
 import com.anismhub.ticketsystem.presentation.screen.tickets.detailticket.DetailTicketContent
 import com.anismhub.ticketsystem.presentation.screen.settings.exportreport.ExportReportScreen

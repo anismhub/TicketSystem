@@ -33,13 +33,11 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.anismhub.ticketsystem.R
 import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.components.InputText
-import com.anismhub.ticketsystem.presentation.theme.TicketSystemTheme
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
-import com.anismhub.ticketsystem.presentation.theme.fontFamily
+import com.anismhub.ticketsystem.presentation.theme.TicketSystemTheme
 
 @Composable
 fun SignInScreen(

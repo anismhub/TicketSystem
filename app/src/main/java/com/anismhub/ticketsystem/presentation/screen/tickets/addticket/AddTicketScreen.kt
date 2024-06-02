@@ -35,25 +35,23 @@ import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.common.areaOptions
 import com.anismhub.ticketsystem.presentation.common.priorityOptions
 import com.anismhub.ticketsystem.presentation.common.typeTicketOptions
+import com.anismhub.ticketsystem.presentation.components.DropdownMenuWithLabel
 import com.anismhub.ticketsystem.presentation.components.InputText
+import com.anismhub.ticketsystem.presentation.components.InputTextWithLabel
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.presentation.theme.TicketSystemTheme
 import com.anismhub.ticketsystem.presentation.theme.fontFamily
 
 @Composable
 fun AddTicketScreen(
-    modifier: Modifier = Modifier
 ) {
 
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTicketContent(
     modifier: Modifier = Modifier
 ) {
-
-
     var expandedArea by remember { mutableStateOf(false) }
     var selectedArea by remember { mutableStateOf(areaOptions[0]) }
 
@@ -63,8 +61,8 @@ fun AddTicketContent(
     var expandedTypeTicket by remember { mutableStateOf(false) }
     var selectedTypeTicket by remember { mutableStateOf(typeTicketOptions[0]) }
 
-    var subject by remember { mutableStateOf(InputTextState()) }
-    var description by remember { mutableStateOf(InputTextState()) }
+    var subject by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier
@@ -77,202 +75,11 @@ fun AddTicketContent(
             style = MyTypography.headlineMedium.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Subjek", modifier = Modifier.weight(0.4f))
-            InputText(
-                value = subject.value,
-                onChange = { newValue ->
-                    subject = subject.copy(
-                        value = newValue,
-                        isError = newValue.isEmpty()
-                    )
-                },
-                label = "",
-                isError = subject.isError,
-                trailingIcon = {
-                    if (subject.value.isNotEmpty()) {
-                        IconButton(onClick = { subject = subject.copy(value = "") }) {
-                            Icon(imageVector = Icons.Outlined.Clear, contentDescription = "")
-                        }
-                    }
-                },
-                supportingText = {
-                    if (subject.isError) {
-                        Text(text = "Subjek harus diisi")
-                    }
-                },
-                modifier = Modifier.weight(0.6f)
-            )
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Area", modifier = Modifier.weight(0.4f))
-
-            ExposedDropdownMenuBox(
-                expanded = expandedArea,
-                onExpandedChange = { expandedArea = it },
-                modifier = Modifier.weight(0.6f)
-            ) {
-                OutlinedTextField(
-                    value = selectedArea,
-                    onValueChange = {},
-                    readOnly = true,
-                    shape = RoundedCornerShape(16.dp),
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedArea)
-                    },
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth()
-                )
-
-                ExposedDropdownMenu(
-                    expanded = expandedArea,
-                    onDismissRequest = { expandedArea = false }) {
-                    areaOptions.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(text = option) },
-                            onClick = {
-                                selectedArea = option
-                                expandedArea = false
-                            }
-                        )
-                    }
-                }
-            }
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Prioritas", modifier = Modifier.weight(0.4f))
-
-            ExposedDropdownMenuBox(
-                expanded = expandedPriority,
-                onExpandedChange = { expandedPriority = it },
-                modifier = Modifier.weight(0.6f)
-            ) {
-                OutlinedTextField(
-                    value = selectedPriority,
-                    onValueChange = {},
-                    readOnly = true,
-                    shape = RoundedCornerShape(16.dp),
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedPriority)
-                    },
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth()
-                )
-
-                ExposedDropdownMenu(
-                    expanded = expandedPriority,
-                    onDismissRequest = { expandedPriority = false }) {
-                    areaOptions.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(text = option) },
-                            onClick = {
-                                selectedPriority = option
-                                expandedPriority = false
-                            }
-                        )
-                    }
-                }
-            }
-        }
-
-
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "Tipe Tiket", fontFamily = fontFamily, modifier = Modifier.weight(0.4f))
-
-            ExposedDropdownMenuBox(
-                expanded = expandedTypeTicket,
-                onExpandedChange = { expandedTypeTicket = it },
-                modifier = Modifier.weight(0.6f)
-            ) {
-                OutlinedTextField(
-                    value = selectedTypeTicket,
-                    onValueChange = {},
-                    readOnly = true,
-                    shape = RoundedCornerShape(16.dp),
-                    trailingIcon = {
-                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedTypeTicket)
-                    },
-                    modifier = Modifier
-                        .menuAnchor()
-                        .fillMaxWidth()
-                )
-
-                ExposedDropdownMenu(
-                    expanded = expandedTypeTicket,
-                    onDismissRequest = { expandedTypeTicket = false }) {
-                    typeTicketOptions.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(text = option) },
-                            onClick = {
-                                selectedTypeTicket = option
-                                expandedTypeTicket = false
-                            }
-                        )
-                    }
-                }
-            }
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.Top
-        ) {
-            Text(
-                text = "Description",
-                fontFamily = fontFamily,
-                modifier = Modifier
-                    .weight(0.4f)
-                    .padding(top = 24.dp)
-            )
-
-            InputText(
-                value = description.value,
-                onChange = { newValue ->
-                    description = description.copy(
-                        value = newValue,
-                        isError = newValue.isEmpty()
-                    )
-                },
-                label = "",
-                minLines = 7,
-                singleLine = false,
-                isError = description.isError,
-                trailingIcon = {
-                    if (description.value.isNotEmpty()) {
-                        IconButton(onClick = { description = description.copy(value = "") }) {
-                            Icon(imageVector = Icons.Outlined.Clear, contentDescription = "")
-                        }
-                    }
-                },
-                supportingText = {
-                    if (description.isError) {
-                        Text(text = "Description cannot be empty", fontFamily = fontFamily)
-                    }
-                },
-                modifier = Modifier.weight(0.6f)
-            )
-        }
+        InputTextWithLabel(title = "Subjek", initialTextState = subject)
+        DropdownMenuWithLabel(title = "Area", selectedValue = selectedArea, options = areaOptions)
+        DropdownMenuWithLabel(title = "Prioritas", selectedValue = selectedPriority, options = priorityOptions)
+        DropdownMenuWithLabel(title = "Tipe Tiket", selectedValue = selectedTypeTicket, options = typeTicketOptions)
+        InputTextWithLabel(title = "Deskripsi", initialTextState = description)
 
         Spacer(modifier = Modifier.weight(1f))
 

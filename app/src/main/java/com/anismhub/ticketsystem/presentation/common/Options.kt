@@ -16,4 +16,4 @@ val areaOptions = listOf(
 val priorityOptions = listOf("Rendah", "Sedang", "Tinggi")
 val typeTicketOptions = listOf("Install", "Config", "Troubleshoot")
 val roleOptions = listOf("Karyawan", "Administrator", "Teknisi")
-val departmentOptions = listOf("Operation","Maintenance","HSE","Finance","Procurement","SR","HR","GA","IT",)
+val departmentOptions = listOf("Operation","Maintenance","HSE","Finance","Procurement","SR","HR","GA","IT")

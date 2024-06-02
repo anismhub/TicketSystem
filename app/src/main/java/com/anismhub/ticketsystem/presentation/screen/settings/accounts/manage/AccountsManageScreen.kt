@@ -1,4 +1,4 @@
-package com.anismhub.ticketsystem.presentation.screen.accounts.manage
+package com.anismhub.ticketsystem.presentation.screen.settings.accounts.manage
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,7 +32,7 @@ import com.anismhub.ticketsystem.presentation.components.ProfilCard
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 
 @Composable
-fun AccountManageScreen(modifier: Modifier = Modifier) {
+fun AccountManageScreen() {
 
 }
 
