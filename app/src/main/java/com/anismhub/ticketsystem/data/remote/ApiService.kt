@@ -10,7 +10,7 @@ interface ApiService {
     @FormUrlEncoded
     @POST("login")
     suspend fun login(
-        @Field("email") email: String,
+        @Field("username") username: String,
         @Field("password") password: String
     ): LoginDTO
 }
