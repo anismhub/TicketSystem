@@ -5,7 +5,5 @@ import com.anismhub.ticketsystem.navigation.graph.RootNavGraph
 
 @Composable
 fun TicketSystemApp() {
-//    AddTicketContent()
-//    HomeContent()
     RootNavGraph()
 }

@@ -8,21 +8,22 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.anismhub.ticketsystem.navigation.BottomNav
+import com.anismhub.ticketsystem.presentation.screen.home.HomeContent
+import com.anismhub.ticketsystem.presentation.screen.notification.NotificationContent
 import com.anismhub.ticketsystem.presentation.screen.settings.accounts.create.AccountsCreateContent
 import com.anismhub.ticketsystem.presentation.screen.settings.accounts.manage.AccountManageContent
 import com.anismhub.ticketsystem.presentation.screen.settings.accounts.update.AccountsUpdateContent
+import com.anismhub.ticketsystem.presentation.screen.settings.exportreport.ExportReportScreen
+import com.anismhub.ticketsystem.presentation.screen.settings.setting.SettingsContent
 import com.anismhub.ticketsystem.presentation.screen.tickets.addticket.AddTicketContent
 import com.anismhub.ticketsystem.presentation.screen.tickets.detailticket.DetailTicketContent
-import com.anismhub.ticketsystem.presentation.screen.settings.exportreport.ExportReportScreen
-import com.anismhub.ticketsystem.presentation.screen.home.HomeContent
-import com.anismhub.ticketsystem.presentation.screen.notification.NotificationContent
-import com.anismhub.ticketsystem.presentation.screen.settings.setting.SettingsContent
 
 @Composable
 fun BottomNavGraph(
+    onTitleChange: (String) -> Unit,
     navController: NavHostController,
     navigateToLogin: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     NavHost(
         navController = navController,
@@ -32,8 +33,9 @@ fun BottomNavGraph(
     ) {
         composable(route = BottomNav.Home.route) {
             HomeContent(
-                navigateToDetailTicket = {
+                navigateToDetailTicket = { title ->
                     navController.navigate(Graph.TICKET)
+                    onTitleChange(title)
                 })
         }
         composable(route = BottomNav.Notification.route) {
@@ -42,19 +44,27 @@ fun BottomNavGraph(
         composable(route = BottomNav.Settings.route) {
             SettingsContent(
                 navigateToAuth = { navigateToLogin() },
-                navigateToManageAccount = {
+                navigateToManageAccount = { title ->
                     navController.navigate(TicketNav.ManageAccount.route)
+                    onTitleChange(title)
                 },
-                navigateToExport = {
+                navigateToExport = { title ->
                     navController.navigate(TicketNav.Export.route)
+                    onTitleChange(title)
                 }
             )
         }
-        ticketNavGraph(navController = navController)
+        ticketNavGraph(
+            onTitleChange = { onTitleChange(it) },
+            navController = navController
+        )
     }
 }
 
-fun NavGraphBuilder.ticketNavGraph(navController: NavHostController) {
+fun NavGraphBuilder.ticketNavGraph(
+    onTitleChange: (String) -> Unit,
+    navController: NavHostController
+) {
     navigation(
         route = Graph.TICKET,
         startDestination = TicketNav.Detail.route
@@ -63,22 +73,31 @@ fun NavGraphBuilder.ticketNavGraph(navController: NavHostController) {
             DetailTicketContent()
         }
         composable(route = TicketNav.Create.route) {
-            AddTicketContent()
+            AddTicketContent(
+                onNavUp = { navController.navigateUp() }
+            )
         }
         composable(route = TicketNav.Export.route) {
             ExportReportScreen()
         }
         composable(route = TicketNav.ManageAccount.route) {
             AccountManageContent(
-                navigateToCreateAccount = { navController.navigate(TicketNav.CreateAccount.route) },
-                navigateToUpdateAccount = { navController.navigate(TicketNav.UpdateAccount.route) }
+                navigateToCreateAccount = {
+                    navController.navigate(TicketNav.CreateAccount.route)
+                },
+                navigateToUpdateAccount = {
+                    navController.navigate(TicketNav.UpdateAccount.route)
+                }
             )
+            onTitleChange("Kelola Pengguna")
         }
         composable(route = TicketNav.CreateAccount.route) {
             AccountsCreateContent()
+            onTitleChange("Buat Pengguna")
         }
         composable(route = TicketNav.UpdateAccount.route) {
             AccountsUpdateContent()
+            onTitleChange("Perbarui Pengguna")
         }
     }
 }

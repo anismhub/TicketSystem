@@ -96,7 +96,7 @@ fun InputTextWithLabel(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = title, modifier = Modifier.weight(0.4f))
+        Text(text = title, modifier = Modifier.weight(0.35f))
         InputText(
             value = textState,
             onChange = { newValue ->
@@ -117,12 +117,65 @@ fun InputTextWithLabel(
                 }
             },
             enabled = enabled,
-            modifier = Modifier.weight(0.6f)
+            modifier = Modifier.weight(0.65f)
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MyDropdownMenu(
+    selectedValue: String,
+    options: List<String>,
+    modifier: Modifier = Modifier,
+    enabled: Boolean,
+    supportingText: @Composable () -> Unit = {}
+) {
+    var expanded by remember { mutableStateOf(false) }
+    var selected by remember { mutableStateOf(selectedValue) }
+    var isError by remember { mutableStateOf(false) }
+    ExposedDropdownMenuBox(
+        expanded = false,
+        onExpandedChange = { expanded = enabled },
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = selected,
+            onValueChange = { newValue ->
+                isError = newValue.isEmpty()
+            },
+            readOnly = true,
+            shape = RoundedCornerShape(16.dp),
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
+            isError = isError,
+            supportingText = {
+                if (isError) {
+                    supportingText()
+                }
+            },
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth()
+        )
+
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }) {
+            options.forEach { option ->
+                DropdownMenuItem(
+                    text = { Text(text = option) },
+                    onClick = {
+                        selected = option
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
+
 @Composable
 fun DropdownMenuWithLabel(
     title: String,
@@ -130,8 +183,6 @@ fun DropdownMenuWithLabel(
     options: List<String>,
     modifier: Modifier = Modifier
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    var selected by remember { mutableStateOf(selectedValue) }
     var isError by remember { mutableStateOf(false) }
 
     Row(
@@ -139,48 +190,18 @@ fun DropdownMenuWithLabel(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = title, modifier = Modifier.weight(0.4f))
+        Text(text = title, modifier = Modifier.weight(0.35f))
 
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = it },
-            modifier = Modifier.weight(0.6f)
-        ) {
-            OutlinedTextField(
-                value = selected,
-                onValueChange = { newValue ->
-                    isError = newValue.isEmpty()
-                },
-                readOnly = true,
-                shape = RoundedCornerShape(16.dp),
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                },
-                isError = isError,
-                supportingText = {
-                    if (isError) {
-                        Text(text = "$title harus diisi", style = MyTypography.labelSmall)
-                    }
-                },
-                modifier = Modifier
-                    .menuAnchor()
-                    .fillMaxWidth()
-            )
-
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }) {
-                options.forEach { option ->
-                    DropdownMenuItem(
-                        text = { Text(text = option) },
-                        onClick = {
-                            selected = option
-                            expanded = false
-                        }
-                    )
+        MyDropdownMenu(
+            selectedValue = selectedValue, options = options,
+            enabled = true,
+            modifier = Modifier.weight(0.65f),
+            supportingText = {
+                if (isError) {
+                    Text(text = "$title harus diisi", style = MyTypography.labelSmall)
                 }
-            }
-        }
+            },
+        )
     }
 }
 

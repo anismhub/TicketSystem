@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.PersonRemove
+import androidx.compose.material.icons.filled.PersonRemoveAlt1
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -63,23 +65,7 @@ fun ProfilCard(
                 onClick = { onClickIcon() },
             ) {
                 icon()
-//                Icon(
-//                    imageVector = Icons.Default.MoreVert,
-//                    contentDescription = "Edit",
-//                    modifier = Modifier.fillMaxSize()
-//                )
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun ProfilCardPreview() {
-    ProfilCard(
-        title = "Nama",
-        subtitle = "Peran",
-        onClick = {},
-        icon = { Icon(imageVector = Icons.Default.MoreVert, contentDescription = "Edit") },
-        onClickIcon = {})
 }

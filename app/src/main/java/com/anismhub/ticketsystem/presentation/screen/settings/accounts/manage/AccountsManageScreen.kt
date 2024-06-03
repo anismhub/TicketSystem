@@ -6,13 +6,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material.icons.rounded.PersonRemove
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -23,13 +22,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.anismhub.ticketsystem.data.DataDummy
 import com.anismhub.ticketsystem.presentation.components.MySearchBar
 import com.anismhub.ticketsystem.presentation.components.ProfilCard
-import com.anismhub.ticketsystem.presentation.theme.MyTypography
 
 @Composable
 fun AccountManageScreen() {
@@ -50,12 +47,6 @@ fun AccountManageContent(
             .padding(horizontal = 12.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(
-            text = "Kelola Pengguna",
-            style = MyTypography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
@@ -83,8 +74,8 @@ fun AccountManageContent(
                 ProfilCard(title = it.title, subtitle = it.date,
                     icon = {
                         Icon(
-                            imageVector = Icons.Rounded.MoreVert,
-                            contentDescription = "Edit"
+                            imageVector = Icons.Rounded.PersonRemove,
+                            contentDescription = "Hapus Pengguna"
                         )
                     },
                     onClickIcon = { },
