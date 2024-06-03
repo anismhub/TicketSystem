@@ -1,4 +1,4 @@
-package com.anismhub.ticketsystem.presentation.screen.accounts.manage
+package com.anismhub.ticketsystem.presentation.screen.settings.accounts.manage
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +17,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -28,12 +32,18 @@ import com.anismhub.ticketsystem.presentation.components.ProfilCard
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 
 @Composable
-fun AccountManageScreen(modifier: Modifier = Modifier) {
+fun AccountManageScreen() {
 
 }
 
 @Composable
-fun AccountManageContent(modifier: Modifier = Modifier) {
+fun AccountManageContent(
+    navigateToCreateAccount: () -> Unit,
+    navigateToUpdateAccount: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    var query by remember { mutableStateOf("") }
+
     Column(
         modifier = modifier
             .padding(top = 16.dp)
@@ -52,11 +62,15 @@ fun AccountManageContent(modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             MySearchBar(
+                query = query,
+                onQueryChange = { query = it },
                 modifier = Modifier
                     .weight(0.5f)
             )
             Spacer(modifier = Modifier.weight(0.2f))
-            Button(onClick = { }, shape = RoundedCornerShape(20),modifier = Modifier.weight(0.3f)) {
+            Button(onClick = {
+                navigateToCreateAccount()
+            }, shape = RoundedCornerShape(20), modifier = Modifier.weight(0.3f)) {
                 Text(text = "Buat Pengguna", textAlign = TextAlign.Center)
             }
         }
@@ -67,9 +81,17 @@ fun AccountManageContent(modifier: Modifier = Modifier) {
         ) {
             items(DataDummy.dummyTickets, key = { it.title }) {
                 ProfilCard(title = it.title, subtitle = it.date,
-                    icon = { Icon(imageVector = Icons.Rounded.MoreVert, contentDescription = "Edit" ) },
-                    onClickIcon = {},
-                    )
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Rounded.MoreVert,
+                            contentDescription = "Edit"
+                        )
+                    },
+                    onClickIcon = { },
+                    onClick = {
+                        navigateToUpdateAccount()
+                    }
+                )
             }
         }
 

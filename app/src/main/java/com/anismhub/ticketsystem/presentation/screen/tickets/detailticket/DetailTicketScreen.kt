@@ -24,13 +24,13 @@ import com.anismhub.ticketsystem.presentation.components.InputText
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 
 @Composable
-fun DetailTicketScreen(modifier: Modifier = Modifier) {
+fun DetailTicketScreen() {
 
 }
 
 @Composable
 fun DetailTicketContent(modifier: Modifier = Modifier) {
-    var replyText by remember { mutableStateOf(InputTextState()) }
+    var replyText by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier
@@ -50,11 +50,9 @@ fun DetailTicketContent(modifier: Modifier = Modifier) {
                 .padding(top = 12.dp)
         )
         InputText(
-            value = replyText.value,
+            value = replyText,
             onChange = { newValue ->
-                replyText = replyText.copy(
-                    value = newValue,
-                )
+                replyText = newValue
             },
             label = " ",
             minLines = 5,

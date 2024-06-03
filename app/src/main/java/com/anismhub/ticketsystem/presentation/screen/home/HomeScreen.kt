@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -29,7 +30,6 @@ import com.anismhub.ticketsystem.presentation.components.TicketItem
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier,
 ) {
 
 }
@@ -42,6 +42,8 @@ fun HomeContent(
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val pagerState = rememberPagerState { TabItem.entries.size }
+    var query by remember { mutableStateOf("") }
+
     LaunchedEffect(selectedTabIndex) {
         pagerState.animateScrollToPage(selectedTabIndex)
     }
@@ -56,7 +58,11 @@ fun HomeContent(
         verticalArrangement = Arrangement.spacedBy(2.dp)
         //.verticalScroll(rememberScrollState())
     ) {
-        MySearchBar(modifier = Modifier.padding(horizontal = 24.dp))
+        MySearchBar(
+            query = query,
+            onQueryChange = { query = it },
+            modifier = Modifier.padding(horizontal = 24.dp)
+        )
         TabRow(selectedTabIndex = selectedTabIndex) {
             TabItem.entries.forEachIndexed { index, currentTab ->
                 Tab(

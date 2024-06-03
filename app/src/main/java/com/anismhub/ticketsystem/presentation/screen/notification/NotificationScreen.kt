@@ -19,7 +19,7 @@ import com.anismhub.ticketsystem.presentation.components.NotificationCard
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 
 @Composable
-fun NotificationScreen(modifier: Modifier = Modifier) {
+fun NotificationScreen() {
 
 }
 
