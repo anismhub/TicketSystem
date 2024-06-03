@@ -33,3 +33,8 @@ val BottomNavItem = listOf(
     BottomNav.Notification,
     BottomNav.Settings
 )
+val BottomNavItemRoute = listOf(
+    BottomNav.Home.route,
+    BottomNav.Notification.route,
+    BottomNav.Settings.route
+)

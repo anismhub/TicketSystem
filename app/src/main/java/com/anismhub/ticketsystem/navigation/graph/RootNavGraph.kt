@@ -1,6 +1,10 @@
 package com.anismhub.ticketsystem.navigation.graph
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -13,6 +17,8 @@ fun RootNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
+    var title by rememberSaveable { mutableStateOf("") }
+
     NavHost(
         navController = navController,
         startDestination = Graph.AUTHENTICATION,
@@ -20,7 +26,7 @@ fun RootNavGraph(
         modifier = modifier
     ) {
         authNavGraph(navController = navController)
-        ticketNavGraph(navController = navController)
+        ticketNavGraph(navController = navController, onTitleChange = { title = it })
         composable(route = Graph.MAIN) {
             MainScreen(
                 navigateToLogin = {

@@ -37,7 +37,7 @@ fun HomeScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeContent(
-    navigateToDetailTicket: () -> Unit,
+    navigateToDetailTicket: (title: String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
@@ -91,7 +91,7 @@ fun HomeContent(
                         date = it.date,
                         priority = it.priority,
                         status = TabItem.entries[index].title,
-                        onClick = { navigateToDetailTicket() }
+                        onClick = { navigateToDetailTicket("Detail Tiket") }
                     )
                 }
             }

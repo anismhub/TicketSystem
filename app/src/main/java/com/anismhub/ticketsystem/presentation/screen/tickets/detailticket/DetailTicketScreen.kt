@@ -38,10 +38,7 @@ fun DetailTicketContent(modifier: Modifier = Modifier) {
             .padding(horizontal = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Detail Tiket",
-            style = MyTypography.headlineMedium.copy(fontWeight = FontWeight.Bold)
-        )
+
         Spacer(modifier = Modifier.height(16.dp))
         DetailTicketCard()
         Text(

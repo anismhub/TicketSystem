@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -17,14 +16,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.anismhub.ticketsystem.presentation.common.departmentOptions
 import com.anismhub.ticketsystem.presentation.common.roleOptions
 import com.anismhub.ticketsystem.presentation.components.DropdownMenuWithLabel
 import com.anismhub.ticketsystem.presentation.components.InputTextWithLabel
-import com.anismhub.ticketsystem.presentation.theme.MyTypography
 
 @Composable
 fun AccountsCreateScreen() {
@@ -48,11 +45,6 @@ fun AccountsCreateContent(modifier: Modifier = Modifier) {
             .padding(horizontal = 24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Text(
-            text = "Buat Pengguna",
-            style = MyTypography.headlineMedium.copy(fontWeight = FontWeight.Bold),
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
         // Username
         InputTextWithLabel(title = "Username", initialTextState = username)
         // Fullname
@@ -73,12 +65,12 @@ fun AccountsCreateContent(modifier: Modifier = Modifier) {
             initialTextState = password,
             keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
-        // Confirmed Password
-        InputTextWithLabel(
-            title = "Konfirmasi Password",
-            initialTextState = confirmPassword,
-            keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password)
-        )
+//        // Confirmed Password
+//        InputTextWithLabel(
+//            title = "Konfirmasi Password",
+//            initialTextState = confirmPassword,
+//            keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password)
+//        )
         Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = { /*TODO*/ },

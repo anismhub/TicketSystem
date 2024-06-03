@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Clear
+import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Button
@@ -146,7 +147,7 @@ fun SignInContent(
             trailingIcon = {
                 if (username.value.isNotEmpty()) {
                     IconButton(onClick = { onUsernameChange(username.copy(value = "")) }) {
-                        Icon(imageVector = Icons.Outlined.Clear, contentDescription = "")
+                        Icon(imageVector = Icons.Outlined.Close, contentDescription = "")
                     }
                 }
             },
