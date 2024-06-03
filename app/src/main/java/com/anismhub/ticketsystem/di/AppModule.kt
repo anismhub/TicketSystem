@@ -1,10 +1,16 @@
 package com.anismhub.ticketsystem.di
 
+import android.content.Context
 import com.anismhub.ticketsystem.BuildConfig
+import com.anismhub.ticketsystem.data.manager.LocalDataManagerImpl
 import com.anismhub.ticketsystem.data.remote.ApiService
+import com.anismhub.ticketsystem.data.repository.AuthRespositoryImpl
+import com.anismhub.ticketsystem.domain.manager.LocalDataManager
+import com.anismhub.ticketsystem.domain.repository.AuthRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -15,6 +21,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideLocalDataManager(
+        @ApplicationContext context: Context
+    ): LocalDataManager = LocalDataManagerImpl(context = context)
 
     @Provides
     @Singleton
@@ -34,4 +46,14 @@ object AppModule {
             .build()
         return retrofit.create(ApiService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(
+        apiService: ApiService,
+        localDataManager: LocalDataManager
+    ): AuthRepository = AuthRespositoryImpl(
+        apiService = apiService,
+        localDataManager = localDataManager
+    )
 }
