@@ -1,5 +1,6 @@
 package com.anismhub.ticketsystem.presentation.screen.signin
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -26,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -33,16 +35,21 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.R
 import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.components.InputText
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.presentation.theme.TicketSystemTheme
+import com.anismhub.ticketsystem.utils.Result
+import com.anismhub.ticketsystem.utils.isInvalid
 
 @Composable
 fun SignInScreen(
     navigateToHome: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: SignInViewModel = hiltViewModel()
 ) {
 
     var passwordVisibility by remember {
@@ -57,14 +64,38 @@ fun SignInScreen(
         mutableStateOf(InputTextState())
     }
 
+    val loginResult by viewModel.loginResult.collectAsStateWithLifecycle()
+    val loginState by viewModel.loginState.collectAsStateWithLifecycle()
+
+    if (loginState) {
+        navigateToHome()
+    }
+
+    loginResult.let {
+        val context = LocalContext.current
+        if (!it.hasBeenHandled) {
+            when (val unhandled = it.getContentIfNotHandled()) {
+                is Result.Error -> {
+                    Toast.makeText(context, unhandled.error, Toast.LENGTH_SHORT).show()
+                }
+
+                is Result.Success -> {
+                    viewModel.saveLoginData(unhandled.data.data)
+                }
+
+                else -> {}
+            }
+        }
+    }
+
     SignInContent(
-        navigateToHome = navigateToHome,
         username = username,
         password = password,
         passwordVisibility = passwordVisibility,
         onPasswordVisibilityChange = { passwordVisibility = it },
         onUsernameChange = { username = it },
         onPasswordChange = { password = it },
+        loginAction = { viewModel.login(username.value, password.value) },
         modifier = modifier
     )
 }
@@ -77,7 +108,7 @@ fun SignInContent(
     onPasswordVisibilityChange: (Boolean) -> Unit,
     onUsernameChange: (InputTextState) -> Unit,
     onPasswordChange: (InputTextState) -> Unit,
-    navigateToHome: () -> Unit,
+    loginAction: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -158,9 +189,17 @@ fun SignInContent(
         )
 
         Spacer(modifier = Modifier.weight(1f))
-        
+
         Button(
-            onClick = { navigateToHome() },
+            onClick = {
+                when {
+                    username.isInvalid() -> onUsernameChange(username.copy(isError = true))
+                    password.isInvalid() -> onPasswordChange(password.copy(isError = true))
+                    else -> {
+                        loginAction()
+                    }
+                }
+            },
             shape = RoundedCornerShape(16.dp),
             contentPadding = PaddingValues(14.dp),
             modifier = Modifier
@@ -179,13 +218,13 @@ fun SignInContent(
 private fun SignInPreview() {
     TicketSystemTheme {
         SignInContent(
-            navigateToHome = {},
             username = InputTextState(),
             password = InputTextState(),
             onUsernameChange = {},
             onPasswordChange = {},
             passwordVisibility = false,
-            onPasswordVisibilityChange = {}
+            onPasswordVisibilityChange = {},
+            loginAction = {}
         )
     }
 }
