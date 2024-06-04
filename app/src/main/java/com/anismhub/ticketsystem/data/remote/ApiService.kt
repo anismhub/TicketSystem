@@ -8,7 +8,7 @@ import retrofit2.http.POST
 interface ApiService {
 
     @FormUrlEncoded
-    @POST("login")
+    @POST("users/auth")
     suspend fun login(
         @Field("username") username: String,
         @Field("password") password: String
