@@ -39,4 +39,12 @@ class AuthRespositoryImpl(
 
     override suspend fun saveLoginData(loginData: LoginData) =
         localDataManager.saveLoginData(loginData = loginData)
+
+    override fun getLoginData(): Flow<LoginData> = localDataManager.getLoginData()
+
+    override fun getLoginState(): Flow<Boolean> = localDataManager.getLoginState()
+
+    override fun getAccessToken(): Flow<String> = localDataManager.getAccessToken()
+
+    override suspend fun clearLoginData() = localDataManager.clearLoginData()
 }
