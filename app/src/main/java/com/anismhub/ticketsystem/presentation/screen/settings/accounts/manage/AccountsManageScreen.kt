@@ -70,8 +70,8 @@ fun AccountManageContent(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier.padding(top = 8.dp)
         ) {
-            items(DataDummy.dummyTickets, key = { it.title }) {
-                ProfilCard(title = it.title, subtitle = it.date,
+            items(DataDummy.pengguna, key = { it.nama }) {
+                ProfilCard(title = it.nama, subtitle = it.role,
                     icon = {
                         Icon(
                             imageVector = Icons.Rounded.PersonRemove,

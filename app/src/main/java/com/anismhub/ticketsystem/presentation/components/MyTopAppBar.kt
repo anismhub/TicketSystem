@@ -20,10 +20,10 @@ import com.anismhub.ticketsystem.presentation.theme.MyTypography
 fun MyTopAppBar(
     title: String,
     navController: NavHostController,
-    topBarDestination: Boolean,
+    showTopBar: Boolean,
     modifier: Modifier = Modifier
 ) {
-    if (topBarDestination) {
+    if (showTopBar) {
         CenterAlignedTopAppBar(
             title = {
                 Text(

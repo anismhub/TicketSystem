@@ -3,6 +3,7 @@ package com.anismhub.ticketsystem.presentation.components
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination
@@ -13,20 +14,30 @@ import com.anismhub.ticketsystem.navigation.BottomNavItem
 fun BottomNavBar(
     navHostController: NavHostController,
     currentDestination: NavDestination?,
+    showBottomNavBar: Boolean,
     modifier: Modifier = Modifier
 ) {
-    NavigationBar(modifier = modifier) {
-        BottomNavItem.forEach { item ->
-            val selected = item.route == currentDestination?.route
-            NavigationBarItem(
-                selected = selected,
-                onClick = { navHostController.navigate(item.route)
-                {
-                    popUpTo(navHostController.graph.startDestinationId)
-                    launchSingleTop = true
-                }},
-                icon = { Icon(item.icon,
-                    contentDescription = item.title) })
+    if (showBottomNavBar) {
+        NavigationBar(modifier = modifier) {
+            BottomNavItem.forEach { item ->
+                val selected = item.route == currentDestination?.route
+                NavigationBarItem(
+                    selected = selected,
+                    onClick = {
+                        navHostController.navigate(item.route)
+                        {
+                            popUpTo(navHostController.graph.startDestinationId)
+                            launchSingleTop = true
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            item.icon,
+                            contentDescription = item.title
+                        )
+                    },
+                    label = { Text(text = item.title) })
+            }
         }
     }
 }

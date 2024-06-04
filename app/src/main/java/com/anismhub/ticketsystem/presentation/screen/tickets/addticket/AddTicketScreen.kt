@@ -1,5 +1,6 @@
 package com.anismhub.ticketsystem.presentation.screen.tickets.addticket
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,6 +53,8 @@ fun AddTicketContent(
     var subject by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
 
+    val context = LocalContext.current
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -67,7 +71,7 @@ fun AddTicketContent(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Rounded.ArrowBackIos,
-                    contentDescription = "Kembali"
+                    contentDescription = "Kembali",
                 )
             }
             Spacer(modifier = Modifier.width(46.dp))
@@ -76,16 +80,42 @@ fun AddTicketContent(
                 style = MyTypography.headlineMedium.copy(fontWeight = FontWeight.Bold),
             )
         }
-        InputTextWithLabel(title = "Subjek", initialTextState = subject)
-        DropdownMenuWithLabel(title = "Area", selectedValue = selectedArea, options = areaOptions)
-        DropdownMenuWithLabel(title = "Prioritas", selectedValue = selectedPriority, options = priorityOptions)
-        DropdownMenuWithLabel(title = "Tipe Tiket", selectedValue = selectedTypeTicket, options = typeTicketOptions)
-        InputTextWithLabel(title = "Deskripsi", initialTextState = description, minLines = 7, singleLine = false)
+        InputTextWithLabel(title = "Subjek", value = subject, onValueChange = { newValue ->
+            subject = newValue
+        })
+        DropdownMenuWithLabel(
+            title = "Area", value = selectedArea,
+            onValueChange = { selectedArea = it },
+            options = areaOptions
+        )
+        DropdownMenuWithLabel(title = "Prioritas",
+            value = selectedPriority,
+            onValueChange = { selectedPriority = it },
+            options = priorityOptions
+        )
+        DropdownMenuWithLabel(
+            title = "Tipe Tiket", value = selectedTypeTicket,
+            onValueChange = { selectedTypeTicket = it },
+            options = typeTicketOptions
+        )
+        InputTextWithLabel(
+            title = "Deskripsi",
+            value = description,
+            onValueChange = { description = it },
+            minLines = 7,
+            singleLine = false
+        )
 
         Spacer(modifier = Modifier.weight(1f))
 
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                Toast.makeText(
+                    context,
+                    "subjek: $subject,deskripsi: $description, area: $selectedArea, prioritas: $selectedPriority, tipe tiket: $selectedTypeTicket",
+                    Toast.LENGTH_SHORT
+                ).show()
+            },
             shape = RoundedCornerShape(16.dp),
             contentPadding = PaddingValues(14.dp),
             modifier = Modifier

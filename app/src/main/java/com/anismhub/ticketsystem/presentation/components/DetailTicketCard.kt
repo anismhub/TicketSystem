@@ -19,14 +19,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
+import com.anismhub.ticketsystem.data.DataDummy
 import com.anismhub.ticketsystem.presentation.common.teknisiOptions
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 
@@ -37,7 +38,8 @@ fun DetailTicketCard(modifier: Modifier = Modifier) {
         shape = RoundedCornerShape(16.dp),
         modifier = modifier.fillMaxWidth()
     ) {
-        val selectedTeknisi by remember { mutableStateOf("") }
+        var selectedTeknisi by remember { mutableStateOf("") }
+        val dummyTicket = DataDummy.tickets[0]
 
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -45,14 +47,17 @@ fun DetailTicketCard(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
         ) {
             Text(
-                text = "#7 Subjek Tiket",
+                text = "#1 ${dummyTicket.title}",
                 style = MyTypography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
             )
-            Text(text = "On Progress", modifier = Modifier.align(Alignment.End))
+            Text(text = dummyTicket.status, modifier = Modifier.align(Alignment.End))
             Row {
                 Spacer(modifier = Modifier.weight(0.6f))
-                MyDropdownMenu(selectedValue = selectedTeknisi, options = teknisiOptions,
-                    enabled = false,
+                MyDropdownMenu(
+                    value = selectedTeknisi,
+                    onValueChange = { selectedTeknisi = it },
+                    options = teknisiOptions,
+                    enabled = true,
                     modifier = Modifier.weight(0.4f))
             }
 
@@ -78,7 +83,7 @@ fun DetailTicketCard(modifier: Modifier = Modifier) {
                             modifier = Modifier.padding(8.dp)
                         ) {
                             Text(text = "Dibuat")
-                            Text("9/9/1999")
+                            Text(dummyTicket.date)
                         }
                     }
                     Card(
@@ -92,7 +97,7 @@ fun DetailTicketCard(modifier: Modifier = Modifier) {
                             modifier = Modifier.padding(8.dp)
                         ) {
                             Text(text = "Terakhir diperbarui")
-                            Text("10/9/1999")
+                            Text(dummyTicket.date)
                         }
                     }
                     Card(
@@ -154,7 +159,7 @@ fun DetailTicketCard(modifier: Modifier = Modifier) {
                             modifier = Modifier.padding(8.dp)
                         ) {
                             Text(text = "Prioritas")
-                            Text("Rendah")
+                            Text(dummyTicket.priority)
                         }
                     }
                 }
@@ -162,17 +167,18 @@ fun DetailTicketCard(modifier: Modifier = Modifier) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(text = "Deskripsi", style = MyTypography.titleMedium)
             Text(
-                text = LoremIpsum(16).values.first(),
+                text = dummyTicket.description,
                 textAlign = TextAlign.Justify,
+                minLines = 3,
                 modifier = Modifier
                     .border(
                         border = ButtonDefaults.outlinedButtonBorder,
                         shape = RoundedCornerShape(16.dp)
                     )
+                    .fillMaxWidth()
                     .padding(8.dp)
             )
         }
-
     }
 }
 

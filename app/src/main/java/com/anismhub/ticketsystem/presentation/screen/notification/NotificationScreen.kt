@@ -37,8 +37,8 @@ fun NotificationContent(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .padding(top = 16.dp)
         ) {
-            items(DataDummy.dummyTickets, key = { it.title }) {
-                NotificationCard(message = "Ini adalah notifikasi dari "+ it.title, date = it.date)
+            items(DataDummy.tickets, key = { it.title }) {
+                NotificationCard(message = "Ini adalah notifikasi dari Tiket "+ DataDummy.tickets.indexOf(it) + 1, date = it.date)
             }
         }
     }

@@ -84,16 +84,57 @@ fun HomeContent(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(bottom = 64.dp, top = 8.dp),
             ) {
-                items(DataDummy.dummyTickets, key = { it.title }) {
-                    TicketItem(
-                        number = DataDummy.dummyTickets.indexOf(it) + 1,
-                        title = it.title,
-                        date = it.date,
-                        priority = it.priority,
-                        status = TabItem.entries[index].title,
-                        onClick = { navigateToDetailTicket("Detail Tiket") }
-                    )
+                var openTicket = DataDummy.tickets.filter { it.status == "Open" }
+                var onProgressTicket = DataDummy.tickets.filter { it.status == "On Progress" }
+                var closedTicket = DataDummy.tickets.filter { it.status == "Closed" }
+                when (index) {
+                    0 -> {
+                        items(openTicket, key = { it.title }) {
+                            TicketItem(
+                                number = openTicket.indexOf(it) + 1,
+                                title = it.title,
+                                date = it.date,
+                                priority = it.priority,
+                                status = it.status,
+                                onClick = { navigateToDetailTicket("Detail Tiket") }
+                            )
+                        }
+                    }
+                    1 -> {
+                        items(onProgressTicket, key = { it.title }) {
+                            TicketItem(
+                                number = DataDummy.tickets.indexOf(it) + 1,
+                                title = it.title,
+                                date = it.date,
+                                priority = it.priority,
+                                status = it.status ,
+                                onClick = { navigateToDetailTicket("Detail Tiket") }
+                            )
+                        }
+                    }
+                    2 -> {
+                        items(closedTicket, key = { it.title }) {
+                            TicketItem(
+                                number = DataDummy.tickets.indexOf(it) + 1,
+                                title = it.title,
+                                date = it.date,
+                                priority = it.priority,
+                                status = it.status ,
+                                onClick = { navigateToDetailTicket("Detail Tiket") }
+                            )
+                        }
+                    }
                 }
+//                items(DataDummy.tickets, key = { it.title }) {
+//                    TicketItem(
+//                        number = DataDummy.tickets.indexOf(it) + 1,
+//                        title = it.title,
+//                        date = it.date,
+//                        priority = it.priority,
+//                        status = TabItem.entries[index].title,
+//                        onClick = { navigateToDetailTicket("Detail Tiket") }
+//                    )
+//                }
             }
         }
     }

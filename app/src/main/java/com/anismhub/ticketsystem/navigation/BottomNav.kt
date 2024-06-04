@@ -13,17 +13,17 @@ sealed class BottomNav(
 ) {
     data object Home : BottomNav(
         route = "home",
-        title = "Home",
+        title = "Tiket",
         icon = Icons.Rounded.ConfirmationNumber
     )
     data object Notification : BottomNav(
         route = "notification",
-        title = "Notification",
+        title = "Notifikasi",
         icon = Icons.Rounded.Notifications
     )
     data object Settings : BottomNav(
         route = "settings",
-        title = "Settings",
+        title = "Pengaturan",
         icon = Icons.Rounded.Settings
     )
 }

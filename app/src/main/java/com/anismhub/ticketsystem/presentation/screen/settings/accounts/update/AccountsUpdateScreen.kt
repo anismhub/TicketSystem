@@ -13,9 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.anismhub.ticketsystem.data.DataDummy
 import com.anismhub.ticketsystem.presentation.common.departmentOptions
 import com.anismhub.ticketsystem.presentation.common.roleOptions
 import com.anismhub.ticketsystem.presentation.components.DropdownMenuWithLabel
@@ -28,12 +30,14 @@ fun AccountsUpdateScreen() {
 
 @Composable
 fun AccountsUpdateContent(modifier: Modifier = Modifier) {
-    val username by remember { mutableStateOf("") }
-    val fullname by remember { mutableStateOf("") }
-    val phoneNumber by remember { mutableStateOf("") }
+    val dummyPengguna = DataDummy.pengguna[0]
 
-    val selectedDepartment by remember { mutableStateOf("") }
-    val selectedRole by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("jdoe") }
+    var fullname by remember { mutableStateOf(dummyPengguna.nama) }
+    var phoneNumber by remember { mutableStateOf("") }
+
+    var selectedDepartment by remember { mutableStateOf("IT") }
+    var selectedRole by remember { mutableStateOf(dummyPengguna.role) }
 
     Column(
         modifier = modifier
@@ -43,19 +47,33 @@ fun AccountsUpdateContent(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // Username
-        InputTextWithLabel(title = "Username", initialTextState = username, enabled = false)
+        InputTextWithLabel(
+            title = "Username",
+            value = username,
+            onValueChange = { username = it },
+            enabled = false
+        )
         // Fullname
-        InputTextWithLabel(title = "Nama Lengkap", initialTextState = fullname)
+        InputTextWithLabel(
+            title = "Nama Lengkap",
+            value = fullname,
+            onValueChange = { fullname = it })
         // Role
-        DropdownMenuWithLabel(title = "Role", selectedValue = selectedRole, options = roleOptions)
+        DropdownMenuWithLabel(title = "Role", value = selectedRole,
+            onValueChange = { selectedRole = it },
+            options = roleOptions)
         // Departemen
         DropdownMenuWithLabel(
             title = "Departemen",
-            selectedValue = selectedDepartment,
+            value = selectedDepartment,
+            onValueChange = { selectedDepartment = it },
             options = departmentOptions
         )
         // Phone Number
-        InputTextWithLabel(title = "Nomor Telepon", initialTextState = phoneNumber)
+        InputTextWithLabel(
+            title = "Nomor Telepon",
+            value = phoneNumber,
+            onValueChange = { phoneNumber = it })
         Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = { /*TODO*/ },

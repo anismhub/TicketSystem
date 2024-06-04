@@ -2,12 +2,10 @@ package com.anismhub.ticketsystem.presentation.screen.main
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -37,13 +35,14 @@ fun MainScreen(
             MyTopAppBar(
                 title = title,
                 navController = navController,
-                topBarDestination = currentRoute !in BottomNavItemRoute
+                showTopBar = currentRoute !in BottomNavItemRoute
             )
         },
         bottomBar = {
             BottomNavBar(
                 navHostController = navController,
-                currentDestination = currentDestination
+                currentDestination = currentDestination,
+                showBottomNavBar = currentRoute in BottomNavItemRoute
             )
         },
         floatingActionButton = {

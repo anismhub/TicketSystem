@@ -1,6 +1,8 @@
 package com.anismhub.ticketsystem.presentation.components
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -22,11 +24,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -34,8 +38,8 @@ import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.presentation.theme.fontFamily
 import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 
 @Composable
 fun InputText(
@@ -80,7 +84,8 @@ fun InputText(
 @Composable
 fun InputTextWithLabel(
     title: String,
-    initialTextState: String,
+    value: String,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     minLines: Int = 1,
     singleLine: Boolean = true,
@@ -88,7 +93,6 @@ fun InputTextWithLabel(
     keyboardOption: KeyboardOptions = KeyboardOptions.Default,
     trailingIcon: @Composable () -> Unit = {}
 ) {
-    var textState by remember { mutableStateOf(initialTextState) }
     var isError by remember { mutableStateOf(false) }
 
     Row(
@@ -98,9 +102,9 @@ fun InputTextWithLabel(
     ) {
         Text(text = title, modifier = Modifier.weight(0.35f))
         InputText(
-            value = textState,
+            value = value,
             onChange = { newValue ->
-                textState = newValue
+                onValueChange(newValue)
                 isError = newValue.isEmpty()
             },
             label = "",
@@ -125,25 +129,27 @@ fun InputTextWithLabel(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyDropdownMenu(
-    selectedValue: String,
+    value: String?,
+    onValueChange: (String) -> Unit,
     options: List<String>,
     modifier: Modifier = Modifier,
     enabled: Boolean,
     supportingText: @Composable () -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selected by remember { mutableStateOf(selectedValue) }
-    var isError by remember { mutableStateOf(false) }
+    var selectedIndex by remember {
+        mutableIntStateOf(options.indexOf(value))
+    }
+    val isError by remember { mutableStateOf(false) }
+
     ExposedDropdownMenuBox(
-        expanded = false,
+        expanded = expanded,
         onExpandedChange = { expanded = enabled },
         modifier = modifier
     ) {
         OutlinedTextField(
-            value = selected,
-            onValueChange = { newValue ->
-                isError = newValue.isEmpty()
-            },
+            value = value ?: "",
+            onValueChange = { },
             readOnly = true,
             shape = RoundedCornerShape(16.dp),
             trailingIcon = {
@@ -163,11 +169,12 @@ fun MyDropdownMenu(
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }) {
-            options.forEach { option ->
+            options.forEachIndexed { index, option ->
                 DropdownMenuItem(
-                    text = { Text(text = option) },
+                    text = { Text(option) },
                     onClick = {
-                        selected = option
+                        selectedIndex = index
+                        onValueChange(option)
                         expanded = false
                     }
                 )
@@ -179,11 +186,12 @@ fun MyDropdownMenu(
 @Composable
 fun DropdownMenuWithLabel(
     title: String,
-    selectedValue: String,
+    value: String,
+    onValueChange: (String) -> Unit,
     options: List<String>,
     modifier: Modifier = Modifier
 ) {
-    var isError by remember { mutableStateOf(false) }
+    val isError by remember { mutableStateOf(false) }
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -193,7 +201,9 @@ fun DropdownMenuWithLabel(
         Text(text = title, modifier = Modifier.weight(0.35f))
 
         MyDropdownMenu(
-            selectedValue = selectedValue, options = options,
+            value = value,
+            onValueChange = onValueChange,
+            options = options,
             enabled = true,
             modifier = Modifier.weight(0.65f),
             supportingText = {
@@ -205,73 +215,79 @@ fun DropdownMenuWithLabel(
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InputTextWithDatePickerDialog(
-    initialTextState: String,
-    modifier: Modifier = Modifier
+fun ReusableDatePicker(
+    modifier: Modifier = Modifier,
+    initialDate: LocalDate? = null,
+    minDateAllowed: LocalDate = LocalDate.now().minusYears(2),
+    onDateSelected: (LocalDate) -> Unit
 ) {
-    var textState by remember { mutableStateOf(initialTextState) }
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
+
     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    var showError by remember { mutableStateOf(false) }
+    var dateState by remember { mutableStateOf(initialDate?.format(formatter) ?: "") }
+    var isError by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
-    InputText(
-        value = textState,
-        onChange = { newValue ->
-            textState = newValue
-            showError = try {
-                LocalDate.parse(newValue, formatter)
-                false // Valid date
-            } catch (e: DateTimeParseException) {
-                true // Invalid date
-            }
-        },
-        isError = showError,
-        placeholder = {
-            Text(text = "DD/MM/YYYY")
-        },
-        trailingIcon = {
-            IconButton(
-                onClick = { showDatePicker = true },
-                modifier = Modifier.padding(end = 8.dp)
-            ) {
-                Icon(imageVector = Icons.Default.CalendarMonth, contentDescription = "")
-            }
-        },
-        supportingText = {
-            if (showError) {
-                Text(text = "Format tanggal tidak valid")
-            }
-        },
-        modifier = modifier.fillMaxWidth()
-    )
-
-    if (showDatePicker) {
-        DatePickerDialog(
-            onDismissRequest = { /*TODO*/ },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        val selectedDate = datePickerState.selectedDateMillis!!
-                        val instant = Instant.ofEpochMilli(selectedDate)
-                        textState = instant.atZone(java.time.ZoneId.systemDefault()).toLocalDate()
-                            .format(formatter)
-                        showDatePicker = false
-                    }
-                ) { Text("OK") }
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        horizontalAlignment = Alignment.Start
+    ) {
+        InputText(
+            value = dateState,
+            onChange = { dateState = it },
+            placeholder = {
+                Text(text = "DD/MM/YYYY")
             },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showDatePicker = false
-                    }
-                ) { Text("Cancel") }
+            isError = isError,
+            trailingIcon = {
+                IconButton(onClick = { showDatePicker = true }) {
+                    Icon(
+                        imageVector = Icons.Default.CalendarMonth,
+                        contentDescription = "Select Date"
+                    )
+                }
             },
+            modifier = Modifier.fillMaxWidth()
         )
-        {
-            DatePicker(state = datePickerState)
+
+        if (showDatePicker) {
+            DatePickerDialog(
+                onDismissRequest = { showDatePicker = false },
+                confirmButton = {
+                    TextButton(onClick = {
+                        val selectedDateMillis = datePickerState.selectedDateMillis
+                        if (selectedDateMillis != null) {
+                            val instant = Instant.ofEpochMilli(selectedDateMillis)
+                            val selectedDate = instant.atZone(ZoneOffset.UTC).toLocalDate()
+
+                            if (selectedDate.isAfter(minDateAllowed)) {
+                                onDateSelected(selectedDate)
+                                dateState = selectedDate.format(formatter)
+                                isError = false
+                                showDatePicker = false
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Selected date must be after ${minDateAllowed.format(formatter)}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                isError = true
+                            }
+                        }
+                    }) { Text("OK") }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showDatePicker = false }) { Text("Cancel") }
+                }
+            ) {
+                DatePicker(state = datePickerState)
+            }
         }
     }
 }
