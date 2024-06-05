@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
@@ -66,14 +65,9 @@ fun SignInScreen(
     }
 
     val loginResult by viewModel.loginResult.collectAsStateWithLifecycle()
-    val loginState by viewModel.loginState.collectAsStateWithLifecycle()
-
-    if (loginState) {
-        navigateToHome()
-    }
+    val context = LocalContext.current
 
     loginResult.let {
-        val context = LocalContext.current
         if (!it.hasBeenHandled) {
             when (val unhandled = it.getContentIfNotHandled()) {
                 is Result.Error -> {
@@ -96,7 +90,10 @@ fun SignInScreen(
         onPasswordVisibilityChange = { passwordVisibility = it },
         onUsernameChange = { username = it },
         onPasswordChange = { password = it },
-        loginAction = { viewModel.login(username.value, password.value) },
+        loginAction = {
+            viewModel.login(username.value, password.value)
+            navigateToHome()
+        },
         modifier = modifier
     )
 }
