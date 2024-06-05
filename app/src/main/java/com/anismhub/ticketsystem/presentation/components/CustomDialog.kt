@@ -75,7 +75,8 @@ fun CustomDialog(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 8.dp),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                            minLines = 4
                         )
                     }
 
