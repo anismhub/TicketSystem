@@ -65,7 +65,12 @@ fun SignInScreen(
     }
 
     val loginResult by viewModel.loginResult.collectAsStateWithLifecycle()
+    val loginState by viewModel.loginState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+
+    if (loginState) {
+        navigateToHome()
+    }
 
     loginResult.let {
         if (!it.hasBeenHandled) {

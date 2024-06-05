@@ -43,6 +43,8 @@ class SignInViewModel @Inject constructor(
         viewModelScope.launch {
             authRepository.saveLoginData(loginData = loginData)
         }
+
+        getLoginState()
     }
 
     private fun getLoginState() {
