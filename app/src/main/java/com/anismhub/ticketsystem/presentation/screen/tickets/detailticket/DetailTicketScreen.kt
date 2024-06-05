@@ -52,7 +52,6 @@ fun DetailTicketContent(modifier: Modifier = Modifier) {
     ) {
 
         Spacer(modifier = Modifier.height(16.dp))
-//        DetailTicketCard()
         Card(
             colors = CardDefaults.cardColors(Color.Transparent),
             shape = RoundedCornerShape(16.dp),
@@ -200,7 +199,6 @@ fun DetailTicketContent(modifier: Modifier = Modifier) {
                 )
             }
         }
-//        DetailTicketCard()
         Text(
             text = "Balasan", style = MyTypography.titleMedium, modifier = Modifier
                 .align(Alignment.Start)
@@ -233,20 +231,20 @@ fun DetailTicketContent(modifier: Modifier = Modifier) {
     CustomDialog(
         showDialog = showDialog,
         onDismiss = { showDialog = false },
-        title = "Enter Text",
-        textInput = Pair("Your Input") { enteredText = it }, // Add text input
+        title = "Resolusi Tiket",
+        textInput = Pair("Resolusi") { enteredText = it }, // Add text input
         confirmButton = {
             Button(onClick = {
                 // Use the enteredText value
                 replyText = enteredText
                 showDialog = false
             }) {
-                Text("Save")
+                Text("Tutup Tiket")
             }
         },
         dismissButton = { // Add a dismiss button
             Button(onClick = { showDialog = false }) {
-                Text("Cancel")
+                Text("Batal")
             }
         }
     )
