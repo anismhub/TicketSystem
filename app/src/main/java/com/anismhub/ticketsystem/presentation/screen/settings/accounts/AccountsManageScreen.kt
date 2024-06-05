@@ -1,4 +1,4 @@
-package com.anismhub.ticketsystem.presentation.screen.settings.accounts.manage
+package com.anismhub.ticketsystem.presentation.screen.settings.accounts
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement

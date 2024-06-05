@@ -8,13 +8,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.anismhub.ticketsystem.navigation.BottomNav
-import com.anismhub.ticketsystem.presentation.screen.tickets.home.HomeContent
+import com.anismhub.ticketsystem.presentation.screen.tickets.TicketContent
 import com.anismhub.ticketsystem.presentation.screen.notification.NotificationContent
 import com.anismhub.ticketsystem.presentation.screen.settings.accounts.create.AccountsCreateContent
-import com.anismhub.ticketsystem.presentation.screen.settings.accounts.manage.AccountManageContent
+import com.anismhub.ticketsystem.presentation.screen.settings.accounts.AccountManageContent
 import com.anismhub.ticketsystem.presentation.screen.settings.accounts.update.AccountsUpdateContent
 import com.anismhub.ticketsystem.presentation.screen.settings.exportreport.ExportReportScreen
-import com.anismhub.ticketsystem.presentation.screen.settings.setting.SettingsContent
+import com.anismhub.ticketsystem.presentation.screen.settings.SettingsContent
 import com.anismhub.ticketsystem.presentation.screen.tickets.addticket.AddTicketContent
 import com.anismhub.ticketsystem.presentation.screen.tickets.detailticket.DetailTicketContent
 
@@ -32,7 +32,7 @@ fun BottomNavGraph(
         modifier = modifier
     ) {
         composable(route = BottomNav.Home.route) {
-            HomeContent(
+            TicketContent(
                 navigateToDetailTicket = { title ->
                     navController.navigate(Graph.TICKET)
                     onTitleChange(title)

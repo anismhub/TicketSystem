@@ -1,4 +1,4 @@
-package com.anismhub.ticketsystem.presentation.screen.settings.setting
+package com.anismhub.ticketsystem.presentation.screen.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

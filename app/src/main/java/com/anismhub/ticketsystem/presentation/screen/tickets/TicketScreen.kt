@@ -1,4 +1,4 @@
-package com.anismhub.ticketsystem.presentation.screen.home
+package com.anismhub.ticketsystem.presentation.screen.tickets
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -29,14 +29,14 @@ import com.anismhub.ticketsystem.presentation.components.TabItem
 import com.anismhub.ticketsystem.presentation.components.TicketItem
 
 @Composable
-fun HomeScreen(
+fun TicketScreen(
 ) {
 
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeContent(
+fun TicketContent(
     navigateToDetailTicket: (title: String) -> Unit,
     modifier: Modifier = Modifier
 ) {

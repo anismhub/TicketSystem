@@ -1,4 +1,4 @@
-package com.anismhub.ticketsystem.presentation.screen.settings.setting
+package com.anismhub.ticketsystem.presentation.screen.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding

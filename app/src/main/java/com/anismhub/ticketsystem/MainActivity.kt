@@ -9,7 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.anismhub.ticketsystem.presentation.screen.main.MainViewModel
+import com.anismhub.ticketsystem.presentation.screen.MainViewModel
 import com.anismhub.ticketsystem.presentation.theme.TicketSystemTheme
 import dagger.hilt.android.AndroidEntryPoint
 

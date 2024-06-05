@@ -97,7 +97,6 @@ fun SignInScreen(
         onPasswordChange = { password = it },
         loginAction = {
             viewModel.login(username.value, password.value)
-//            navigateToHome()
         },
         modifier = modifier
     )
