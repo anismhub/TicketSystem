@@ -1,5 +1,6 @@
 package com.anismhub.ticketsystem.presentation.screen.settings.accounts.manage
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,9 +23,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.anismhub.ticketsystem.data.DataDummy
+import com.anismhub.ticketsystem.presentation.components.CustomDialog
 import com.anismhub.ticketsystem.presentation.components.MySearchBar
 import com.anismhub.ticketsystem.presentation.components.ProfilCard
 
@@ -40,6 +43,10 @@ fun AccountManageContent(
     modifier: Modifier = Modifier
 ) {
     var query by remember { mutableStateOf("") }
+    var showDialog by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+
 
     Column(
         modifier = modifier
@@ -78,13 +85,37 @@ fun AccountManageContent(
                             contentDescription = "Hapus Pengguna"
                         )
                     },
-                    onClickIcon = { },
+                    onClickIcon = { showDialog = true },
                     onClick = {
                         navigateToUpdateAccount()
                     }
                 )
             }
         }
-
     }
+    CustomDialog(
+        showDialog = showDialog,
+        onDismiss = { showDialog = false }, // Now managed internally
+        title = "Basic Dialog",
+        content = {
+            Text("This is a basic dialog with a message.")
+        },
+        confirmButton = {
+            Button(onClick = {
+                Toast.makeText(
+                    context,
+                    "Confirmed",
+                    Toast.LENGTH_SHORT
+                ).show()
+                showDialog = false  // Close the dialog on confirm
+            }) {
+                Text("Confirm")
+            }
+        },
+        dismissButton = {
+            Button(onClick = { showDialog = false }) { // Close on dismiss
+                Text("Cancel")
+            }
+        }
+    )
 }

@@ -27,9 +27,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.anismhub.ticketsystem.data.DataDummy
-import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.common.teknisiOptions
-import com.anismhub.ticketsystem.presentation.components.DetailTicketCard
+import com.anismhub.ticketsystem.presentation.components.CustomDialog
 import com.anismhub.ticketsystem.presentation.components.InputText
 import com.anismhub.ticketsystem.presentation.components.MyDropdownMenu
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
@@ -42,6 +41,8 @@ fun DetailTicketScreen() {
 @Composable
 fun DetailTicketContent(modifier: Modifier = Modifier) {
     var replyText by remember { mutableStateOf("") }
+    var showDialog by remember { mutableStateOf(false) }
+    var enteredText by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier
@@ -223,9 +224,30 @@ fun DetailTicketContent(modifier: Modifier = Modifier) {
             Button(onClick = { /*TODO*/ }) {
                 Text(text = "Perbarui")
             }
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = { showDialog = true }) {
                 Text(text = "Tutup")
             }
         }
     }
+
+    CustomDialog(
+        showDialog = showDialog,
+        onDismiss = { showDialog = false },
+        title = "Enter Text",
+        textInput = Pair("Your Input", { enteredText = it }), // Add text input
+        confirmButton = {
+            Button(onClick = {
+                // Use the enteredText value
+                println("Entered Text: $enteredText")
+                showDialog = false
+            }) {
+                Text("Save")
+            }
+        },
+        dismissButton = { // Add a dismiss button
+            Button(onClick = { showDialog = false }) {
+                Text("Cancel")
+            }
+        }
+    )
 }
