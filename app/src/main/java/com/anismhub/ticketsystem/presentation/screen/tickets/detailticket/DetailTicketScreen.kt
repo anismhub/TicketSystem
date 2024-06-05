@@ -234,11 +234,11 @@ fun DetailTicketContent(modifier: Modifier = Modifier) {
         showDialog = showDialog,
         onDismiss = { showDialog = false },
         title = "Enter Text",
-        textInput = Pair("Your Input", { enteredText = it }), // Add text input
+        textInput = Pair("Your Input") { enteredText = it }, // Add text input
         confirmButton = {
             Button(onClick = {
                 // Use the enteredText value
-                println("Entered Text: $enteredText")
+                replyText = enteredText
                 showDialog = false
             }) {
                 Text("Save")
