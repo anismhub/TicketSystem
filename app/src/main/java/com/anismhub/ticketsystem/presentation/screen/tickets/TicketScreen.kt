@@ -125,16 +125,6 @@ fun TicketContent(
                         }
                     }
                 }
-//                items(DataDummy.tickets, key = { it.title }) {
-//                    TicketItem(
-//                        number = DataDummy.tickets.indexOf(it) + 1,
-//                        title = it.title,
-//                        date = it.date,
-//                        priority = it.priority,
-//                        status = TabItem.entries[index].title,
-//                        onClick = { navigateToDetailTicket("Detail Tiket") }
-//                    )
-//                }
             }
         }
     }
