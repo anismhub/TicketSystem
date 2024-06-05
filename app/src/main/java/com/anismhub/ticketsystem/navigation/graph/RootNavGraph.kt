@@ -14,6 +14,7 @@ import com.anismhub.ticketsystem.presentation.screen.main.MainScreen
 
 @Composable
 fun RootNavGraph(
+    startDestination: String,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
@@ -21,7 +22,7 @@ fun RootNavGraph(
 
     NavHost(
         navController = navController,
-        startDestination = Graph.AUTHENTICATION,
+        startDestination = startDestination,
         route = Graph.ROOT,
         modifier = modifier
     ) {
@@ -38,6 +39,7 @@ fun RootNavGraph(
                 },
             )
         }
+        composable(route = Graph.NONE) {}
     }
 }
 
@@ -46,4 +48,5 @@ object Graph {
     const val AUTHENTICATION = "authentication"
     const val MAIN = "main"
     const val TICKET = "ticket"
+    const val NONE = "none"
 }

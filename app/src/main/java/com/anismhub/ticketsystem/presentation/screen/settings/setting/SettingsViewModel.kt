@@ -19,13 +19,9 @@ class SettingsViewModel @Inject constructor(
     private val _loginData: MutableStateFlow<LoginData> = MutableStateFlow(dummyLoginData)
     val loginData: StateFlow<LoginData> = _loginData
 
-    private val _loginState: MutableStateFlow<Boolean> = MutableStateFlow(true)
-    val loginState: StateFlow<Boolean> = _loginState
-
 
     init {
         getLoginData()
-        getLoginState()
     }
 
     private fun getLoginData() {
@@ -39,16 +35,6 @@ class SettingsViewModel @Inject constructor(
     fun logout() {
         viewModelScope.launch {
             authRepository.clearLoginData()
-        }
-
-        getLoginState()
-    }
-
-    private fun getLoginState() {
-        viewModelScope.launch {
-            authRepository.getLoginState().collect {
-                _loginState.value = it
-            }
         }
     }
 }

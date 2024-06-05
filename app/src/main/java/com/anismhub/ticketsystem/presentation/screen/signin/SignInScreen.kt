@@ -1,5 +1,6 @@
 package com.anismhub.ticketsystem.presentation.screen.signin
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -68,9 +69,7 @@ fun SignInScreen(
     val loginState by viewModel.loginState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    if (loginState) {
-        navigateToHome()
-    }
+    Log.d("TAG", "loginState: $loginState ")
 
     loginResult.let {
         if (!it.hasBeenHandled) {
@@ -81,6 +80,7 @@ fun SignInScreen(
 
                 is Result.Success -> {
                     viewModel.saveLoginData(unhandled.data.data)
+                    navigateToHome()
                 }
 
                 else -> {}
@@ -97,7 +97,7 @@ fun SignInScreen(
         onPasswordChange = { password = it },
         loginAction = {
             viewModel.login(username.value, password.value)
-            navigateToHome()
+//            navigateToHome()
         },
         modifier = modifier
     )

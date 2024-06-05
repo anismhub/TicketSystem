@@ -4,6 +4,10 @@ import androidx.compose.runtime.Composable
 import com.anismhub.ticketsystem.navigation.graph.RootNavGraph
 
 @Composable
-fun TicketSystemApp() {
-    RootNavGraph()
+fun TicketSystemApp(
+    startDestination: String
+) {
+    RootNavGraph(
+        startDestination = startDestination
+    )
 }

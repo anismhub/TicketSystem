@@ -8,13 +8,11 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.ManageAccounts
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.presentation.components.ProfilCard
 import com.anismhub.ticketsystem.presentation.components.SettingsMenu
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
@@ -33,10 +31,6 @@ fun SettingsContent(
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
 
-    val loginState by viewModel.loginState.collectAsStateWithLifecycle()
-    if (!loginState) {
-        navigateToAuth()
-    }
     Column(
         modifier = modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -56,6 +50,7 @@ fun SettingsContent(
             onClick = { navigateToExport("Ekspor Laporan") })
         SettingsMenu(icon = Icons.Rounded.Close, text = "Sign Out", onClick = {
             viewModel.logout()
+            navigateToAuth()
         })
 
     }
