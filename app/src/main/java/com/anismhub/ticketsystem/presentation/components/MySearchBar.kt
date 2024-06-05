@@ -8,6 +8,8 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import com.anismhub.ticketsystem.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,7 +28,7 @@ fun MySearchBar(
         active = active,
         onActiveChange = onActiveChange,
         leadingIcon = {
-            Icon(imageVector = Icons.Rounded.Search, contentDescription = "Search Icon")
+            Icon(painter = painterResource(id = R.drawable.search_24px), contentDescription = "Search Icon")
         },
         placeholder = {
             Text(text = "Search")

@@ -2,17 +2,15 @@ package com.anismhub.ticketsystem.presentation.screen.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.OpenInNew
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.ManageAccounts
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.anismhub.ticketsystem.R
 import com.anismhub.ticketsystem.presentation.components.ProfilCard
 import com.anismhub.ticketsystem.presentation.components.SettingsMenu
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
@@ -41,14 +39,14 @@ fun SettingsContent(
         )
         ProfilCard(title = "Nama", subtitle = "Peran Pengguna", modifier = Modifier.padding(vertical = 36.dp))
         SettingsMenu(
-            icon = Icons.Rounded.ManageAccounts,
+            icon = painterResource(R.drawable.manage_accounts_24px),
             text = "Kelola Pengguna",
             onClick = { navigateToManageAccount("Kelola Pengguna") })
         SettingsMenu(
-            icon = Icons.AutoMirrored.Rounded.OpenInNew,
+            icon = painterResource(id = R.drawable.open_in_new_24px),
             text = "Ekspor Laporan",
             onClick = { navigateToExport("Ekspor Laporan") })
-        SettingsMenu(icon = Icons.Rounded.Close, text = "Sign Out", onClick = {
+        SettingsMenu(icon = painterResource(id = R.drawable.close_24px), text = "Sign Out", onClick = {
             viewModel.logout()
             navigateToAuth()
         })

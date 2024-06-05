@@ -8,8 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -19,13 +17,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.anismhub.ticketsystem.R
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 
 @Composable
 fun SettingsMenu(
-    icon: ImageVector,
+    icon: Painter,
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -51,7 +51,7 @@ fun SettingsMenu(
                         .clip(shape = Shapes().medium)
                 ) {
                     Icon(
-                        imageVector = icon,
+                        painter = icon,
                         contentDescription = "",
                         modifier = Modifier.padding(6.dp)
                     )
@@ -61,7 +61,7 @@ fun SettingsMenu(
                 Text(text = text, style = MyTypography.bodyLarge)
             }
             Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
+                painter = painterResource(id = R.drawable.arrow_forward_24px),
                 contentDescription = "",
                 modifier = Modifier.size(16.dp)
             )

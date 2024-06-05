@@ -72,7 +72,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.google.dagger.hilt)
-    implementation(libs.androidx.material.icons.extended)
     ksp(libs.google.dagger.hilt.compiler)
     ksp(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)

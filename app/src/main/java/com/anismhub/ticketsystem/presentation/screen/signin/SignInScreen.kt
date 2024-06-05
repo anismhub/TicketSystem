@@ -13,10 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Visibility
-import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -148,7 +144,10 @@ fun SignInContent(
             trailingIcon = {
                 if (username.value.isNotEmpty()) {
                     IconButton(onClick = { onUsernameChange(username.copy(value = "")) }) {
-                        Icon(imageVector = Icons.Outlined.Close, contentDescription = "")
+                        Icon(
+                            painter = painterResource(id = R.drawable.close_24px),
+                            contentDescription = ""
+                        )
                     }
                 }
             },
@@ -175,12 +174,13 @@ fun SignInContent(
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 val icon =
-                    if (passwordVisibility) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff
+                    if (passwordVisibility) painterResource(R.drawable.visibility_off_24px) else
+                        painterResource(R.drawable.visibility_24px)
                 val desc =
                     if (passwordVisibility) "Hide password" else "Show password"
 
                 IconButton(onClick = { onPasswordVisibilityChange(!passwordVisibility) }) {
-                    Icon(imageVector = icon, contentDescription = desc)
+                    Icon(painter = icon, contentDescription = desc)
                 }
             },
             supportingText = {
