@@ -84,9 +84,9 @@ fun TicketContent(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(bottom = 64.dp, top = 8.dp),
             ) {
-                var openTicket = DataDummy.tickets.filter { it.status == "Open" }
-                var onProgressTicket = DataDummy.tickets.filter { it.status == "On Progress" }
-                var closedTicket = DataDummy.tickets.filter { it.status == "Closed" }
+                val openTicket = DataDummy.tickets.filter { it.status == "Open" }
+                val onProgressTicket = DataDummy.tickets.filter { it.status == "On Progress" }
+                val closedTicket = DataDummy.tickets.filter { it.status == "Closed" }
                 when (index) {
                     0 -> {
                         items(openTicket, key = { it.title }) {
