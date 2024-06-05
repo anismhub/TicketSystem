@@ -96,9 +96,9 @@ fun AccountManageContent(
     CustomDialog(
         showDialog = showDialog,
         onDismiss = { showDialog = false }, // Now managed internally
-        title = "Basic Dialog",
+        title = "Hapus Pengguna",
         content = {
-            Text("This is a basic dialog with a message.")
+            Text("Apakah anda yakin menghapus pengguna ini?")
         },
         confirmButton = {
             Button(onClick = {
@@ -109,12 +109,12 @@ fun AccountManageContent(
                 ).show()
                 showDialog = false  // Close the dialog on confirm
             }) {
-                Text("Confirm")
+                Text("Ya")
             }
         },
         dismissButton = {
             Button(onClick = { showDialog = false }) { // Close on dismiss
-                Text("Cancel")
+                Text("Batal")
             }
         }
     )
