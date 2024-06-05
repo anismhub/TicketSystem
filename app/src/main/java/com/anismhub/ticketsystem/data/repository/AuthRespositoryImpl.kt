@@ -24,7 +24,6 @@ class AuthRespositoryImpl(
                 username = username,
                 password = password
             )
-
             emit(Result.Success(response.toLogin()))
         } catch (e: Exception) {
             if (e is HttpException) {
