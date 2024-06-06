@@ -3,6 +3,8 @@ package com.anismhub.ticketsystem.presentation.screen.signin
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -61,6 +64,9 @@ fun SignInScreen(
         mutableStateOf(InputTextState())
     }
 
+    var isSigninEnabled by remember { mutableStateOf(true) }
+    var isLoading by remember { mutableStateOf(false) }
+
     val loginResult by viewModel.loginResult.collectAsStateWithLifecycle()
     val loginState by viewModel.loginState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -70,11 +76,19 @@ fun SignInScreen(
     loginResult.let {
         if (!it.hasBeenHandled) {
             when (val unhandled = it.getContentIfNotHandled()) {
+                is Result.Loading -> {
+                    isSigninEnabled = false
+                    isLoading = true
+                }
+
                 is Result.Error -> {
                     Toast.makeText(context, unhandled.error, Toast.LENGTH_SHORT).show()
+                    isSigninEnabled = true
+                    isLoading = false
                 }
 
                 is Result.Success -> {
+                    isLoading = false
                     viewModel.saveLoginData(unhandled.data.data)
                     navigateToHome()
                 }
@@ -94,6 +108,8 @@ fun SignInScreen(
         loginAction = {
             viewModel.login(username.value, password.value)
         },
+        isSignInEnabled = isSigninEnabled,
+        isLoading = isLoading,
         modifier = modifier
     )
 }
@@ -107,110 +123,122 @@ fun SignInContent(
     onUsernameChange: (InputTextState) -> Unit,
     onPasswordChange: (InputTextState) -> Unit,
     loginAction: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isSignInEnabled: Boolean = true,
+    isLoading: Boolean = false
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(24.dp)
-            .verticalScroll(rememberScrollState())
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = "Sign In",
-            style = MyTypography.displaySmall.copy(fontWeight = FontWeight.Bold),
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
+        if (isLoading) {
+            CircularProgressIndicator()
+        }
 
-        Image(
-            painter = painterResource(id = R.drawable.maintenance),
-            contentDescription = "",
+        Column(
             modifier = Modifier
-                .padding(top = 12.dp)
-        )
-
-        InputText(
-            value = username.value,
-            onChange = { newValue ->
-                onUsernameChange(
-                    username.copy(
-                        value = newValue,
-                        isError = newValue.isEmpty()
-                    )
-                )
-            },
-            label = "Username",
-            isError = username.isError,
-            keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Text),
-            trailingIcon = {
-                if (username.value.isNotEmpty()) {
-                    IconButton(onClick = { onUsernameChange(username.copy(value = "")) }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.close_24px),
-                            contentDescription = ""
-                        )
-                    }
-                }
-            },
-            supportingText = {
-                if (username.isError) {
-                    Text(text = "Username can't be empty")
-                }
-            }
-        )
-
-        InputText(
-            value = password.value,
-            onChange = { newValue ->
-                onPasswordChange(
-                    password.copy(
-                        value = newValue,
-                        isError = newValue.isEmpty() || newValue.length < 6
-                    )
-                )
-            },
-            label = "Password",
-            isError = password.isError,
-            keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password),
-            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                val icon =
-                    if (passwordVisibility) painterResource(R.drawable.visibility_off_24px) else
-                        painterResource(R.drawable.visibility_24px)
-                val desc =
-                    if (passwordVisibility) "Hide password" else "Show password"
-
-                IconButton(onClick = { onPasswordVisibilityChange(!passwordVisibility) }) {
-                    Icon(painter = icon, contentDescription = desc)
-                }
-            },
-            supportingText = {
-                if (password.isError) {
-                    Text(text = "Password at least 6 characters")
-                }
-            }
-        )
-
-        Spacer(modifier = Modifier.weight(1f))
-
-        Button(
-            onClick = {
-                when {
-                    username.isInvalid() -> onUsernameChange(username.copy(isError = true))
-                    password.isInvalid() -> onPasswordChange(password.copy(isError = true))
-                    else -> {
-                        loginAction()
-                    }
-                }
-            },
-            shape = RoundedCornerShape(16.dp),
-            contentPadding = PaddingValues(14.dp),
-            modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
+                .padding(24.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Text(
                 text = "Sign In",
-                style = MyTypography.bodyLarge.copy(fontWeight = FontWeight.Medium)
+                style = MyTypography.displaySmall.copy(fontWeight = FontWeight.Bold),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
+
+            Image(
+                painter = painterResource(id = R.drawable.maintenance),
+                contentDescription = "",
+                modifier = Modifier
+                    .padding(top = 12.dp)
+            )
+
+            InputText(
+                value = username.value,
+                onChange = { newValue ->
+                    onUsernameChange(
+                        username.copy(
+                            value = newValue,
+                            isError = newValue.isEmpty()
+                        )
+                    )
+                },
+                label = "Username",
+                isError = username.isError,
+                keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Text),
+                trailingIcon = {
+                    if (username.value.isNotEmpty()) {
+                        IconButton(onClick = { onUsernameChange(username.copy(value = "")) }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.close_24px),
+                                contentDescription = ""
+                            )
+                        }
+                    }
+                },
+                supportingText = {
+                    if (username.isError) {
+                        Text(text = "Username can't be empty")
+                    }
+                }
+            )
+
+            InputText(
+                value = password.value,
+                onChange = { newValue ->
+                    onPasswordChange(
+                        password.copy(
+                            value = newValue,
+                            isError = newValue.isEmpty() || newValue.length < 6
+                        )
+                    )
+                },
+                label = "Password",
+                isError = password.isError,
+                keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password),
+                visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
+                trailingIcon = {
+                    val icon =
+                        if (passwordVisibility) painterResource(R.drawable.visibility_off_24px) else
+                            painterResource(R.drawable.visibility_24px)
+                    val desc =
+                        if (passwordVisibility) "Hide password" else "Show password"
+
+                    IconButton(onClick = { onPasswordVisibilityChange(!passwordVisibility) }) {
+                        Icon(painter = icon, contentDescription = desc)
+                    }
+                },
+                supportingText = {
+                    if (password.isError) {
+                        Text(text = "Password at least 6 characters")
+                    }
+                }
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Button(
+                onClick = {
+                    when {
+                        username.isInvalid() -> onUsernameChange(username.copy(isError = true))
+                        password.isInvalid() -> onPasswordChange(password.copy(isError = true))
+                        else -> {
+                            loginAction()
+                        }
+                    }
+                },
+                enabled = isSignInEnabled,
+                shape = RoundedCornerShape(16.dp),
+                contentPadding = PaddingValues(14.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = "Sign In",
+                    style = MyTypography.bodyLarge.copy(fontWeight = FontWeight.Medium)
+                )
+            }
         }
     }
 }
