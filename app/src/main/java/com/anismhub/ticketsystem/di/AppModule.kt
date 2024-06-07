@@ -5,8 +5,10 @@ import com.anismhub.ticketsystem.BuildConfig
 import com.anismhub.ticketsystem.data.manager.LocalDataManagerImpl
 import com.anismhub.ticketsystem.data.remote.ApiService
 import com.anismhub.ticketsystem.data.repository.AuthRespositoryImpl
+import com.anismhub.ticketsystem.data.repository.TicketRepositoryImpl
 import com.anismhub.ticketsystem.domain.manager.LocalDataManager
 import com.anismhub.ticketsystem.domain.repository.AuthRepository
+import com.anismhub.ticketsystem.domain.repository.TicketRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -56,4 +58,9 @@ object AppModule {
         apiService = apiService,
         localDataManager = localDataManager
     )
+
+    @Provides
+    @Singleton
+    fun provideTicketRepository(apiService: ApiService): TicketRepository =
+        TicketRepositoryImpl(apiService = apiService)
 }
