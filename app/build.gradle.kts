@@ -93,6 +93,9 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
 
+    // Mock API
+    implementation(libs.mockwebserver)
+
     // Navigation Compose
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.navigation.runtime.ktx)
