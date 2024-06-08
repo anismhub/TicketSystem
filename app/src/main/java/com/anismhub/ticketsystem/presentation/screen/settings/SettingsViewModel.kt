@@ -1,33 +1,35 @@
 package com.anismhub.ticketsystem.presentation.screen.settings
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.anismhub.ticketsystem.domain.model.LoginData
+import com.anismhub.ticketsystem.domain.model.Profile
 import com.anismhub.ticketsystem.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.anismhub.ticketsystem.utils.Resource
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
-    private val dummyLoginData = LoginData( 9999,"admin","admin","admin","admin")
 
-    private val _loginData: MutableStateFlow<LoginData> = MutableStateFlow(dummyLoginData)
-    val loginData: StateFlow<LoginData> = _loginData
-
+    private val _profileData: MutableStateFlow<Resource<Profile>> =
+        MutableStateFlow(Resource.None)
+    val profileData: StateFlow<Resource<Profile>> = _profileData
 
     init {
-        getLoginData()
+        getProfile()
+        Log.d("Profile", _profileData.value.toString())
     }
 
-    private fun getLoginData() {
+    private fun getProfile() {
         viewModelScope.launch {
-            authRepository.getLoginData().collect {
-                _loginData.value = it
+            authRepository.getProfile().collect {
+                _profileData.value = it
             }
         }
     }

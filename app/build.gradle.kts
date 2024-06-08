@@ -103,4 +103,9 @@ dependencies {
     // DataStore
     implementation(libs.androidx.datastore)
     implementation(libs.androidx.datastore.preferences)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 }

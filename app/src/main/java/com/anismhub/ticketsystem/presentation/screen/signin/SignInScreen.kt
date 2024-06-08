@@ -1,9 +1,7 @@
 package com.anismhub.ticketsystem.presentation.screen.signin
 
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,7 +31,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -41,8 +38,7 @@ import com.anismhub.ticketsystem.R
 import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.components.InputText
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
-import com.anismhub.ticketsystem.presentation.theme.TicketSystemTheme
-import com.anismhub.ticketsystem.utils.Result
+import com.anismhub.ticketsystem.utils.Resource
 import com.anismhub.ticketsystem.utils.isInvalid
 
 @Composable
@@ -67,27 +63,25 @@ fun SignInScreen(
     var isSigninEnabled by remember { mutableStateOf(true) }
     var isLoading by remember { mutableStateOf(false) }
 
-    val loginResult by viewModel.loginResult.collectAsStateWithLifecycle()
-    val loginState by viewModel.loginState.collectAsStateWithLifecycle()
+    val loginResult by viewModel.loginResource.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    Log.d("TAG", "loginState: $loginState ")
 
     loginResult.let {
         if (!it.hasBeenHandled) {
             when (val unhandled = it.getContentIfNotHandled()) {
-                is Result.Loading -> {
+                is Resource.Loading -> {
                     isSigninEnabled = false
                     isLoading = true
                 }
 
-                is Result.Error -> {
+                is Resource.Error -> {
                     Toast.makeText(context, unhandled.error, Toast.LENGTH_SHORT).show()
                     isSigninEnabled = true
                     isLoading = false
                 }
 
-                is Result.Success -> {
+                is Resource.Success -> {
                     isLoading = false
                     viewModel.saveLoginData(unhandled.data.data)
                     navigateToHome()
@@ -240,21 +234,5 @@ fun SignInContent(
                 )
             }
         }
-    }
-}
-
-@Preview(showSystemUi = true)
-@Composable
-private fun SignInPreview() {
-    TicketSystemTheme {
-        SignInContent(
-            username = InputTextState(),
-            password = InputTextState(),
-            onUsernameChange = {},
-            onPasswordChange = {},
-            passwordVisibility = false,
-            onPasswordVisibilityChange = {},
-            loginAction = {}
-        )
     }
 }

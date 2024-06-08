@@ -2,11 +2,12 @@ package com.anismhub.ticketsystem.domain.repository
 
 import com.anismhub.ticketsystem.domain.model.Login
 import com.anismhub.ticketsystem.domain.model.LoginData
+import com.anismhub.ticketsystem.domain.model.Profile
 import kotlinx.coroutines.flow.Flow
-import com.anismhub.ticketsystem.utils.Result
+import com.anismhub.ticketsystem.utils.Resource
 
 interface AuthRepository {
-    fun login(username: String, password: String): Flow<Result<Login>>
+    fun login(username: String, password: String): Flow<Resource<Login>>
 
     suspend fun saveLoginData(loginData: LoginData)
 
@@ -17,4 +18,6 @@ interface AuthRepository {
     fun getAccessToken(): Flow<String>
 
     suspend fun clearLoginData()
+
+    fun getProfile(): Flow<Resource<Profile>>
 }

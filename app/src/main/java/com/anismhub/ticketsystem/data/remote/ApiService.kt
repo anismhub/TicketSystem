@@ -1,6 +1,7 @@
 package com.anismhub.ticketsystem.data.remote
 
 import com.anismhub.ticketsystem.data.remote.dto.LoginDTO
+import com.anismhub.ticketsystem.data.remote.dto.ProfileDTO
 import com.anismhub.ticketsystem.domain.model.Ticket
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -16,6 +17,9 @@ interface ApiService {
         @Field("username") username: String,
         @Field("password") password: String
     ): LoginDTO
+
+    @GET("users/profile")
+    suspend fun profile(): ProfileDTO
 
     @GET("tickets")
     suspend fun tickets(

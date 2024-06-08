@@ -6,7 +6,7 @@ import com.anismhub.ticketsystem.domain.model.Login
 import com.anismhub.ticketsystem.domain.model.LoginData
 import com.anismhub.ticketsystem.domain.repository.AuthRepository
 import com.anismhub.ticketsystem.utils.Event
-import com.anismhub.ticketsystem.utils.Result
+import com.anismhub.ticketsystem.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,9 +17,9 @@ import javax.inject.Inject
 class SignInViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
-    private val _loginResult: MutableStateFlow<Event<Result<Login>>> =
-        MutableStateFlow(Event(Result.None))
-    val loginResult: StateFlow<Event<Result<Login>>> = _loginResult
+    private val _loginResource: MutableStateFlow<Event<Resource<Login>>> =
+        MutableStateFlow(Event(Resource.None))
+    val loginResource: StateFlow<Event<Resource<Login>>> = _loginResource
 
     private val _loginState: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val loginState: StateFlow<Boolean> = _loginState
@@ -34,7 +34,7 @@ class SignInViewModel @Inject constructor(
                 username = username,
                 password = password
             ).collect {
-                _loginResult.value = Event(it)
+                _loginResource.value = Event(it)
             }
         }
     }
