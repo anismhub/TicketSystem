@@ -4,8 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.anismhub.ticketsystem.navigation.BottomNav
 import com.anismhub.ticketsystem.presentation.screen.tickets.TicketContent
@@ -17,6 +19,7 @@ import com.anismhub.ticketsystem.presentation.screen.settings.exportreport.Expor
 import com.anismhub.ticketsystem.presentation.screen.settings.SettingsContent
 import com.anismhub.ticketsystem.presentation.screen.tickets.addticket.AddTicketContent
 import com.anismhub.ticketsystem.presentation.screen.tickets.detailticket.DetailTicketContent
+import com.anismhub.ticketsystem.presentation.screen.tickets.detailticket.DetailTicketScreen
 
 @Composable
 fun BottomNavGraph(
@@ -69,8 +72,11 @@ fun NavGraphBuilder.ticketNavGraph(
         route = Graph.TICKET,
         startDestination = TicketNav.Detail.route
     ) {
-        composable(route = TicketNav.Detail.route) {
-            DetailTicketContent()
+        composable(route = TicketNav.Detail.route,
+            arguments = listOf(navArgument("ticketId") {type = NavType.IntType})
+        ) {
+            val ticketId = it.arguments?.getInt("ticketId") ?: 0
+            DetailTicketScreen(ticketId = ticketId)
         }
         composable(route = TicketNav.Create.route) {
             AddTicketContent(
