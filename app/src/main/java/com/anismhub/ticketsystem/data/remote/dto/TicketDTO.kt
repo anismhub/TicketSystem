@@ -13,5 +13,5 @@ data class TicketDTO(
     val message: String,
 
     @field:SerializedName("data")
-    val data: TicketDataDTO
+    val data: List<TicketDataDTO>
 )
