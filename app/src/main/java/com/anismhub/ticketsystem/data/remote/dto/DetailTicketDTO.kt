@@ -2,7 +2,7 @@ package com.anismhub.ticketsystem.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 
-class DetailTicketDTO(
+data class DetailTicketDTO(
     @field:SerializedName("ticketId")
     val ticketId: Int,
 
