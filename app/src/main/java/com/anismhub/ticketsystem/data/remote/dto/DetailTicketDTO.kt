@@ -19,17 +19,17 @@ data class DetailTicketDTO(
     val ticketStatus: String,
 
     @field:SerializedName("ticketCategory")
-    val ticketCategory: Int,
+    val ticketCategory: String,
 
     @field:SerializedName("ticketArea")
-    val ticketArea: Int,
+    val ticketArea: String,
 
     @field:SerializedName("ticketCreatedBy")
-    val ticketCreatedBy: Int,
+    val ticketCreatedBy: String,
 
-    @field:SerializedName("ticketCreateAt")
+    @field:SerializedName("ticketCreatedAt")
     val ticketCreatedAt: String,
 
-    @field:SerializedName("ticketUpdateAt")
+    @field:SerializedName("ticketUpdatedAt")
     val ticketUpdateAt: String
 )

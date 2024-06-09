@@ -8,9 +8,9 @@ data class DetailTicket(
     val ticketDescription: String,
     val ticketPriority: String,
     val ticketStatus: String,
-    val ticketCategory: Int,
-    val ticketArea: Int,
-    val ticketCreatedBy: Int,
+    val ticketCategory: String,
+    val ticketArea: String,
+    val ticketCreatedBy: String,
     val ticketCreatedAt: String,
     val ticketUpdateAt: String
 )

@@ -39,9 +39,9 @@ interface ApiService {
         @Field("ticketCategory") ticketCategory: Int
     ): ResponseDTO
 
-    @GET("tickets")
+    @GET("tickets/{ticketId}")
     suspend fun ticketById(
-        @Query("ticketId") ticketId: Int
+        @Path("ticketId") ticketId: Int
     ): DetailTicketDTO
 
     @FormUrlEncoded

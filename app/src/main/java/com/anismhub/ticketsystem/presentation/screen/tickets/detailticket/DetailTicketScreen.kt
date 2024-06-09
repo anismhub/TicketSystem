@@ -1,5 +1,6 @@
 package com.anismhub.ticketsystem.presentation.screen.tickets.detailticket
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,13 +39,13 @@ import com.anismhub.ticketsystem.presentation.components.InputText
 import com.anismhub.ticketsystem.presentation.components.MyDropdownMenu
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.utils.Resource
+import com.anismhub.ticketsystem.utils.toDateTime
 
 @Composable
 fun DetailTicketScreen(
     ticketId: Int,
     modifier: Modifier = Modifier,
     viewModel: DetailTicketViewModel = hiltViewModel()
-
 ) {
     LaunchedEffect(ticketId) {
         viewModel.getTicketById(ticketId)
@@ -52,25 +53,29 @@ fun DetailTicketScreen(
 
     val detailTicket by viewModel.detailTicket.collectAsStateWithLifecycle()
 
-    when(val result = detailTicket) {
+    when (val result = detailTicket) {
         is Resource.Loading -> {
-
+            Log.d("DetailTicket Loading", "Loading: ")
         }
+
         is Resource.Success -> {
             DetailTicketContent(
-                detailTicketData = result.data,
-                modifier = modifier)
+                data = result.data,
+                modifier = modifier
+            )
         }
-        is Resource.Error -> {
 
+        is Resource.Error -> {
+            Log.d("DetailTicket Error", "Detail Error: ${result.error}: ")
         }
+
         else -> {}
     }
 }
 
 @Composable
 fun DetailTicketContent(
-    detailTicketData: DetailTicket,
+    data: DetailTicket,
     modifier: Modifier = Modifier,
 ) {
     var replyText by remember { mutableStateOf("") }
@@ -101,10 +106,10 @@ fun DetailTicketContent(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = "#${detailTicketData.ticketId} ${detailTicketData.ticketSubject}",
+                    text = "#${data.ticketId} ${data.ticketSubject}",
                     style = MyTypography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
                 )
-                Text(text = dummyTicket.status, modifier = Modifier.align(Alignment.End))
+                Text(text = data.ticketStatus, modifier = Modifier.align(Alignment.End))
                 Row {
                     Spacer(modifier = Modifier.weight(0.6f))
                     MyDropdownMenu(
@@ -131,7 +136,9 @@ fun DetailTicketContent(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Card(
-                            modifier = Modifier.padding(vertical = 8.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(vertical = 8.dp),
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer)
                         ) {
@@ -141,11 +148,13 @@ fun DetailTicketContent(
                                 modifier = Modifier.padding(8.dp)
                             ) {
                                 Text(text = "Dibuat")
-                                Text(dummyTicket.date)
+                                Text(data.ticketCreatedAt.toDateTime())
                             }
                         }
                         Card(
-                            modifier = Modifier.padding(vertical = 8.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(vertical = 8.dp),
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer)
                         ) {
@@ -155,11 +164,13 @@ fun DetailTicketContent(
                                 modifier = Modifier.padding(8.dp)
                             ) {
                                 Text(text = "Terakhir diperbarui")
-                                Text(dummyTicket.date)
+                                Text(text = data.ticketUpdateAt.toDateTime())
                             }
                         }
                         Card(
-                            modifier = Modifier.padding(vertical = 8.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(vertical = 8.dp),
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer)
                         ) {
@@ -169,7 +180,7 @@ fun DetailTicketContent(
                                 modifier = Modifier.padding(8.dp)
                             ) {
                                 Text(text = "Kategori")
-                                Text("Troubleshoot")
+                                Text(data.ticketCategory)
                             }
                         }
                     }
@@ -179,7 +190,9 @@ fun DetailTicketContent(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Card(
-                            modifier = Modifier.padding(vertical = 8.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(vertical = 8.dp),
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer)
                         ) {
@@ -193,7 +206,9 @@ fun DetailTicketContent(
                             }
                         }
                         Card(
-                            modifier = Modifier.padding(vertical = 8.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(vertical = 8.dp),
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer)
                         ) {
@@ -203,11 +218,13 @@ fun DetailTicketContent(
                                 modifier = Modifier.padding(8.dp)
                             ) {
                                 Text(text = "Area")
-                                Text("Admin Building")
+                                Text(data.ticketArea)
                             }
                         }
                         Card(
-                            modifier = Modifier.padding(vertical = 8.dp),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(vertical = 8.dp),
                             shape = RoundedCornerShape(16.dp),
                             colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer)
                         ) {
@@ -217,7 +234,7 @@ fun DetailTicketContent(
                                 modifier = Modifier.padding(8.dp)
                             ) {
                                 Text(text = "Prioritas")
-                                Text(dummyTicket.priority)
+                                Text(data.ticketPriority)
                             }
                         }
                     }
@@ -225,7 +242,7 @@ fun DetailTicketContent(
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(text = "Deskripsi", style = MyTypography.titleMedium)
                 Text(
-                    text = dummyTicket.description,
+                    text = data.ticketDescription,
                     textAlign = TextAlign.Justify,
                     minLines = 3,
                     modifier = Modifier

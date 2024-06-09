@@ -43,7 +43,7 @@ fun TicketScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TicketContent(
-    navigateToDetailTicket: (title: String) -> Unit,
+    navigateToDetailTicket: (title: String, ticketId: Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TicketViewModel = hiltViewModel()
 ) {
@@ -164,7 +164,7 @@ fun TicketContent(
                                 date = it.ticketCreatedAt,
                                 priority = it.ticketPriority,
                                 status = it.ticketStatus,
-                                onClick = { navigateToDetailTicket("Detail Tiket") }
+                                onClick = { navigateToDetailTicket("Detail Tiket", it.ticketId) }
                             )
                         }
                     }
@@ -177,7 +177,7 @@ fun TicketContent(
                                 date = it.ticketCreatedAt,
                                 priority = it.ticketPriority,
                                 status = it.ticketStatus,
-                                onClick = { navigateToDetailTicket("Detail Tiket") }
+                                onClick = { navigateToDetailTicket("Detail Tiket", it.ticketId) }
                             )
                         }
                     }
@@ -190,7 +190,7 @@ fun TicketContent(
                                 date = it.ticketCreatedAt,
                                 priority = it.ticketPriority,
                                 status = it.ticketStatus,
-                                onClick = { navigateToDetailTicket("Detail Tiket") }
+                                onClick = { navigateToDetailTicket("Detail Tiket", it.ticketId) }
                             )
                         }
                     }

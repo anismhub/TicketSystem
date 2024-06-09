@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.anismhub.ticketsystem.navigation.TicketNav
 import com.anismhub.ticketsystem.presentation.screen.MainScreen
 
 @Composable
