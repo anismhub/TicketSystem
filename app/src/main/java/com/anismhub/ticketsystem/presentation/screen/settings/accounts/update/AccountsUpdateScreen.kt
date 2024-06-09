@@ -31,7 +31,7 @@ fun AccountsUpdateScreen() {
 
 @Composable
 fun AccountsUpdateContent(modifier: Modifier = Modifier) {
-    val dummyPengguna = DataDummy.pengguna[0]
+    val dummyPengguna = DataDummy.dummyPenggunas[0]
 
     var username by remember { mutableStateOf("jdoe") }
     var fullname by remember { mutableStateOf(dummyPengguna.nama) }

@@ -77,7 +77,7 @@ fun AccountManageContent(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier.padding(top = 8.dp)
         ) {
-            items(DataDummy.pengguna, key = { it.nama }) {
+            items(DataDummy.dummyPenggunas, key = { it.nama }) {
                 ProfilCard(title = it.nama, subtitle = it.role,
                     icon = {
                         Icon(
