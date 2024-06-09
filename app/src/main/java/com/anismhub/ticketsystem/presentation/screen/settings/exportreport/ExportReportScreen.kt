@@ -17,7 +17,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anismhub.ticketsystem.presentation.components.ReusableDatePicker
 import java.time.LocalDate
@@ -25,7 +24,7 @@ import java.time.LocalDate
 @Composable
 fun ExportReportScreen(modifier: Modifier = Modifier) {
 
-    var startDate by remember { mutableStateOf<LocalDate?>(null) }
+    var startDate by remember { mutableStateOf<LocalDate?>(LocalDate.now()) }
     var endDate by remember { mutableStateOf<LocalDate?>(null) }
 
     val context = LocalContext.current
@@ -47,30 +46,25 @@ fun ExportReportScreen(modifier: Modifier = Modifier) {
             onDateSelected = { endDate = it }
         )
 
-    Spacer(modifier = Modifier.weight(1f))
-    Button(
-        onClick = {
-            Toast.makeText(
-                context,
-                "tanggal dari : $startDate, tanggal sampai : $endDate",
-                Toast.LENGTH_SHORT
-            ).show()
-        },
-        shape = RoundedCornerShape(20),
-        modifier = Modifier
-            .align(Alignment.CenterHorizontally)
-            .fillMaxWidth(0.6f)
-            .padding(bottom = 8.dp)
-    ) {
-        Text(text = "Ekspor")
+        Spacer(modifier = Modifier.weight(1f))
+        Button(
+            onClick = {
+                Toast.makeText(
+                    context,
+                    "tanggal dari : $startDate, tanggal sampai : $endDate",
+                    Toast.LENGTH_SHORT
+                ).show()
+            },
+            shape = RoundedCornerShape(20),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(0.6f)
+                .padding(bottom = 8.dp)
+        ) {
+            Text(text = "Ekspor")
+        }
     }
 }
-}
 
-@Composable
-@Preview
-fun DatePickerSample() {
-    ExportReportScreen()
-}
 
 

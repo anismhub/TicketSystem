@@ -1,11 +1,9 @@
 package com.anismhub.ticketsystem.presentation.screen.tickets
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anismhub.ticketsystem.domain.model.Ticket
 import com.anismhub.ticketsystem.domain.repository.TicketRepository
-import com.anismhub.ticketsystem.utils.Event
 import com.anismhub.ticketsystem.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,18 +15,37 @@ class TicketViewModel @Inject constructor(
     private val ticketRepository: TicketRepository
 ) : ViewModel() {
 
-    private val _ticket: MutableStateFlow<Event<Resource<Ticket>>> = MutableStateFlow(Event(Resource.None))
-    val ticket: MutableStateFlow<Event<Resource<Ticket>>> = _ticket
+    private val _ticketOpen: MutableStateFlow<Resource<Ticket>> = MutableStateFlow(Resource.None)
+    val ticketOpen: MutableStateFlow<Resource<Ticket>> = _ticketOpen
 
-    init {
-        getTicket("Open")
-        getTicket("On Progress")
-        getTicket("Closed")
-    }
-    private fun getTicket(status: String){
+    private val _ticketOnProgress: MutableStateFlow<Resource<Ticket>> =
+        MutableStateFlow(Resource.None)
+    val ticketOnProgress: MutableStateFlow<Resource<Ticket>> = _ticketOnProgress
+
+    private val _ticketClosed: MutableStateFlow<Resource<Ticket>> = MutableStateFlow(Resource.None)
+    val ticketClosed: MutableStateFlow<Resource<Ticket>> = _ticketClosed
+
+
+    fun getOpenTicket() {
         viewModelScope.launch {
-            ticketRepository.getTickets(status).collect {
-                _ticket.value = Event(it)
+            ticketRepository.getOpenTickets().collect {
+                _ticketOpen.value = it
+            }
+        }
+    }
+
+    fun getOnProgressTicket() {
+        viewModelScope.launch {
+            ticketRepository.getOnProgressTickets().collect {
+                _ticketOnProgress.value = it
+            }
+        }
+    }
+
+    fun getClosedTicket() {
+        viewModelScope.launch {
+            ticketRepository.getClosedTickets().collect {
+                _ticketClosed.value = it
             }
         }
     }

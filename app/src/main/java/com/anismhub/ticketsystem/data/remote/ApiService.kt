@@ -5,12 +5,11 @@ import com.anismhub.ticketsystem.data.remote.dto.LoginDTO
 import com.anismhub.ticketsystem.data.remote.dto.ProfileDTO
 import com.anismhub.ticketsystem.data.remote.dto.ResponseDTO
 import com.anismhub.ticketsystem.data.remote.dto.TicketDTO
-import com.anismhub.ticketsystem.domain.model.Response
-import com.anismhub.ticketsystem.domain.model.Ticket
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -44,4 +43,25 @@ interface ApiService {
     suspend fun ticketById(
         @Query("ticketId") ticketId: Int
     ): DetailTicketDTO
+
+    @FormUrlEncoded
+    @POST("tickets/{ticketId}/assign")
+    suspend fun assignTicket(
+        @Path("ticketId") ticketId: Int,
+        @Field("userId") userId: Int
+    ): ResponseDTO
+
+    @FormUrlEncoded
+    @POST("tickets/{ticketId}/comments")
+    suspend fun addComment(
+        @Path("ticketId") ticketId: Int,
+        @Field("content") content: String,
+    ): ResponseDTO
+
+    @FormUrlEncoded
+    @POST("tickets/{ticketId}/close")
+    suspend fun closeTicket(
+        @Path("ticketId") ticketId: Int,
+        @Field("content") content: String,
+    ): ResponseDTO
 }

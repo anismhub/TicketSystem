@@ -17,7 +17,39 @@ import retrofit2.HttpException
 class TicketRepositoryImpl(
     private val apiService: ApiService
 ) : TicketRepository {
-    override fun getTickets(status: String): Flow<Resource<Ticket>> = flow {
+    override fun getOpenTickets(status: String): Flow<Resource<Ticket>> = flow {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.tickets(status)
+            emit(Resource.Success(response.toTicket()))
+        } catch (e: Exception) {
+            if (e is HttpException) {
+                val jsonInString = e.response()?.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonInString, Response::class.java)
+                emit(Resource.Error(errorBody.message))
+            } else {
+                emit(Resource.Error(e.message.toString()))
+            }
+        }
+    }
+
+    override fun getOnProgressTickets(status: String): Flow<Resource<Ticket>> = flow {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.tickets(status)
+            emit(Resource.Success(response.toTicket()))
+        } catch (e: Exception) {
+            if (e is HttpException) {
+                val jsonInString = e.response()?.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonInString, Response::class.java)
+                emit(Resource.Error(errorBody.message))
+            } else {
+                emit(Resource.Error(e.message.toString()))
+            }
+        }
+    }
+
+    override fun getClosedTickets(status: String): Flow<Resource<Ticket>> = flow {
         emit(Resource.Loading)
         try {
             val response = apiService.tickets(status)

@@ -1,7 +1,6 @@
 package com.anismhub.ticketsystem.presentation.screen.tickets
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,7 +11,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -23,6 +21,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -34,7 +33,6 @@ import com.anismhub.ticketsystem.presentation.components.MySearchBar
 import com.anismhub.ticketsystem.presentation.components.TabItem
 import com.anismhub.ticketsystem.presentation.components.TicketItem
 import com.anismhub.ticketsystem.utils.Resource
-import kotlin.math.log
 
 @Composable
 fun TicketScreen(
@@ -51,38 +49,66 @@ fun TicketContent(
 ) {
     val context = LocalContext.current
 
-    val ticket by viewModel.ticket.collectAsStateWithLifecycle()
+    val ticketOpen by viewModel.ticketOpen.collectAsStateWithLifecycle()
+    val ticketOnProgress by viewModel.ticketOnProgress.collectAsStateWithLifecycle()
+    val ticketClosed by viewModel.ticketClosed.collectAsStateWithLifecycle()
+    LaunchedEffect(key1 = "Open") { viewModel.getOpenTicket() }
+    LaunchedEffect(key1 = "On Progress") { viewModel.getOnProgressTicket() }
+    LaunchedEffect(key1 = "Closed") { viewModel.getClosedTicket() }
+
     var listTicketOpen by remember { mutableStateOf(emptyList<TicketData>()) }
     var listTicketOnProgress by remember { mutableStateOf(emptyList<TicketData>()) }
     var listTicketClosed by remember { mutableStateOf(emptyList<TicketData>()) }
 
-    ticket.let {
-        if (!it.hasBeenHandled) {
-            when (val unhandled = it.getContentIfNotHandled()) {
-                is Resource.Loading -> {
-
-                }
-
-                is Resource.Error -> {
-                    Toast.makeText(context, unhandled.error, Toast.LENGTH_SHORT).show()
-                }
-
-                is Resource.Success -> {
-                    listTicketOpen =
-                        unhandled.data.data.filter { ticketData -> ticketData.ticketStatus == "Open" }
-                    listTicketOnProgress =
-                        unhandled.data.data.filter { ticketData -> ticketData.ticketStatus == "On Progress" }
-                    listTicketClosed =
-                        unhandled.data.data.filter { ticketData -> ticketData.ticketStatus == "Closed" }
-
-                    Log.d("Ticket Open", "Ticket Open: $listTicketOpen")
-                    Log.d("Ticket On Progress", "Ticket On Progress: $listTicketOnProgress")
-                }
-
-                else -> {}
-            }
-
+    when (val result = ticketOpen) {
+        is Resource.Loading -> {
+            Log.d("Open Loading", "Ticket Open Loading : $result")
         }
+
+        is Resource.Success -> {
+            listTicketOpen = result.data.data
+            Log.d("Open Success", "Ticket Open: ${result.data.data}")
+        }
+
+        is Resource.Error -> {
+            Log.d("Open Error", "Ticket Open Error: ${result.error}")
+        }
+
+        else -> {}
+    }
+
+    when (val result = ticketOnProgress) {
+        is Resource.Loading -> {
+            Log.d("Progress Loading", "Ticket Progress Loading : $result")
+        }
+
+        is Resource.Success -> {
+            listTicketOnProgress = result.data.data
+            Log.d("Progress Success", "Ticket Progress: ${result.data.data}")
+        }
+
+        is Resource.Error -> {
+            Log.d("Progress Error", "Ticket Progress Error: ${result.error}")
+        }
+
+        else -> {}
+    }
+
+    when (val result = ticketClosed) {
+        is Resource.Loading -> {
+            Log.d("Closed Loading", "Ticket Closed Loading : $result")
+        }
+
+        is Resource.Success -> {
+            listTicketClosed = result.data.data
+            Log.d("Closed Success", "Ticket Closed: ${result.data.data}")
+        }
+
+        is Resource.Error -> {
+            Log.d("Closed Error", "Ticket Closed Error: ${result.error}")
+        }
+
+        else -> {}
     }
 
     var selectedTabIndex by remember { mutableIntStateOf(0) }
@@ -112,8 +138,6 @@ fun TicketContent(
             TabItem.entries.forEachIndexed { index, currentTab ->
                 Tab(
                     selected = selectedTabIndex == index,
-                    selectedContentColor = MaterialTheme.colorScheme.primary,
-                    unselectedContentColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     onClick = { selectedTabIndex = index },
                     text = { Text(text = currentTab.title) },
                 )
@@ -121,52 +145,51 @@ fun TicketContent(
         }
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier
-                .fillMaxSize()
+            verticalAlignment = Alignment.Top,
+            modifier = Modifier.fillMaxSize()
         ) { index ->
             LazyColumn(
                 modifier = Modifier.padding(horizontal = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(bottom = 64.dp, top = 8.dp),
             ) {
-                val openTicket = DataDummy.tickets.filter { it.status == "Open" }
                 val onProgressTicket = DataDummy.tickets.filter { it.status == "On Progress" }
                 val closedTicket = DataDummy.tickets.filter { it.status == "Closed" }
                 when (index) {
                     0 -> {
-                        items(openTicket, key = { it.title }) {
+                        items(listTicketOpen, key = { it.ticketId }) {
                             TicketItem(
-                                number = openTicket.indexOf(it) + 1,
-                                title = it.title,
-                                date = it.date,
-                                priority = it.priority,
-                                status = it.status,
+                                number = it.ticketId,
+                                title = it.ticketSubject,
+                                date = it.ticketCreatedAt,
+                                priority = it.ticketPriority,
+                                status = it.ticketStatus,
                                 onClick = { navigateToDetailTicket("Detail Tiket") }
                             )
                         }
                     }
 
                     1 -> {
-                        items(onProgressTicket, key = { it.title }) {
+                        items(listTicketOnProgress, key = { it.ticketId }) {
                             TicketItem(
-                                number = DataDummy.tickets.indexOf(it) + 1,
-                                title = it.title,
-                                date = it.date,
-                                priority = it.priority,
-                                status = it.status,
+                                number = it.ticketId,
+                                title = it.ticketSubject,
+                                date = it.ticketCreatedAt,
+                                priority = it.ticketPriority,
+                                status = it.ticketStatus,
                                 onClick = { navigateToDetailTicket("Detail Tiket") }
                             )
                         }
                     }
 
                     2 -> {
-                        items(closedTicket, key = { it.title }) {
+                        items(listTicketClosed, key = { it.ticketId }) {
                             TicketItem(
-                                number = DataDummy.tickets.indexOf(it) + 1,
-                                title = it.title,
-                                date = it.date,
-                                priority = it.priority,
-                                status = it.status,
+                                number = it.ticketId,
+                                title = it.ticketSubject,
+                                date = it.ticketCreatedAt,
+                                priority = it.ticketPriority,
+                                status = it.ticketStatus,
                                 onClick = { navigateToDetailTicket("Detail Tiket") }
                             )
                         }
