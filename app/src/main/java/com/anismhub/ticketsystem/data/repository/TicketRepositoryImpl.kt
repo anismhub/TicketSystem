@@ -1,7 +1,10 @@
 package com.anismhub.ticketsystem.data.repository
 
+import com.anismhub.ticketsystem.data.mapper.toDetailTicket
 import com.anismhub.ticketsystem.data.mapper.toResponse
+import com.anismhub.ticketsystem.data.mapper.toTicket
 import com.anismhub.ticketsystem.data.remote.ApiService
+import com.anismhub.ticketsystem.domain.model.DetailTicket
 import com.anismhub.ticketsystem.domain.model.Response
 import com.anismhub.ticketsystem.domain.model.Ticket
 import com.anismhub.ticketsystem.domain.repository.TicketRepository
@@ -18,7 +21,23 @@ class TicketRepositoryImpl(
         emit(Resource.Loading)
         try {
             val response = apiService.tickets(status)
-            emit(Resource.Success(response))
+            emit(Resource.Success(response.toTicket()))
+        } catch (e: Exception) {
+            if (e is HttpException) {
+                val jsonInString = e.response()?.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonInString, Response::class.java)
+                emit(Resource.Error(errorBody.message))
+            } else {
+                emit(Resource.Error(e.message.toString()))
+            }
+        }
+    }
+
+    override fun getTicketById(ticketId: Int): Flow<Resource<DetailTicket>> = flow {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.ticketById(ticketId)
+            emit(Resource.Success(response.toDetailTicket()))
         } catch (e: Exception) {
             if (e is HttpException) {
                 val jsonInString = e.response()?.errorBody()?.string()
