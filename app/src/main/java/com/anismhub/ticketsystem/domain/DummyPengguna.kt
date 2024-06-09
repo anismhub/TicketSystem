@@ -1,6 +1,6 @@
 package com.anismhub.ticketsystem.domain
 
-data class Pengguna(
+data class DummyPengguna(
     val nama: String,
     val role: String
 )
