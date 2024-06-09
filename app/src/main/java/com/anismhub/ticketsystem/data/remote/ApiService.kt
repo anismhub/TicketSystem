@@ -1,8 +1,10 @@
 package com.anismhub.ticketsystem.data.remote
 
+import com.anismhub.ticketsystem.data.remote.dto.DetailTicketDTO
 import com.anismhub.ticketsystem.data.remote.dto.LoginDTO
 import com.anismhub.ticketsystem.data.remote.dto.ProfileDTO
 import com.anismhub.ticketsystem.data.remote.dto.ResponseDTO
+import com.anismhub.ticketsystem.data.remote.dto.TicketDTO
 import com.anismhub.ticketsystem.domain.model.Response
 import com.anismhub.ticketsystem.domain.model.Ticket
 import retrofit2.http.Field
@@ -26,7 +28,7 @@ interface ApiService {
     @GET("tickets")
     suspend fun tickets(
         @Query("status") status: String
-    ): Ticket
+    ): TicketDTO
 
     @FormUrlEncoded
     @POST("tickets")
@@ -37,4 +39,9 @@ interface ApiService {
         @Field("ticketArea") ticketArea: Int,
         @Field("ticketCategory") ticketCategory: Int
     ): ResponseDTO
+
+    @GET("tickets")
+    suspend fun ticketById(
+        @Query("ticketId") ticketId: Int
+    ): DetailTicketDTO
 }
