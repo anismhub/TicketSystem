@@ -16,6 +16,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -27,20 +28,51 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.data.DataDummy
+import com.anismhub.ticketsystem.domain.model.DetailTicket
 import com.anismhub.ticketsystem.presentation.common.teknisiOptions
 import com.anismhub.ticketsystem.presentation.components.CustomDialog
 import com.anismhub.ticketsystem.presentation.components.InputText
 import com.anismhub.ticketsystem.presentation.components.MyDropdownMenu
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
+import com.anismhub.ticketsystem.utils.Resource
 
 @Composable
-fun DetailTicketScreen() {
+fun DetailTicketScreen(
+    ticketId: Int,
+    modifier: Modifier = Modifier,
+    viewModel: DetailTicketViewModel = hiltViewModel()
 
+) {
+    LaunchedEffect(ticketId) {
+        viewModel.getTicketById(ticketId)
+    }
+
+    val detailTicket by viewModel.detailTicket.collectAsStateWithLifecycle()
+
+    when(val result = detailTicket) {
+        is Resource.Loading -> {
+
+        }
+        is Resource.Success -> {
+            DetailTicketContent(
+                detailTicketData = result.data,
+                modifier = modifier)
+        }
+        is Resource.Error -> {
+
+        }
+        else -> {}
+    }
 }
 
 @Composable
-fun DetailTicketContent(modifier: Modifier = Modifier) {
+fun DetailTicketContent(
+    detailTicketData: DetailTicket,
+    modifier: Modifier = Modifier,
+) {
     var replyText by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
     var enteredText by remember { mutableStateOf("") }
@@ -69,7 +101,7 @@ fun DetailTicketContent(modifier: Modifier = Modifier) {
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = "#1 ${dummyTicket.title}",
+                    text = "#${detailTicketData.ticketId} ${detailTicketData.ticketSubject}",
                     style = MyTypography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
                 )
                 Text(text = dummyTicket.status, modifier = Modifier.align(Alignment.End))
