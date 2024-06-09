@@ -19,7 +19,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val localDataManager: LocalDataManager
 ) : ViewModel() {
 
     private val _profileData: MutableStateFlow<Resource<Profile>> =
