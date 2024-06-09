@@ -12,6 +12,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,7 +38,10 @@ fun AccountsCreateContent(modifier: Modifier = Modifier) {
     val confirmPassword by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
     var selectedRole by remember { mutableStateOf("") }
+    var selectedRoleIndex by remember { mutableIntStateOf(0) }
     var selectedDepartment by remember { mutableStateOf("") }
+    var selectedDepartmentIndex by remember { mutableIntStateOf(0) }
+
 
     Column(
         modifier = modifier
@@ -47,22 +51,36 @@ fun AccountsCreateContent(modifier: Modifier = Modifier) {
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         // Username
-        InputTextWithLabel(title = "Username", value = username, onValueChange = { username = it})
+        InputTextWithLabel(title = "Username", value = username, onValueChange = { username = it })
         // Fullname
-        InputTextWithLabel(title = "Nama Lengkap", value = fullname, onValueChange = { fullname = it})
+        InputTextWithLabel(
+            title = "Nama Lengkap",
+            value = fullname,
+            onValueChange = { fullname = it })
         // Role
-        DropdownMenuWithLabel(title = "Role", value = selectedRole,
-            onValueChange = { selectedRole = it },
-            options = roleOptions)
+        DropdownMenuWithLabel(
+            title = "Role", value = selectedRole,
+            onValueChange = { value, index ->
+                selectedRole = value
+                selectedRoleIndex = index
+            },
+            options = roleOptions
+        )
         // Departemen
         DropdownMenuWithLabel(
             title = "Departemen",
             value = selectedDepartment,
-            onValueChange = { selectedDepartment = it },
+            onValueChange = { value, index ->
+                selectedDepartment = value
+                selectedDepartmentIndex = index
+            },
             options = departmentOptions
         )
         // Phone Number
-        InputTextWithLabel(title = "Nomor Telepon", value = phoneNumber, onValueChange = { phoneNumber = it})
+        InputTextWithLabel(
+            title = "Nomor Telepon",
+            value = phoneNumber,
+            onValueChange = { phoneNumber = it })
         // Password
         InputTextWithLabel(
             title = "Password",

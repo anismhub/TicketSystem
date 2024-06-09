@@ -17,6 +17,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -27,6 +28,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.R
 import com.anismhub.ticketsystem.presentation.common.areaOptions
 import com.anismhub.ticketsystem.presentation.common.priorityOptions
@@ -45,9 +48,14 @@ fun AddTicketScreen(
 @Composable
 fun AddTicketContent(
     onNavUp: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: AddTicketViewModel = hiltViewModel()
 ) {
     var selectedArea by remember { mutableStateOf(areaOptions[0]) }
+    var selectedAreaIndex by remember { mutableIntStateOf(0) }
+    var selectedPriorityIndex by remember { mutableIntStateOf(0) }
+    var selectedTypeTicketIndex by remember { mutableIntStateOf(0) }
+
     var selectedPriority by remember { mutableStateOf(priorityOptions[0]) }
     var selectedTypeTicket by remember { mutableStateOf(typeTicketOptions[0]) }
     var subject by remember { mutableStateOf("") }
@@ -85,17 +93,27 @@ fun AddTicketContent(
         })
         DropdownMenuWithLabel(
             title = "Area", value = selectedArea,
-            onValueChange = { selectedArea = it },
+            onValueChange = { value, index ->
+                selectedArea = value
+                selectedAreaIndex = index
+            },
             options = areaOptions
         )
-        DropdownMenuWithLabel(title = "Prioritas",
+        DropdownMenuWithLabel(
+            title = "Prioritas",
             value = selectedPriority,
-            onValueChange = { selectedPriority = it },
+            onValueChange = { value, index ->
+                selectedPriority = value
+                selectedPriorityIndex = index
+            },
             options = priorityOptions
         )
         DropdownMenuWithLabel(
             title = "Tipe Tiket", value = selectedTypeTicket,
-            onValueChange = { selectedTypeTicket = it },
+            onValueChange = { value, index ->
+                selectedTypeTicket = value
+                selectedTypeTicketIndex = index
+            },
             options = typeTicketOptions
         )
         InputTextWithLabel(
@@ -115,6 +133,14 @@ fun AddTicketContent(
                     "subjek: $subject,deskripsi: $description, area: $selectedArea, prioritas: $selectedPriority, tipe tiket: $selectedTypeTicket",
                     Toast.LENGTH_SHORT
                 ).show()
+
+                viewModel.addTicket(
+                    ticketSubject = subject,
+                    ticketDescription = description,
+                    ticketArea = selectedAreaIndex,
+                    ticketPriority = selectedPriorityIndex,
+                    ticketCategory = selectedTypeTicketIndex
+                )
             },
             shape = RoundedCornerShape(16.dp),
             contentPadding = PaddingValues(14.dp),

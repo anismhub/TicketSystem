@@ -11,6 +11,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,8 +37,11 @@ fun AccountsUpdateContent(modifier: Modifier = Modifier) {
     var fullname by remember { mutableStateOf(dummyPengguna.nama) }
     var phoneNumber by remember { mutableStateOf("") }
 
-    var selectedDepartment by remember { mutableStateOf("IT") }
+    var selectedDepartment by remember { mutableStateOf("") }
+    var selectedDepartmentIndex by remember { mutableIntStateOf(0) }
     var selectedRole by remember { mutableStateOf(dummyPengguna.role) }
+    var selectedRoleIndex by remember { mutableIntStateOf(0) }
+
 
     Column(
         modifier = modifier
@@ -59,14 +63,22 @@ fun AccountsUpdateContent(modifier: Modifier = Modifier) {
             value = fullname,
             onValueChange = { fullname = it })
         // Role
-        DropdownMenuWithLabel(title = "Role", value = selectedRole,
-            onValueChange = { selectedRole = it },
-            options = roleOptions)
+        DropdownMenuWithLabel(
+            title = "Role", value = selectedRole,
+            onValueChange = { value, index ->
+                selectedRole = value
+                selectedRoleIndex = index
+            },
+            options = roleOptions
+        )
         // Departemen
         DropdownMenuWithLabel(
             title = "Departemen",
             value = selectedDepartment,
-            onValueChange = { selectedDepartment = it },
+            onValueChange = { value, index ->
+                selectedDepartment = value
+                selectedDepartmentIndex = index
+            },
             options = departmentOptions
         )
         // Phone Number

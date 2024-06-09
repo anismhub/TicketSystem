@@ -130,7 +130,7 @@ fun InputTextWithLabel(
 @Composable
 fun MyDropdownMenu(
     value: String?,
-    onValueChange: (String) -> Unit,
+    onValueChange: (String, Int) -> Unit,
     options: List<String>,
     modifier: Modifier = Modifier,
     enabled: Boolean,
@@ -174,7 +174,7 @@ fun MyDropdownMenu(
                     text = { Text(option) },
                     onClick = {
                         selectedIndex = index
-                        onValueChange(option)
+                        onValueChange(option, index)
                         expanded = false
                     }
                 )
@@ -187,7 +187,7 @@ fun MyDropdownMenu(
 fun DropdownMenuWithLabel(
     title: String,
     value: String,
-    onValueChange: (String) -> Unit,
+    onValueChange: (String, Int) -> Unit,
     options: List<String>,
     modifier: Modifier = Modifier
 ) {

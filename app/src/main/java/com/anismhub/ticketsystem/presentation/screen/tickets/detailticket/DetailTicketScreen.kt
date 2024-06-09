@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -58,6 +59,8 @@ fun DetailTicketContent(modifier: Modifier = Modifier) {
             modifier = modifier.fillMaxWidth()
         ) {
             var selectedTeknisi by remember { mutableStateOf("") }
+            var selectedTeknisiIndex by remember { mutableIntStateOf(0) }
+
             val dummyTicket = DataDummy.tickets[0]
 
             Column(
@@ -74,10 +77,14 @@ fun DetailTicketContent(modifier: Modifier = Modifier) {
                     Spacer(modifier = Modifier.weight(0.6f))
                     MyDropdownMenu(
                         value = selectedTeknisi,
-                        onValueChange = { selectedTeknisi = it },
+                        onValueChange = { value, index ->
+                            selectedTeknisi = value
+                            selectedTeknisiIndex = index
+                        },
                         options = teknisiOptions,
                         enabled = true,
-                        modifier = Modifier.weight(0.4f))
+                        modifier = Modifier.weight(0.4f)
+                    )
                 }
 
                 Column(
