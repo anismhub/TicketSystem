@@ -48,7 +48,7 @@ class AuthRespositoryImpl(
 
     override fun getAccessToken(): Flow<String> = localDataManager.getAccessToken()
 
-    override suspend fun clearLoginData() = localDataManager.clearLoginData()
+    override suspend fun clearData() = localDataManager.clearData()
 
     override fun getProfile(): Flow<Resource<Profile>> = flow {
         emit(Resource.Loading)

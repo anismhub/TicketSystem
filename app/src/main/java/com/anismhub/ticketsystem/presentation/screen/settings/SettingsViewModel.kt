@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anismhub.ticketsystem.domain.manager.LocalDataManager
-import com.anismhub.ticketsystem.domain.model.LoginData
 import com.anismhub.ticketsystem.domain.model.Profile
 import com.anismhub.ticketsystem.domain.model.ProfileData
 import com.anismhub.ticketsystem.domain.repository.AuthRepository
@@ -63,7 +62,7 @@ class SettingsViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
-            authRepository.clearLoginData()
+            authRepository.clearData()
         }
     }
 }

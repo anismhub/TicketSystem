@@ -18,7 +18,7 @@ interface AuthRepository {
 
     fun getAccessToken(): Flow<String>
 
-    suspend fun clearLoginData()
+    suspend fun clearData()
 
     fun getProfile(): Flow<Resource<Profile>>
 

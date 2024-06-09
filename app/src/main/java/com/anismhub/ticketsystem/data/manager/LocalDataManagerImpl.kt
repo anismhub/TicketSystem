@@ -55,7 +55,7 @@ class LocalDataManagerImpl(context: Context) : LocalDataManager {
         }
     }
 
-    override suspend fun clearLoginData() {
+    override suspend fun clearData() {
         dataStore.edit { pref ->
             pref.remove(userIdKey)
             pref.remove(userNameKey)
