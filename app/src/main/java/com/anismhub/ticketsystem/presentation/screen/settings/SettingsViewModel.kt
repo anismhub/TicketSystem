@@ -1,16 +1,15 @@
 package com.anismhub.ticketsystem.presentation.screen.settings
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anismhub.ticketsystem.domain.model.Profile
 import com.anismhub.ticketsystem.domain.repository.AuthRepository
+import com.anismhub.ticketsystem.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import com.anismhub.ticketsystem.utils.Resource
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
@@ -23,7 +22,6 @@ class SettingsViewModel @Inject constructor(
 
     init {
         getProfile()
-        Log.d("Profile", _profileData.value.toString())
     }
 
     private fun getProfile() {
