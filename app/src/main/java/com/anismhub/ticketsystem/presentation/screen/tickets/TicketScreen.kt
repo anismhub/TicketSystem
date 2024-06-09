@@ -1,5 +1,7 @@
 package com.anismhub.ticketsystem.presentation.screen.tickets
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,11 +24,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.data.DataDummy
+import com.anismhub.ticketsystem.domain.model.TicketData
 import com.anismhub.ticketsystem.presentation.components.MySearchBar
 import com.anismhub.ticketsystem.presentation.components.TabItem
 import com.anismhub.ticketsystem.presentation.components.TicketItem
+import com.anismhub.ticketsystem.utils.Resource
+import kotlin.math.log
 
 @Composable
 fun TicketScreen(
@@ -38,8 +46,45 @@ fun TicketScreen(
 @Composable
 fun TicketContent(
     navigateToDetailTicket: (title: String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: TicketViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+
+    val ticket by viewModel.ticket.collectAsStateWithLifecycle()
+    var listTicketOpen by remember { mutableStateOf(emptyList<TicketData>()) }
+    var listTicketOnProgress by remember { mutableStateOf(emptyList<TicketData>()) }
+    var listTicketClosed by remember { mutableStateOf(emptyList<TicketData>()) }
+
+    ticket.let {
+        if (!it.hasBeenHandled) {
+            when (val unhandled = it.getContentIfNotHandled()) {
+                is Resource.Loading -> {
+
+                }
+
+                is Resource.Error -> {
+                    Toast.makeText(context, unhandled.error, Toast.LENGTH_SHORT).show()
+                }
+
+                is Resource.Success -> {
+                    listTicketOpen =
+                        unhandled.data.data.filter { ticketData -> ticketData.ticketStatus == "Open" }
+                    listTicketOnProgress =
+                        unhandled.data.data.filter { ticketData -> ticketData.ticketStatus == "On Progress" }
+                    listTicketClosed =
+                        unhandled.data.data.filter { ticketData -> ticketData.ticketStatus == "Closed" }
+
+                    Log.d("Ticket Open", "Ticket Open: $listTicketOpen")
+                    Log.d("Ticket On Progress", "Ticket On Progress: $listTicketOnProgress")
+                }
+
+                else -> {}
+            }
+
+        }
+    }
+
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val pagerState = rememberPagerState { TabItem.entries.size }
     var query by remember { mutableStateOf("") }
@@ -100,6 +145,7 @@ fun TicketContent(
                             )
                         }
                     }
+
                     1 -> {
                         items(onProgressTicket, key = { it.title }) {
                             TicketItem(
@@ -107,11 +153,12 @@ fun TicketContent(
                                 title = it.title,
                                 date = it.date,
                                 priority = it.priority,
-                                status = it.status ,
+                                status = it.status,
                                 onClick = { navigateToDetailTicket("Detail Tiket") }
                             )
                         }
                     }
+
                     2 -> {
                         items(closedTicket, key = { it.title }) {
                             TicketItem(
@@ -119,7 +166,7 @@ fun TicketContent(
                                 title = it.title,
                                 date = it.date,
                                 priority = it.priority,
-                                status = it.status ,
+                                status = it.status,
                                 onClick = { navigateToDetailTicket("Detail Tiket") }
                             )
                         }
