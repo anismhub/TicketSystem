@@ -63,6 +63,9 @@ class LocalDataManagerImpl(context: Context) : LocalDataManager {
             pref.remove(userRoleKey)
             pref.remove(accessTokenKey)
             pref.remove(loginStateKey)
+            pref.remove(departmentIdKey)
+            pref.remove(departmentNameKey)
+            pref.remove(userPhoneKey)
         }
     }
 
