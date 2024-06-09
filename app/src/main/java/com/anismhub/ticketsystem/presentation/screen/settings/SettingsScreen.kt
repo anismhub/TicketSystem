@@ -37,15 +37,15 @@ fun SettingsContent(
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val profile by viewModel.profileData.collectAsState()
+    val localProfile by viewModel.localProfileData
     var profileDataState by remember {
         mutableStateOf(ProfileData(1,"","","",1,"",""))
     }
 
-    Log.d("Profile State", "SettingsContent: ${profileDataState}")
-
     when(val result = profile) {
         is Resource.Success -> {
             profileDataState = result.data.data
+            viewModel.saveLocalProfile(profileDataState)
             Log.d("Result Success", "SettingsContent: ${result.data}")
 
         }
@@ -64,7 +64,7 @@ fun SettingsContent(
             text = "Pengaturan",
             style = MyTypography.headlineMedium.copy(fontWeight = FontWeight.Bold)
         )
-        ProfilCard(title = profileDataState.userFullname, subtitle = profileDataState.userRole, modifier = Modifier.padding(vertical = 36.dp))
+        ProfilCard(title = localProfile.userFullName, subtitle = localProfile.departmentName, modifier = Modifier.padding(vertical = 36.dp))
         SettingsMenu(
             icon = painterResource(R.drawable.manage_accounts_24px),
             text = "Kelola Pengguna",

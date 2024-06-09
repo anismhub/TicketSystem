@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.anismhub.ticketsystem.domain.manager.LocalDataManager
 import com.anismhub.ticketsystem.domain.model.LoginData
+import com.anismhub.ticketsystem.domain.model.ProfileData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -65,6 +66,32 @@ class LocalDataManagerImpl(context: Context) : LocalDataManager {
         }
     }
 
+    override fun getProfileData(): Flow<ProfileData> {
+        return dataStore.data.map { pref ->
+            ProfileData(
+                userId = pref[userIdKey] ?: 0,
+                userName = pref[userNameKey] ?: "",
+                userFullName = pref[userFullNameKey] ?: "",
+                userRole = pref[userRoleKey] ?: "",
+                departmentId = pref[departmentIdKey] ?: 0,
+                departmentName = pref[departmentNameKey] ?: "",
+                userPhone = pref[userPhoneKey] ?: "08xx"
+            )
+        }
+    }
+
+    override suspend fun saveProfileData(profileData: ProfileData) {
+        dataStore.edit { pref ->
+            pref[userIdKey] = profileData.userId
+            pref[userNameKey] = profileData.userName
+            pref[userFullNameKey] = profileData.userFullName
+            pref[userRoleKey] = profileData.userRole
+            pref[departmentIdKey] = profileData.departmentId
+            pref[departmentNameKey] = profileData.departmentName
+            pref[userPhoneKey] = profileData.userPhone
+        }
+    }
+
     private companion object {
         val userIdKey = intPreferencesKey("user_id_key")
         val userNameKey = stringPreferencesKey("user_name_key")
@@ -72,5 +99,8 @@ class LocalDataManagerImpl(context: Context) : LocalDataManager {
         val userRoleKey = stringPreferencesKey("user_role_key")
         val accessTokenKey = stringPreferencesKey("access_token_key")
         val loginStateKey = booleanPreferencesKey("login_state_key")
+        val departmentIdKey = intPreferencesKey("department_id_key")
+        val departmentNameKey = stringPreferencesKey("department_name_key")
+        val userPhoneKey = stringPreferencesKey("user_phone_key")
     }
 }

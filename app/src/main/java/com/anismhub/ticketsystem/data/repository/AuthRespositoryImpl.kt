@@ -7,6 +7,7 @@ import com.anismhub.ticketsystem.domain.manager.LocalDataManager
 import com.anismhub.ticketsystem.domain.model.Login
 import com.anismhub.ticketsystem.domain.model.LoginData
 import com.anismhub.ticketsystem.domain.model.Profile
+import com.anismhub.ticketsystem.domain.model.ProfileData
 import com.anismhub.ticketsystem.domain.model.Response
 import com.anismhub.ticketsystem.domain.repository.AuthRepository
 import com.anismhub.ticketsystem.utils.Resource
@@ -63,5 +64,11 @@ class AuthRespositoryImpl(
                 emit(Resource.Error(e.message.toString()))
             }
         }
+    }
+
+    override fun getProfileData(): Flow<ProfileData> = localDataManager.getProfileData()
+
+    override suspend fun saveProfileData(profileData: ProfileData) {
+        localDataManager.saveProfileData(profileData)
     }
 }

@@ -32,7 +32,7 @@ fun ProfileDataDto.toProfileData(): ProfileData {
     return ProfileData(
         userId = userId,
         userName = userName,
-        userFullname = userFullName,
+        userFullName = userFullName,
         userRole = userRole,
         departmentId = departmentId,
         departmentName = departmentName,
