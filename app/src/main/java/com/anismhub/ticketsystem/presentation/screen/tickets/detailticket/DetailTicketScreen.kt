@@ -179,7 +179,7 @@ fun DetailTicketContent(
                             selectedTeknisiIndex = index
                         },
                         options = teknisiOptions,
-                        enabled = true,
+                        enabled = data.ticketStatus == "Open",
                         modifier = Modifier.weight(0.4f)
                     )
                 }

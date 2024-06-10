@@ -153,7 +153,9 @@ fun MyDropdownMenu(
             readOnly = true,
             shape = RoundedCornerShape(16.dp),
             trailingIcon = {
-                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                if (enabled) {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                }
             },
             isError = isError,
             supportingText = {
