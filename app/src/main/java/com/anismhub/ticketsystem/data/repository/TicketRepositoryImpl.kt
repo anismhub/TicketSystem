@@ -108,4 +108,61 @@ class TicketRepositoryImpl(
             }
         }
     }
+
+    override fun assignTicket(ticketId: Int, userId: Int): Flow<Resource<Response>> = flow {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.assignTicket(
+                ticketId = ticketId,
+                userId = userId
+            )
+            emit(Resource.Success(response.toResponse()))
+        } catch (e: Exception) {
+            if (e is HttpException) {
+                val jsonInString = e.response()?.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonInString, Response::class.java)
+                emit(Resource.Error(errorBody.message))
+            } else {
+                emit(Resource.Error(e.message.toString()))
+            }
+        }
+    }
+
+    override fun addComment(ticketId: Int, comment: String): Flow<Resource<Response>> = flow {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.addComment(
+                ticketId = ticketId,
+                content = comment
+            )
+            emit(Resource.Success(response.toResponse()))
+        } catch (e: Exception) {
+            if (e is HttpException) {
+                val jsonInString = e.response()?.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonInString, Response::class.java)
+                emit(Resource.Error(errorBody.message))
+            } else {
+                emit(Resource.Error(e.message.toString()))
+            }
+        }
+    }
+
+    override fun closeTicket(ticketId: Int, resolusi: String): Flow<Resource<Response>> = flow {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.closeTicket(
+                ticketId = ticketId,
+                content = resolusi
+            )
+            emit(Resource.Success(response.toResponse()))
+        } catch (e: Exception) {
+            if (e is HttpException) {
+                val jsonInString = e.response()?.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonInString, Response::class.java)
+                emit(Resource.Error(errorBody.message))
+            } else {
+                emit(Resource.Error(e.message.toString()))
+            }
+        }
+    }
 }

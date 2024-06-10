@@ -20,4 +20,19 @@ interface TicketRepository {
         ticketArea: Int,
         ticketCategory: Int
     ): Flow<Resource<Response>>
+
+    fun assignTicket(
+        ticketId: Int,
+        userId: Int
+    ): Flow<Resource<Response>>
+
+    fun addComment(
+        ticketId: Int,
+        comment: String
+    ): Flow<Resource<Response>>
+
+    fun closeTicket(
+        ticketId: Int,
+        resolusi: String
+    ): Flow<Resource<Response>>
 }

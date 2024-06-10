@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -40,6 +42,7 @@ import com.anismhub.ticketsystem.presentation.components.DetailCard
 import com.anismhub.ticketsystem.presentation.components.DetailSectionCard
 import com.anismhub.ticketsystem.presentation.components.InputText
 import com.anismhub.ticketsystem.presentation.components.MyDropdownMenu
+import com.anismhub.ticketsystem.presentation.components.ReplyCard
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.utils.Resource
 import com.anismhub.ticketsystem.utils.toDateTime
@@ -55,6 +58,8 @@ fun DetailTicketScreen(
     }
 
     val detailTicket by viewModel.detailTicket.collectAsStateWithLifecycle()
+    val comment by viewModel.comments.collectAsStateWithLifecycle()
+    val closeTicket by viewModel.closeTicket.collectAsStateWithLifecycle()
 
     when (val result = detailTicket) {
         is Resource.Loading -> {
@@ -64,6 +69,10 @@ fun DetailTicketScreen(
         is Resource.Success -> {
             DetailTicketContent(
                 data = result.data,
+                addComment = {
+                    viewModel.addComment(ticketId, it)
+                    viewModel.getTicketById(ticketId)
+                },
                 modifier = modifier
             )
         }
@@ -74,16 +83,40 @@ fun DetailTicketScreen(
 
         else -> {}
     }
+
+    comment.let {
+        if (!it.hasBeenHandled) {
+            when (val unhandled = it.getContentIfNotHandled()) {
+                is Resource.Loading -> {
+                    Log.d("Comment Loading", "Loading: ")
+                }
+
+                is Resource.Success -> {
+                    Log.d("Comment Success", "Success: ${unhandled.data}: ")
+                }
+
+                is Resource.Error -> {
+                    Log.d("Comment Error", "Error: ${unhandled.error}: ")
+                }
+
+                else -> {}
+            }
+        }
+
+    }
 }
 
 @Composable
 fun DetailTicketContent(
     data: DetailTicket,
+    addComment: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var replyText by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
     var enteredText by remember { mutableStateOf("") }
+    var selectedTeknisi by remember { mutableStateOf(teknisiOptions[0]) }
+    var selectedTeknisiIndex by remember { mutableIntStateOf(0) }
 
     Column(
         modifier = modifier
@@ -96,9 +129,6 @@ fun DetailTicketContent(
             shape = RoundedCornerShape(16.dp),
             modifier = modifier.fillMaxWidth()
         ) {
-            var selectedTeknisi by remember { mutableStateOf("") }
-            var selectedTeknisiIndex by remember { mutableIntStateOf(0) }
-
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
@@ -113,6 +143,19 @@ fun DetailTicketContent(
                     style = MyTypography.titleLarge,
                     modifier = Modifier.align(Alignment.End)
                 )
+                Row {
+                    Spacer(modifier = Modifier.weight(0.6f))
+                    MyDropdownMenu(
+                        value = selectedTeknisi,
+                        onValueChange = { value, index ->
+                            selectedTeknisi = value
+                            selectedTeknisiIndex = index
+                        },
+                        options = teknisiOptions,
+                        enabled = true,
+                        modifier = Modifier.weight(0.4f)
+                    )
+                }
                 DetailCard(
                     ticketCreatedAt = data.ticketCreatedAt.toDateTime(),
                     ticketUpdatedAt = data.ticketUpdateAt.toDateTime(),
@@ -145,17 +188,14 @@ fun DetailTicketContent(
         )
         if (data.comments.isNotEmpty()) {
             LazyColumn(
-                modifier = Modifier.padding(horizontal = 24.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(vertical = 8.dp),
             ) {
-                items(data.comments, key = { it.commentId }) {
-                    InputText(
-                        value = it.commentContent,
-                        onChange = {},
-                        minLines = 5,
-                        singleLine = false,
-                        readonly = true
+                items(data.comments, key = { it.commentTime }) {
+                    ReplyCard(
+                        name = it.commentName,
+                        date = it.commentTime.toDateTime(),
+                        content = it.commentContent
                     )
                 }
             }
@@ -174,7 +214,9 @@ fun DetailTicketContent(
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.Bottom,
         ) {
-            Button(onClick = { /*TODO*/ }) {
+            Button(onClick = {
+                addComment(replyText)
+            }) {
                 Text(text = "Perbarui")
             }
             Button(onClick = { showDialog = true }) {

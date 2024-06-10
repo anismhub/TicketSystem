@@ -1,10 +1,14 @@
 package com.anismhub.ticketsystem.data.mapper
 
+import com.anismhub.ticketsystem.data.remote.dto.CommentDTO
 import com.anismhub.ticketsystem.data.remote.dto.DetailTicketDTO
+import com.anismhub.ticketsystem.data.remote.dto.ResolutionDTO
 import com.anismhub.ticketsystem.data.remote.dto.ResponseDTO
 import com.anismhub.ticketsystem.data.remote.dto.TicketDTO
 import com.anismhub.ticketsystem.data.remote.dto.TicketDataDTO
+import com.anismhub.ticketsystem.domain.model.Comment
 import com.anismhub.ticketsystem.domain.model.DetailTicket
+import com.anismhub.ticketsystem.domain.model.Resolution
 import com.anismhub.ticketsystem.domain.model.Response
 import com.anismhub.ticketsystem.domain.model.Ticket
 import com.anismhub.ticketsystem.domain.model.TicketData
@@ -47,5 +51,21 @@ fun DetailTicketDTO.toDetailTicket(): DetailTicket {
 fun ResponseDTO.toResponse(): Response {
     return Response(
         error = error, status = status, message = message
+    )
+}
+
+fun CommentDTO.toComment(): Comment {
+    return Comment(
+        commentTime = commentTime,
+        commentName = commentName,
+        commentContent = commentContent
+    )
+}
+
+fun ResolutionDTO.toResolution(): Resolution {
+    return Resolution(
+        resolutionResolvedBy = resolutionResolvedBy,
+        resolutionResolvedAt = resolutionResolvedAt,
+        resolutionContent = resolutionContent
     )
 }

@@ -9,7 +9,7 @@ fun InputTextState.isInvalid(): Boolean {
 }
 
 fun String.toDateTime(
-    dateFormat: String = "yyyy-MM-dd",
+    dateFormat: String = "dd/MM/yyyy",
     timeFormat: String = "HH:mm:ss"
 ): String {
     val zonedDateTime = ZonedDateTime.parse(this, DateTimeFormatter.ISO_DATE_TIME)
