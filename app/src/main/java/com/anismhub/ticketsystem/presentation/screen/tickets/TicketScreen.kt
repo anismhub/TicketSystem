@@ -33,6 +33,7 @@ import com.anismhub.ticketsystem.presentation.components.MySearchBar
 import com.anismhub.ticketsystem.presentation.components.TabItem
 import com.anismhub.ticketsystem.presentation.components.TicketItem
 import com.anismhub.ticketsystem.utils.Resource
+import com.anismhub.ticketsystem.utils.toDateTime
 
 @Composable
 fun TicketScreen(
@@ -161,7 +162,7 @@ fun TicketContent(
                             TicketItem(
                                 number = it.ticketId,
                                 title = it.ticketSubject,
-                                date = it.ticketCreatedAt,
+                                date = it.ticketCreatedAt.toDateTime(),
                                 priority = it.ticketPriority,
                                 status = it.ticketStatus,
                                 onClick = { navigateToDetailTicket("Detail Tiket", it.ticketId) }
@@ -174,7 +175,7 @@ fun TicketContent(
                             TicketItem(
                                 number = it.ticketId,
                                 title = it.ticketSubject,
-                                date = it.ticketCreatedAt,
+                                date = it.ticketCreatedAt.toDateTime(),
                                 priority = it.ticketPriority,
                                 status = it.ticketStatus,
                                 onClick = { navigateToDetailTicket("Detail Tiket", it.ticketId) }
@@ -187,7 +188,7 @@ fun TicketContent(
                             TicketItem(
                                 number = it.ticketId,
                                 title = it.ticketSubject,
-                                date = it.ticketCreatedAt,
+                                date = it.ticketCreatedAt.toDateTime(),
                                 priority = it.ticketPriority,
                                 status = it.ticketStatus,
                                 onClick = { navigateToDetailTicket("Detail Tiket", it.ticketId) }

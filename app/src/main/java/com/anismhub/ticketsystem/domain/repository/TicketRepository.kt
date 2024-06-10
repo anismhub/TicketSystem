@@ -16,7 +16,7 @@ interface TicketRepository {
     fun addTicket(
         ticketSubject: String,
         ticketDescription: String,
-        ticketPriority: Int,
+        ticketPriority: String,
         ticketArea: Int,
         ticketCategory: Int
     ): Flow<Resource<Response>>

@@ -6,12 +6,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.anismhub.ticketsystem.navigation.BottomNav
 import com.anismhub.ticketsystem.navigation.TicketNav
 import com.anismhub.ticketsystem.presentation.screen.settings.accounts.AccountManageContent
 import com.anismhub.ticketsystem.presentation.screen.settings.accounts.create.AccountsCreateContent
 import com.anismhub.ticketsystem.presentation.screen.settings.accounts.update.AccountsUpdateContent
 import com.anismhub.ticketsystem.presentation.screen.settings.exportreport.ExportReportScreen
 import com.anismhub.ticketsystem.presentation.screen.tickets.addticket.AddTicketContent
+import com.anismhub.ticketsystem.presentation.screen.tickets.addticket.AddTicketScreen
 import com.anismhub.ticketsystem.presentation.screen.tickets.detailticket.DetailTicketScreen
 
 
@@ -23,15 +25,17 @@ fun NavGraphBuilder.ticketNavGraph(
         route = Graph.TICKET,
         startDestination = TicketNav.Detail.route
     ) {
-        composable(route = TicketNav.Detail.route,
-            arguments = listOf(navArgument("ticketId") {type = NavType.IntType})
+        composable(
+            route = TicketNav.Detail.route,
+            arguments = listOf(navArgument("ticketId") { type = NavType.IntType })
         ) {
             val ticketId = it.arguments?.getInt("ticketId") ?: 0
             DetailTicketScreen(ticketId = ticketId)
         }
         composable(route = TicketNav.Create.route) {
-            AddTicketContent(
-                onNavUp = { navController.navigateUp() }
+            AddTicketScreen(
+                onNavUp = { navController.navigateUp() },
+                navigateToTicket = { navController.navigate(BottomNav.Home.route) }
             )
         }
         composable(route = TicketNav.Export.route) {

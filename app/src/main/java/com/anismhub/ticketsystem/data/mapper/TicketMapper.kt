@@ -23,10 +23,7 @@ fun List<TicketDataDTO>.toListTicketData(): List<TicketData> {
 
 fun TicketDTO.toTicket(): Ticket {
     return Ticket(
-        error = error,
-        status = status,
-        message = message,
-        data = data.toListTicketData()
+        error = error, status = status, message = message, data = data.toListTicketData()
     )
 }
 
@@ -41,14 +38,14 @@ fun DetailTicketDTO.toDetailTicket(): DetailTicket {
         ticketArea = ticketArea,
         ticketCreatedBy = ticketCreatedBy,
         ticketCreatedAt = ticketCreatedAt,
-        ticketUpdateAt = ticketUpdateAt
+        ticketUpdateAt = ticketUpdatedAt,
+        comments = comments,
+        resolution = resolution
     )
 }
 
 fun ResponseDTO.toResponse(): Response {
     return Response(
-        error = error,
-        status = status,
-        message = message
+        error = error, status = status, message = message
     )
 }

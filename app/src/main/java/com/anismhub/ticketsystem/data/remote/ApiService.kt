@@ -34,7 +34,7 @@ interface ApiService {
     suspend fun addTicket(
         @Field("ticketSubject") ticketSubject: String,
         @Field("ticketDescription") ticketDescription: String,
-        @Field("ticketPriority") ticketPriority: Int,
+        @Field("ticketPriority") ticketPriority: String,
         @Field("ticketArea") ticketArea: Int,
         @Field("ticketCategory") ticketCategory: Int
     ): ResponseDTO

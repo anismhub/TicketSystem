@@ -1,7 +1,5 @@
 package com.anismhub.ticketsystem.domain.model
 
-import com.google.gson.annotations.SerializedName
-
 data class DetailTicket(
     val ticketId: Int,
     val ticketSubject: String,
@@ -12,5 +10,7 @@ data class DetailTicket(
     val ticketArea: String,
     val ticketCreatedBy: String,
     val ticketCreatedAt: String,
-    val ticketUpdateAt: String
+    val ticketUpdateAt: String,
+    val comments: List<Comment>,
+    val resolution: List<Resolution>
 )

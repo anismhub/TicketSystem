@@ -4,17 +4,19 @@ import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,10 +33,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.anismhub.ticketsystem.data.DataDummy
 import com.anismhub.ticketsystem.domain.model.DetailTicket
 import com.anismhub.ticketsystem.presentation.common.teknisiOptions
 import com.anismhub.ticketsystem.presentation.components.CustomDialog
+import com.anismhub.ticketsystem.presentation.components.DetailCard
+import com.anismhub.ticketsystem.presentation.components.DetailSectionCard
 import com.anismhub.ticketsystem.presentation.components.InputText
 import com.anismhub.ticketsystem.presentation.components.MyDropdownMenu
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
@@ -85,11 +88,9 @@ fun DetailTicketContent(
     Column(
         modifier = modifier
             .padding(top = 16.dp)
-            .padding(horizontal = 12.dp),
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
-        Spacer(modifier = Modifier.height(16.dp))
         Card(
             colors = CardDefaults.cardColors(Color.Transparent),
             shape = RoundedCornerShape(16.dp),
@@ -97,8 +98,6 @@ fun DetailTicketContent(
         ) {
             var selectedTeknisi by remember { mutableStateOf("") }
             var selectedTeknisiIndex by remember { mutableIntStateOf(0) }
-
-            val dummyTicket = DataDummy.tickets[0]
 
             Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -109,136 +108,20 @@ fun DetailTicketContent(
                     text = "#${data.ticketId} ${data.ticketSubject}",
                     style = MyTypography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
                 )
-                Text(text = data.ticketStatus, modifier = Modifier.align(Alignment.End))
-                Row {
-                    Spacer(modifier = Modifier.weight(0.6f))
-                    MyDropdownMenu(
-                        value = selectedTeknisi,
-                        onValueChange = { value, index ->
-                            selectedTeknisi = value
-                            selectedTeknisiIndex = index
-                        },
-                        options = teknisiOptions,
-                        enabled = true,
-                        modifier = Modifier.weight(0.4f)
-                    )
-                }
-
-                Column(
-                    modifier = Modifier
-                        .border(
-                            border = ButtonDefaults.outlinedButtonBorder,
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Card(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(vertical = 8.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer)
-                        ) {
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(12.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.padding(8.dp)
-                            ) {
-                                Text(text = "Dibuat")
-                                Text(data.ticketCreatedAt.toDateTime())
-                            }
-                        }
-                        Card(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(vertical = 8.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer)
-                        ) {
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(12.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.padding(8.dp)
-                            ) {
-                                Text(text = "Terakhir diperbarui")
-                                Text(text = data.ticketUpdateAt.toDateTime())
-                            }
-                        }
-                        Card(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(vertical = 8.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer)
-                        ) {
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(12.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.padding(8.dp)
-                            ) {
-                                Text(text = "Kategori")
-                                Text(data.ticketCategory)
-                            }
-                        }
-                    }
-
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceAround,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Card(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(vertical = 8.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer)
-                        ) {
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(12.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.padding(8.dp)
-                            ) {
-                                Text(text = "Nama Karyawan")
-                                Text("Departemen")
-                            }
-                        }
-                        Card(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(vertical = 8.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer)
-                        ) {
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(12.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.padding(8.dp)
-                            ) {
-                                Text(text = "Area")
-                                Text(data.ticketArea)
-                            }
-                        }
-                        Card(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(vertical = 8.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer)
-                        ) {
-                            Column(
-                                verticalArrangement = Arrangement.spacedBy(12.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.padding(8.dp)
-                            ) {
-                                Text(text = "Prioritas")
-                                Text(data.ticketPriority)
-                            }
-                        }
-                    }
-                }
+                Text(
+                    text = data.ticketStatus,
+                    style = MyTypography.titleLarge,
+                    modifier = Modifier.align(Alignment.End)
+                )
+                DetailCard(
+                    ticketCreatedAt = data.ticketCreatedAt.toDateTime(),
+                    ticketUpdatedAt = data.ticketUpdateAt.toDateTime(),
+                    ticketCategory = data.ticketCategory,
+                    userFullName = "Nama Karyawan",
+                    departmentName = "Procurement",
+                    ticketArea = data.ticketArea,
+                    ticketPriority = data.ticketPriority
+                )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(text = "Deskripsi", style = MyTypography.titleMedium)
                 Text(
@@ -260,12 +143,28 @@ fun DetailTicketContent(
                 .align(Alignment.Start)
                 .padding(top = 12.dp)
         )
+        if (data.comments.isNotEmpty()) {
+            LazyColumn(
+                modifier = Modifier.padding(horizontal = 24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(vertical = 8.dp),
+            ) {
+                items(data.comments, key = { it.commentId }) {
+                    InputText(
+                        value = it.commentContent,
+                        onChange = {},
+                        minLines = 5,
+                        singleLine = false,
+                        readonly = true
+                    )
+                }
+            }
+        }
         InputText(
             value = replyText,
             onChange = { newValue ->
                 replyText = newValue
             },
-            label = " ",
             minLines = 5,
             singleLine = false,
         )

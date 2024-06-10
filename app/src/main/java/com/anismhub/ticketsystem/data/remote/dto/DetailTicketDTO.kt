@@ -1,5 +1,7 @@
 package com.anismhub.ticketsystem.data.remote.dto
 
+import com.anismhub.ticketsystem.domain.model.Comment
+import com.anismhub.ticketsystem.domain.model.Resolution
 import com.google.gson.annotations.SerializedName
 
 data class DetailTicketDTO(
@@ -31,5 +33,11 @@ data class DetailTicketDTO(
     val ticketCreatedAt: String,
 
     @field:SerializedName("ticketUpdatedAt")
-    val ticketUpdateAt: String
+    val ticketUpdatedAt: String,
+
+    @field:SerializedName("comments")
+    val comments: List<Comment>,
+
+    @field:SerializedName("resolution")
+    val resolution: List<Resolution>
 )
