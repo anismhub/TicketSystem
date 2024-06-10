@@ -43,8 +43,8 @@ fun DetailTicketDTO.toDetailTicket(): DetailTicket {
         ticketCreatedBy = ticketCreatedBy,
         ticketCreatedAt = ticketCreatedAt,
         ticketUpdateAt = ticketUpdatedAt,
-        comments = comments,
-        resolution = resolution
+        comments = comments.map { it.toComment() },
+        resolution = resolution.map { it.toResolution() }
     )
 }
 

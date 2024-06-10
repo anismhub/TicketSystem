@@ -73,6 +73,10 @@ fun DetailTicketScreen(
                     viewModel.addComment(ticketId, it)
                     viewModel.getTicketById(ticketId)
                 },
+                addResolution = {
+                    viewModel.closeTicket(ticketId, it)
+                    viewModel.getTicketById(ticketId)
+                },
                 modifier = modifier
             )
         }
@@ -104,12 +108,34 @@ fun DetailTicketScreen(
         }
 
     }
+
+    closeTicket.let {
+        if (!it.hasBeenHandled) {
+            when (val unhandled = it.getContentIfNotHandled()) {
+                is Resource.Loading -> {
+                    Log.d("Close Ticket Loading", "Loading: ")
+                }
+
+                is Resource.Success -> {
+                    Log.d("Close Ticket Success", "Success: ${unhandled.data}: ")
+                }
+
+                is Resource.Error -> {
+                    Log.d("Close Ticket Error", "Error: ${unhandled.error}: ")
+                }
+
+                else -> {}
+            }
+        }
+
+    }
 }
 
 @Composable
 fun DetailTicketContent(
     data: DetailTicket,
     addComment: (String) -> Unit,
+    addResolution: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var replyText by remember { mutableStateOf("") }
@@ -121,7 +147,8 @@ fun DetailTicketContent(
     Column(
         modifier = modifier
             .padding(top = 16.dp)
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Card(
@@ -187,17 +214,22 @@ fun DetailTicketContent(
                 .padding(top = 12.dp)
         )
         if (data.comments.isNotEmpty()) {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(vertical = 8.dp),
-            ) {
-                items(data.comments, key = { it.commentTime }) {
-                    ReplyCard(
-                        name = it.commentName,
-                        date = it.commentTime.toDateTime(),
-                        content = it.commentContent
-                    )
-                }
+            data.comments.forEach {
+                ReplyCard(
+                    name = it.commentName,
+                    date = it.commentTime.toDateTime(),
+                    content = it.commentContent
+                )
+            }
+        }
+        if (data.resolution.isNotEmpty()) {
+            data.resolution.forEach {
+                Log.d("TAG", "DetailTicketContent: $it")
+                ReplyCard(
+                    name = it.resolutionResolvedBy,
+                    date = it.resolutionResolvedAt.toDateTime(),
+                    content = it.resolutionContent
+                )
             }
         }
         InputText(
@@ -233,8 +265,9 @@ fun DetailTicketContent(
         confirmButton = {
             Button(onClick = {
                 // Use the enteredText value
-                replyText = enteredText
-                showDialog = false
+//                replyText = enteredText
+//                showDialog = false
+                addResolution(enteredText)
             }) {
                 Text("Tutup Tiket")
             }

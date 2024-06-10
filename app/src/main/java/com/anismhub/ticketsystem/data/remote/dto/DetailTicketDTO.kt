@@ -36,8 +36,8 @@ data class DetailTicketDTO(
     val ticketUpdatedAt: String,
 
     @field:SerializedName("comments")
-    val comments: List<Comment>,
+    val comments: List<CommentDTO>,
 
     @field:SerializedName("resolution")
-    val resolution: List<Resolution>
+    val resolution: List<ResolutionDTO>
 )
