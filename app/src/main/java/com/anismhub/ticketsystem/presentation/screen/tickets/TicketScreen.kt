@@ -27,7 +27,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.anismhub.ticketsystem.data.DataDummy
 import com.anismhub.ticketsystem.domain.model.TicketData
 import com.anismhub.ticketsystem.presentation.components.MySearchBar
 import com.anismhub.ticketsystem.presentation.components.TabItem
@@ -37,29 +36,32 @@ import com.anismhub.ticketsystem.utils.toDateTime
 
 @Composable
 fun TicketScreen(
-) {
-
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun TicketContent(
     navigateToDetailTicket: (title: String, ticketId: Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: TicketViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
+    var listTicketOpen by remember { mutableStateOf(emptyList<TicketData>()) }
+    var listTicketOnProgress by remember { mutableStateOf(emptyList<TicketData>()) }
+    var listTicketClosed by remember { mutableStateOf(emptyList<TicketData>()) }
 
     val ticketOpen by viewModel.ticketOpen.collectAsStateWithLifecycle()
     val ticketOnProgress by viewModel.ticketOnProgress.collectAsStateWithLifecycle()
     val ticketClosed by viewModel.ticketClosed.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = "Open") { viewModel.getOpenTicket() }
-    LaunchedEffect(key1 = "On Progress") { viewModel.getOnProgressTicket() }
-    LaunchedEffect(key1 = "Closed") { viewModel.getClosedTicket() }
-
-    var listTicketOpen by remember { mutableStateOf(emptyList<TicketData>()) }
-    var listTicketOnProgress by remember { mutableStateOf(emptyList<TicketData>()) }
-    var listTicketClosed by remember { mutableStateOf(emptyList<TicketData>()) }
+    LaunchedEffect(key1 = Unit) {
+        if (listTicketOpen.isEmpty()) {
+            viewModel.getOpenTicket()
+        }
+    }
+    LaunchedEffect(key1 = Unit) {
+        if (listTicketOnProgress.isEmpty()) {
+            viewModel.getOnProgressTicket()
+        }
+    }
+    LaunchedEffect(key1 = Unit) {
+        if (listTicketClosed.isEmpty()) {
+            viewModel.getClosedTicket()
+        }
+    }
 
     when (val result = ticketOpen) {
         is Resource.Loading -> {
@@ -112,6 +114,24 @@ fun TicketContent(
         else -> {}
     }
 
+    TicketContent(
+        ticketOpen = listTicketOpen,
+        ticketOnProgress = listTicketOnProgress,
+        ticketClosed = listTicketClosed,
+        navigateToDetailTicket = navigateToDetailTicket,
+        modifier = modifier
+    )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun TicketContent(
+    ticketOpen: List<TicketData>,
+    ticketOnProgress: List<TicketData>,
+    ticketClosed: List<TicketData>,
+    navigateToDetailTicket: (title: String, ticketId: Int) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val pagerState = rememberPagerState { TabItem.entries.size }
     var query by remember { mutableStateOf("") }
@@ -126,9 +146,8 @@ fun TicketContent(
     }
 
     Column(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(2.dp)
-        //.verticalScroll(rememberScrollState())
     ) {
         MySearchBar(
             query = query,
@@ -154,11 +173,9 @@ fun TicketContent(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(bottom = 64.dp, top = 8.dp),
             ) {
-                val onProgressTicket = DataDummy.tickets.filter { it.status == "On Progress" }
-                val closedTicket = DataDummy.tickets.filter { it.status == "Closed" }
                 when (index) {
                     0 -> {
-                        items(listTicketOpen, key = { it.ticketId }) {
+                        items(ticketOpen, key = { it.ticketId }) {
                             TicketItem(
                                 number = it.ticketId,
                                 title = it.ticketSubject,
@@ -171,7 +188,7 @@ fun TicketContent(
                     }
 
                     1 -> {
-                        items(listTicketOnProgress, key = { it.ticketId }) {
+                        items(ticketOnProgress, key = { it.ticketId }) {
                             TicketItem(
                                 number = it.ticketId,
                                 title = it.ticketSubject,
@@ -184,7 +201,7 @@ fun TicketContent(
                     }
 
                     2 -> {
-                        items(listTicketClosed, key = { it.ticketId }) {
+                        items(ticketClosed, key = { it.ticketId }) {
                             TicketItem(
                                 number = it.ticketId,
                                 title = it.ticketSubject,

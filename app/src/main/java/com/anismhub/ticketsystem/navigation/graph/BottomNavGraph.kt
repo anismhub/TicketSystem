@@ -9,6 +9,7 @@ import com.anismhub.ticketsystem.navigation.TicketNav
 import com.anismhub.ticketsystem.presentation.screen.notification.NotificationContent
 import com.anismhub.ticketsystem.presentation.screen.settings.SettingsContent
 import com.anismhub.ticketsystem.presentation.screen.tickets.TicketContent
+import com.anismhub.ticketsystem.presentation.screen.tickets.TicketScreen
 
 @Composable
 fun BottomNavGraph(
@@ -22,7 +23,7 @@ fun BottomNavGraph(
         route = Graph.MAIN,
     ) {
         composable(route = BottomNav.Home.route) {
-            TicketContent(
+            TicketScreen(
                 navigateToDetailTicket = { title, ticketId ->
                     navController.navigate(TicketNav.Detail.createRoute(ticketId))
                     onTitleChange(title)

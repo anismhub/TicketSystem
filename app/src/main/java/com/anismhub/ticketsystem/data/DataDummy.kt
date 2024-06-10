@@ -4,17 +4,6 @@ import com.anismhub.ticketsystem.domain.DummyPengguna
 import com.anismhub.ticketsystem.domain.DummyTicket
 
 object DataDummy {
-    val dummyDummyTickets: List<DummyTicket> by lazy {
-        (1..25).map { index ->
-            DummyTicket(
-                title = "Title $index",
-                description = "Description $index",
-                priority = "Priority $index",
-                status = "Status $index",
-                date = "Date $index"
-            )
-        }
-    }
     val tickets = listOf(
         DummyTicket("Investigate memory leak", "App crashes when loading large images", "High", "Open", "2023-08-01"),
         DummyTicket("Fix login issue", "Users can't log in with correct credentials", "Medium", "On Progress", "2023-08-02"),
