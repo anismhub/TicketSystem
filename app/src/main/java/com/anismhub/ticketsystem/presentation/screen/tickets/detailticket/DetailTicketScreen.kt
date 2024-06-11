@@ -65,6 +65,7 @@ fun DetailTicketScreen(
         is Resource.Success -> {
             DetailTicketContent(
                 data = result.data,
+                isClosed = result.data.ticketStatus == "Closed",
                 addComment = {
                     viewModel.addComment(ticketId, it)
                     viewModel.getTicketById(ticketId)
@@ -132,6 +133,7 @@ fun DetailTicketContent(
     data: DetailTicket,
     addComment: (String) -> Unit,
     addResolution: (String) -> Unit,
+    isClosed: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     var replyText by remember { mutableStateOf("") }
@@ -228,27 +230,31 @@ fun DetailTicketContent(
                 )
             }
         }
-        InputText(
-            value = replyText,
-            onChange = { newValue ->
-                replyText = newValue
-            },
-            minLines = 5,
-            singleLine = false,
-        )
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.Bottom,
-        ) {
-            Button(onClick = {
-                addComment(replyText)
-            }) {
-                Text(text = "Perbarui")
-            }
-            Button(onClick = { showDialog = true }) {
-                Text(text = "Tutup")
+        if (!isClosed) {
+            InputText(
+                value = replyText,
+                onChange = { newValue ->
+                    replyText = newValue
+                },
+                minLines = 5,
+                singleLine = false,
+            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp),
+                horizontalArrangement = Arrangement.SpaceAround,
+                verticalAlignment = Alignment.Bottom,
+            ) {
+                Button(onClick = {
+                    addComment(replyText)
+                }) {
+                    Text(text = "Perbarui")
+                }
+                Button(onClick = { showDialog = true }) {
+                    Text(text = "Tutup")
+                }
             }
         }
     }
