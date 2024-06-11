@@ -139,7 +139,7 @@ fun DetailTicketContent(
     var replyText by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
     var enteredText by remember { mutableStateOf("") }
-    var selectedTeknisi by remember { mutableStateOf(teknisiOptions[0]) }
+    var selectedTeknisi by remember { mutableStateOf("") }
     var selectedTeknisiIndex by remember { mutableIntStateOf(0) }
 
     Column(
