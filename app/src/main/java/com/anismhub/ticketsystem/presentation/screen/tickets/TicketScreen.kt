@@ -47,21 +47,10 @@ fun TicketScreen(
     val ticketOpen by viewModel.ticketOpen.collectAsStateWithLifecycle()
     val ticketOnProgress by viewModel.ticketOnProgress.collectAsStateWithLifecycle()
     val ticketClosed by viewModel.ticketClosed.collectAsStateWithLifecycle()
-    LaunchedEffect(key1 = Unit) {
-        if (listTicketOpen.isEmpty()) {
-            viewModel.getOpenTicket()
-        }
-    }
-    LaunchedEffect(key1 = Unit) {
-        if (listTicketOnProgress.isEmpty()) {
-            viewModel.getOnProgressTicket()
-        }
-    }
-    LaunchedEffect(key1 = Unit) {
-        if (listTicketClosed.isEmpty()) {
-            viewModel.getClosedTicket()
-        }
-    }
+
+    viewModel.getOpenTicket()
+    viewModel.getOnProgressTicket()
+    viewModel.getClosedTicket()
 
     when (val result = ticketOpen) {
         is Resource.Loading -> {
