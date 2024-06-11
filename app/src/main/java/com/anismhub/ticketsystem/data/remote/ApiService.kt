@@ -5,7 +5,6 @@ import com.anismhub.ticketsystem.data.remote.dto.LoginDTO
 import com.anismhub.ticketsystem.data.remote.dto.ProfileDTO
 import com.anismhub.ticketsystem.data.remote.dto.ResponseDTO
 import com.anismhub.ticketsystem.data.remote.dto.TechProfileDTO
-import com.anismhub.ticketsystem.data.remote.dto.TechProfileDataDTO
 import com.anismhub.ticketsystem.data.remote.dto.TicketDTO
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded

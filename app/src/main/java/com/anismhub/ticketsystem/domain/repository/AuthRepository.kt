@@ -5,9 +5,8 @@ import com.anismhub.ticketsystem.domain.model.LoginData
 import com.anismhub.ticketsystem.domain.model.Profile
 import com.anismhub.ticketsystem.domain.model.ProfileData
 import com.anismhub.ticketsystem.domain.model.TechProfile
-import com.anismhub.ticketsystem.domain.model.TechProfileData
-import kotlinx.coroutines.flow.Flow
 import com.anismhub.ticketsystem.utils.Resource
+import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
     fun login(username: String, password: String): Flow<Resource<Login>>

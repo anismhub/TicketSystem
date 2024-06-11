@@ -2,11 +2,9 @@ package com.anismhub.ticketsystem.presentation.screen.tickets.detailticket
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.anismhub.ticketsystem.domain.model.Comment
 import com.anismhub.ticketsystem.domain.model.DetailTicket
 import com.anismhub.ticketsystem.domain.model.Response
 import com.anismhub.ticketsystem.domain.model.TechProfile
-import com.anismhub.ticketsystem.domain.model.TechProfileData
 import com.anismhub.ticketsystem.domain.repository.AuthRepository
 import com.anismhub.ticketsystem.domain.repository.TicketRepository
 import com.anismhub.ticketsystem.utils.Event
