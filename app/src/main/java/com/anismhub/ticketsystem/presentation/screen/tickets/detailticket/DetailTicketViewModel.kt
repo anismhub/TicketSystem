@@ -24,6 +24,10 @@ class DetailTicketViewModel @Inject constructor(
         MutableStateFlow(Resource.None)
     val detailTicket: StateFlow<Resource<DetailTicket>> = _detailTicket
 
+    private val _assignTicket: MutableStateFlow<Event<Resource<Response>>> =
+        MutableStateFlow(Event(Resource.None))
+    val assignTicket: StateFlow<Event<Resource<Response>>> = _assignTicket
+
     private val _comments: MutableStateFlow<Event<Resource<Response>>> =
         MutableStateFlow(Event(Resource.None))
     val comments: StateFlow<Event<Resource<Response>>> = _comments
@@ -39,7 +43,7 @@ class DetailTicketViewModel @Inject constructor(
     init {
         getTechUsers()
     }
-    fun getTechUsers() {
+    private fun getTechUsers() {
         viewModelScope.launch {
             authRepository.getTechUsers().collect {
                 _techUsers.value = it
@@ -51,6 +55,14 @@ class DetailTicketViewModel @Inject constructor(
         viewModelScope.launch {
             ticketRepository.getTicketById(ticketId).collect {
                 _detailTicket.value = it
+            }
+        }
+    }
+
+    fun assignTicket(ticketId: Int, userId: Int) {
+        viewModelScope.launch {
+            ticketRepository.assignTicket(ticketId, userId).collect {
+                _assignTicket.value = Event(it)
             }
         }
     }

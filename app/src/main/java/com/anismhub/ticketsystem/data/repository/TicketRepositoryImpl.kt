@@ -112,10 +112,7 @@ class TicketRepositoryImpl(
     override fun assignTicket(ticketId: Int, userId: Int): Flow<Resource<Response>> = flow {
         emit(Resource.Loading)
         try {
-            val response = apiService.assignTicket(
-                ticketId = ticketId,
-                userId = userId
-            )
+            val response = apiService.assignTicket(ticketId = ticketId, userId = userId)
             emit(Resource.Success(response.toResponse()))
         } catch (e: Exception) {
             if (e is HttpException) {

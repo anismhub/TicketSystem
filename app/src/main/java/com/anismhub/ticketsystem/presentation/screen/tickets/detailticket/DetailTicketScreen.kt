@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -37,7 +36,7 @@ import com.anismhub.ticketsystem.domain.model.TechProfileData
 import com.anismhub.ticketsystem.presentation.components.CustomDialog
 import com.anismhub.ticketsystem.presentation.components.DetailCard
 import com.anismhub.ticketsystem.presentation.components.InputText
-import com.anismhub.ticketsystem.presentation.components.MyDropdownMenu
+import com.anismhub.ticketsystem.presentation.components.MyDropdownMenuTech
 import com.anismhub.ticketsystem.presentation.components.ReplyCard
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.utils.Resource
@@ -55,22 +54,26 @@ fun DetailTicketScreen(
 
     val techUsers by viewModel.techUsers.collectAsStateWithLifecycle()
     val detailTicket by viewModel.detailTicket.collectAsStateWithLifecycle()
+    val assignTicket by viewModel.assignTicket.collectAsStateWithLifecycle()
     val comment by viewModel.comments.collectAsStateWithLifecycle()
     val closeTicket by viewModel.closeTicket.collectAsStateWithLifecycle()
 
     var listTeknisi by remember { mutableStateOf(emptyList<TechProfileData>()) }
 
-    when(val resultTech = techUsers) {
+    when (val resultTech = techUsers) {
         is Resource.Loading -> {
             Log.d("TechUsers Loading", "Loading: ")
         }
+
         is Resource.Success -> {
             Log.d("TechUsers Success", "Success: ${resultTech.data.data}: ")
             listTeknisi = resultTech.data.data
         }
+
         is Resource.Error -> {
             Log.d("TechUsers Error", "Error: ${resultTech.error}: ")
         }
+
         else -> {}
     }
 
@@ -82,15 +85,17 @@ fun DetailTicketScreen(
         is Resource.Success -> {
             DetailTicketContent(
                 data = resultData.data,
-                listTeknisi = listTeknisi,
+                listTech = listTeknisi,
                 isClosed = resultData.data.ticketStatus == "Closed",
+                isAssigned = resultData.data.ticketAssignedTo != null,
+                assignTicket = {
+                    if (it != 0) viewModel.assignTicket(ticketId, it)
+                },
                 addComment = {
                     viewModel.addComment(ticketId, it)
-                    viewModel.getTicketById(ticketId)
                 },
                 addResolution = {
                     viewModel.closeTicket(ticketId, it)
-                    viewModel.getTicketById(ticketId)
                 },
                 modifier = modifier
             )
@@ -103,6 +108,25 @@ fun DetailTicketScreen(
         else -> {}
     }
 
+    assignTicket.let {
+        when (val unhandled = it.getContentIfNotHandled()) {
+            is Resource.Loading -> {
+                Log.d("Comment Loading", "Loading: ")
+            }
+
+            is Resource.Success -> {
+                viewModel.getTicketById(ticketId)
+                Log.d("Comment Success", "Success: ${unhandled.data}: ")
+            }
+
+            is Resource.Error -> {
+                Log.d("Comment Error", "Error: ${unhandled.error}: ")
+            }
+
+            else -> {}
+        }
+    }
+
     comment.let {
         if (!it.hasBeenHandled) {
             when (val unhandled = it.getContentIfNotHandled()) {
@@ -111,6 +135,7 @@ fun DetailTicketScreen(
                 }
 
                 is Resource.Success -> {
+                    viewModel.getTicketById(ticketId)
                     Log.d("Comment Success", "Success: ${unhandled.data}: ")
                 }
 
@@ -132,6 +157,7 @@ fun DetailTicketScreen(
                 }
 
                 is Resource.Success -> {
+                    viewModel.getTicketById(ticketId)
                     Log.d("Close Ticket Success", "Success: ${unhandled.data}: ")
                 }
 
@@ -149,17 +175,18 @@ fun DetailTicketScreen(
 @Composable
 fun DetailTicketContent(
     data: DetailTicket,
-    listTeknisi: List<TechProfileData>,
+    listTech: List<TechProfileData>,
+    assignTicket: (Int) -> Unit,
     addComment: (String) -> Unit,
     addResolution: (String) -> Unit,
     modifier: Modifier = Modifier,
     isClosed: Boolean = false,
+    isAssigned: Boolean = false
 ) {
     var replyText by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
     var enteredText by remember { mutableStateOf("") }
-    var selectedTeknisi by remember { mutableStateOf("") }
-    var selectedTeknisiIndex by remember { mutableIntStateOf(0) }
+    var selectedTeknisi by remember { mutableStateOf<TechProfileData?>(null) }
 
     Column(
         modifier = modifier
@@ -189,14 +216,17 @@ fun DetailTicketContent(
                 )
                 Row {
                     Spacer(modifier = Modifier.weight(0.6f))
-                    MyDropdownMenu(
-                        value = selectedTeknisi,
-                        onValueChange = { value, index ->
-                            selectedTeknisi = value
-                            selectedTeknisiIndex = index
+                    MyDropdownMenuTech(
+                        value = if (isAssigned) {
+                            data.ticketAssignedTo
+                        } else {
+                            selectedTeknisi?.userFullName ?: "Pilih Teknisi"
                         },
-                        options = listTeknisi.map { it.userFullName },
-                        enabled = data.ticketStatus == "Open",
+                        onValueChange = {
+                            selectedTeknisi = it
+                        },
+                        listTech = listTech,
+                        enabled = !isAssigned,
                         modifier = Modifier.weight(0.4f)
                     )
                 }
@@ -226,7 +256,8 @@ fun DetailTicketContent(
             }
         }
         Text(
-            text = "Balasan", style = MyTypography.titleMedium, modifier = Modifier
+            text = "Balasan", style = MyTypography.titleMedium,
+            modifier = Modifier
                 .align(Alignment.Start)
                 .padding(top = 12.dp)
         )
@@ -241,11 +272,11 @@ fun DetailTicketContent(
         }
         if (data.resolution.isNotEmpty()) {
             data.resolution.forEach {
-                Log.d("TAG", "DetailTicketContent: $it")
                 ReplyCard(
                     name = it.resolutionResolvedBy,
                     date = it.resolutionResolvedAt.toDateTime(),
-                    content = it.resolutionContent
+                    content = it.resolutionContent,
+                    containerColor = Color(0xFFD8EFD3)
                 )
             }
         }
@@ -267,7 +298,12 @@ fun DetailTicketContent(
                 verticalAlignment = Alignment.Bottom,
             ) {
                 Button(onClick = {
-                    addComment(replyText)
+                    if (selectedTeknisi?.userId != null || isAssigned) {
+                        assignTicket(selectedTeknisi?.userId ?: 0)
+                    }
+                    if (replyText.trim().isNotEmpty()) {
+                        addComment(replyText)
+                    }
                 }) {
                     Text(text = "Perbarui")
                 }

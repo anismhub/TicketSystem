@@ -22,7 +22,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -34,6 +33,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.anismhub.ticketsystem.R
+import com.anismhub.ticketsystem.domain.model.TechProfileData
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.presentation.theme.fontFamily
 import java.time.Instant
@@ -137,9 +137,6 @@ fun MyDropdownMenu(
     supportingText: @Composable () -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedIndex by remember {
-        mutableIntStateOf(options.indexOf(value))
-    }
     val isError by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
@@ -171,12 +168,66 @@ fun MyDropdownMenu(
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false }) {
-            options.forEachIndexed { index, option ->
+            options.forEachIndexed { index, value ->
                 DropdownMenuItem(
-                    text = { Text(option) },
+                    text = { Text(value) },
                     onClick = {
-                        selectedIndex = index
-                        onValueChange(option, index)
+                        onValueChange(value, index)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MyDropdownMenuTech(
+    value: String?,
+    onValueChange: (TechProfileData) -> Unit,
+    listTech: List<TechProfileData>,
+    modifier: Modifier = Modifier,
+    enabled: Boolean,
+    supportingText: @Composable () -> Unit = {}
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val isError by remember { mutableStateOf(false) }
+
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = { expanded = enabled },
+        modifier = modifier
+    ) {
+        OutlinedTextField(
+            value = value ?: "",
+            onValueChange = { },
+            readOnly = true,
+            shape = RoundedCornerShape(16.dp),
+            trailingIcon = {
+                if (enabled) {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+                }
+            },
+            isError = isError,
+            supportingText = {
+                if (isError) {
+                    supportingText()
+                }
+            },
+            modifier = Modifier
+                .menuAnchor()
+                .fillMaxWidth()
+        )
+
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }) {
+            listTech.forEach { tech ->
+                DropdownMenuItem(
+                    text = { Text(tech.userFullName) },
+                    onClick = {
+                        onValueChange(tech)
                         expanded = false
                     }
                 )
@@ -216,7 +267,6 @@ fun DropdownMenuWithLabel(
         )
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
