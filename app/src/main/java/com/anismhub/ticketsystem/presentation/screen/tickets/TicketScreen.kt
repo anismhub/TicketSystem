@@ -163,7 +163,7 @@ fun TicketContent(
             ) {
                 when (index) {
                     0 -> {
-                        items(ticketOpen, key = { it.ticketId }) {
+                        items(ticketOpen.sortedByDescending { it.ticketId }, key = { it.ticketId }) {
                             TicketItem(
                                 number = it.ticketId,
                                 title = it.ticketSubject,
@@ -176,7 +176,7 @@ fun TicketContent(
                     }
 
                     1 -> {
-                        items(ticketOnProgress, key = { it.ticketId }) {
+                        items(ticketOnProgress.sortedByDescending { it.ticketId }, key = { it.ticketId }) {
                             TicketItem(
                                 number = it.ticketId,
                                 title = it.ticketSubject,
@@ -189,7 +189,7 @@ fun TicketContent(
                     }
 
                     2 -> {
-                        items(ticketClosed, key = { it.ticketId }) {
+                        items(ticketClosed.sortedByDescending { it.ticketId }, key = { it.ticketId }) {
                             TicketItem(
                                 number = it.ticketId,
                                 title = it.ticketSubject,
