@@ -133,8 +133,8 @@ fun DetailTicketContent(
     data: DetailTicket,
     addComment: (String) -> Unit,
     addResolution: (String) -> Unit,
-    isClosed: Boolean = false,
     modifier: Modifier = Modifier,
+    isClosed: Boolean = false,
 ) {
     var replyText by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
