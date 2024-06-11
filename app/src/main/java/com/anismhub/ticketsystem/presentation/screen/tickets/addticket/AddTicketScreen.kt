@@ -43,7 +43,6 @@ import com.anismhub.ticketsystem.utils.Resource
 @Composable
 fun AddTicketScreen(
     onNavUp: () -> Unit,
-    navigateToTicket: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AddTicketViewModel = hiltViewModel()
 ) {
@@ -65,7 +64,7 @@ fun AddTicketScreen(
                     Toast.makeText(LocalContext.current, "Loading", Toast.LENGTH_SHORT).show()
                 }
                 is Resource.Success -> {
-                    navigateToTicket()
+                    onNavUp()
                 }
 
                 is Resource.Error -> {
@@ -83,9 +82,9 @@ fun AddTicketScreen(
             viewModel.addTicket(
                 ticketSubject = subject,
                 ticketDescription = description,
-                ticketArea = selectedAreaIndex,
+                ticketArea = selectedAreaIndex + 1,
                 ticketPriority = selectedPriority,
-                ticketCategory = selectedTypeTicketIndex
+                ticketCategory = selectedTypeTicketIndex + 1
             )
         },
         subjectValue = subject,
