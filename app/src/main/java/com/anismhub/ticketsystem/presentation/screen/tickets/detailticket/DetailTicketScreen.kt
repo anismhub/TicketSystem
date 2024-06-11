@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.domain.model.DetailTicket
-import com.anismhub.ticketsystem.presentation.common.teknisiOptions
+import com.anismhub.ticketsystem.domain.model.TechProfileData
 import com.anismhub.ticketsystem.presentation.components.CustomDialog
 import com.anismhub.ticketsystem.presentation.components.DetailCard
 import com.anismhub.ticketsystem.presentation.components.InputText
@@ -53,19 +53,37 @@ fun DetailTicketScreen(
         viewModel.getTicketById(ticketId)
     }
 
+    val techUsers by viewModel.techUsers.collectAsStateWithLifecycle()
     val detailTicket by viewModel.detailTicket.collectAsStateWithLifecycle()
     val comment by viewModel.comments.collectAsStateWithLifecycle()
     val closeTicket by viewModel.closeTicket.collectAsStateWithLifecycle()
 
-    when (val result = detailTicket) {
+    var listTeknisi by remember { mutableStateOf(emptyList<TechProfileData>()) }
+
+    when(val resultTech = techUsers) {
+        is Resource.Loading -> {
+            Log.d("TechUsers Loading", "Loading: ")
+        }
+        is Resource.Success -> {
+            Log.d("TechUsers Success", "Success: ${resultTech.data.data}: ")
+            listTeknisi = resultTech.data.data
+        }
+        is Resource.Error -> {
+            Log.d("TechUsers Error", "Error: ${resultTech.error}: ")
+        }
+        else -> {}
+    }
+
+    when (val resultData = detailTicket) {
         is Resource.Loading -> {
             Log.d("DetailTicket Loading", "Loading: ")
         }
 
         is Resource.Success -> {
             DetailTicketContent(
-                data = result.data,
-                isClosed = result.data.ticketStatus == "Closed",
+                data = resultData.data,
+                listTeknisi = listTeknisi,
+                isClosed = resultData.data.ticketStatus == "Closed",
                 addComment = {
                     viewModel.addComment(ticketId, it)
                     viewModel.getTicketById(ticketId)
@@ -79,7 +97,7 @@ fun DetailTicketScreen(
         }
 
         is Resource.Error -> {
-            Log.d("DetailTicket Error", "Detail Error: ${result.error}: ")
+            Log.d("DetailTicket Error", "Detail Error: ${resultData.error}: ")
         }
 
         else -> {}
@@ -131,6 +149,7 @@ fun DetailTicketScreen(
 @Composable
 fun DetailTicketContent(
     data: DetailTicket,
+    listTeknisi: List<TechProfileData>,
     addComment: (String) -> Unit,
     addResolution: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -176,7 +195,7 @@ fun DetailTicketContent(
                             selectedTeknisi = value
                             selectedTeknisiIndex = index
                         },
-                        options = teknisiOptions,
+                        options = listTeknisi.map { it.userFullName },
                         enabled = data.ticketStatus == "Open",
                         modifier = Modifier.weight(0.4f)
                     )

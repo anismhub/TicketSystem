@@ -5,6 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.anismhub.ticketsystem.domain.model.Comment
 import com.anismhub.ticketsystem.domain.model.DetailTicket
 import com.anismhub.ticketsystem.domain.model.Response
+import com.anismhub.ticketsystem.domain.model.TechProfile
+import com.anismhub.ticketsystem.domain.model.TechProfileData
+import com.anismhub.ticketsystem.domain.repository.AuthRepository
 import com.anismhub.ticketsystem.domain.repository.TicketRepository
 import com.anismhub.ticketsystem.utils.Event
 import com.anismhub.ticketsystem.utils.Resource
@@ -16,17 +19,35 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailTicketViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
     private val ticketRepository: TicketRepository
-): ViewModel() {
+) : ViewModel() {
     private val _detailTicket: MutableStateFlow<Resource<DetailTicket>> =
         MutableStateFlow(Resource.None)
     val detailTicket: StateFlow<Resource<DetailTicket>> = _detailTicket
 
-    private val _comments: MutableStateFlow<Event<Resource<Response>>> = MutableStateFlow(Event(Resource.None))
+    private val _comments: MutableStateFlow<Event<Resource<Response>>> =
+        MutableStateFlow(Event(Resource.None))
     val comments: StateFlow<Event<Resource<Response>>> = _comments
 
-    private val _closeTicket: MutableStateFlow<Event<Resource<Response>>> = MutableStateFlow(Event(Resource.None))
+    private val _closeTicket: MutableStateFlow<Event<Resource<Response>>> =
+        MutableStateFlow(Event(Resource.None))
     val closeTicket: StateFlow<Event<Resource<Response>>> = _closeTicket
+
+    private val _techUsers: MutableStateFlow<Resource<TechProfile>> =
+        MutableStateFlow(Resource.None)
+    val techUsers: StateFlow<Resource<TechProfile>> = _techUsers
+
+    init {
+        getTechUsers()
+    }
+    fun getTechUsers() {
+        viewModelScope.launch {
+            authRepository.getTechUsers().collect {
+                _techUsers.value = it
+            }
+        }
+    }
 
     fun getTicketById(ticketId: Int) {
         viewModelScope.launch {

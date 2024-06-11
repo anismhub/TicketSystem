@@ -4,6 +4,8 @@ import com.anismhub.ticketsystem.domain.model.Login
 import com.anismhub.ticketsystem.domain.model.LoginData
 import com.anismhub.ticketsystem.domain.model.Profile
 import com.anismhub.ticketsystem.domain.model.ProfileData
+import com.anismhub.ticketsystem.domain.model.TechProfile
+import com.anismhub.ticketsystem.domain.model.TechProfileData
 import kotlinx.coroutines.flow.Flow
 import com.anismhub.ticketsystem.utils.Resource
 
@@ -23,6 +25,8 @@ interface AuthRepository {
     fun getProfile(): Flow<Resource<Profile>>
 
     fun getProfileData(): Flow<ProfileData>
+
+    fun getTechUsers(): Flow<Resource<TechProfile>>
 
     suspend fun saveProfileData(profileData: ProfileData)
 }

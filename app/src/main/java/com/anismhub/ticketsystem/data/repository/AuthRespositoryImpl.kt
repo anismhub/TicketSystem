@@ -2,6 +2,7 @@ package com.anismhub.ticketsystem.data.repository
 
 import com.anismhub.ticketsystem.data.mapper.toLogin
 import com.anismhub.ticketsystem.data.mapper.toProfile
+import com.anismhub.ticketsystem.data.mapper.toTechProfile
 import com.anismhub.ticketsystem.data.remote.ApiService
 import com.anismhub.ticketsystem.domain.manager.LocalDataManager
 import com.anismhub.ticketsystem.domain.model.Login
@@ -9,6 +10,7 @@ import com.anismhub.ticketsystem.domain.model.LoginData
 import com.anismhub.ticketsystem.domain.model.Profile
 import com.anismhub.ticketsystem.domain.model.ProfileData
 import com.anismhub.ticketsystem.domain.model.Response
+import com.anismhub.ticketsystem.domain.model.TechProfile
 import com.anismhub.ticketsystem.domain.repository.AuthRepository
 import com.anismhub.ticketsystem.utils.Resource
 import com.google.gson.Gson
@@ -67,7 +69,21 @@ class AuthRespositoryImpl(
     }
 
     override fun getProfileData(): Flow<ProfileData> = localDataManager.getProfileData()
-
+    override fun getTechUsers(): Flow<Resource<TechProfile>> = flow {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.getTechs()
+            emit(Resource.Success(response.toTechProfile()))
+        } catch (e: Exception) {
+            if (e is HttpException) {
+                val jsonInString = e.response()?.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonInString, Response::class.java)
+                emit(Resource.Error(errorBody.message))
+            } else {
+                emit(Resource.Error(e.message.toString()))
+            }
+        }
+    }
     override suspend fun saveProfileData(profileData: ProfileData) {
         localDataManager.saveProfileData(profileData)
     }
