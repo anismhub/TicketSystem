@@ -47,9 +47,15 @@ fun TicketScreen(
     val ticketOnProgress by viewModel.ticketOnProgress.collectAsStateWithLifecycle()
     val ticketClosed by viewModel.ticketClosed.collectAsStateWithLifecycle()
 
-    viewModel.getOpenTicket()
-    viewModel.getOnProgressTicket()
-    viewModel.getClosedTicket()
+    LaunchedEffect(Unit) {
+        viewModel.getOpenTicket()
+    }
+    LaunchedEffect(Unit) {
+        viewModel.getOnProgressTicket()
+    }
+    LaunchedEffect(Unit) {
+        viewModel.getClosedTicket()
+    }
 
     when (val result = ticketOpen) {
         is Resource.Loading -> {
