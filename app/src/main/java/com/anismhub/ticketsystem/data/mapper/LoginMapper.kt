@@ -6,12 +6,14 @@ import com.anismhub.ticketsystem.data.remote.dto.ProfileDTO
 import com.anismhub.ticketsystem.data.remote.dto.ProfileDataDTO
 import com.anismhub.ticketsystem.data.remote.dto.TechProfileDTO
 import com.anismhub.ticketsystem.data.remote.dto.TechProfileDataDTO
+import com.anismhub.ticketsystem.data.remote.dto.UsersDTO
 import com.anismhub.ticketsystem.domain.model.Login
 import com.anismhub.ticketsystem.domain.model.LoginData
 import com.anismhub.ticketsystem.domain.model.Profile
 import com.anismhub.ticketsystem.domain.model.ProfileData
 import com.anismhub.ticketsystem.domain.model.TechProfile
 import com.anismhub.ticketsystem.domain.model.TechProfileData
+import com.anismhub.ticketsystem.domain.model.Users
 
 fun LoginDataDTO.toLoginData(): LoginData {
     return LoginData(
@@ -44,6 +46,14 @@ fun ProfileDataDTO.toProfileData(): ProfileData {
     )
 }
 
+fun UsersDTO.toUsers(): Users {
+    return Users(
+        error = error,
+        status = status,
+        message = message,
+        data = data.map { it.toProfileData() }
+    )
+}
 fun ProfileDTO.toProfile(): Profile {
     return Profile(
         error = error,

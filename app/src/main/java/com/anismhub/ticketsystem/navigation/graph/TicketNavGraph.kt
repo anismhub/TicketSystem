@@ -7,8 +7,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.anismhub.ticketsystem.navigation.TicketNav
-import com.anismhub.ticketsystem.presentation.screen.settings.accounts.AccountManageContent
-import com.anismhub.ticketsystem.presentation.screen.settings.accounts.create.AccountsCreateContent
+import com.anismhub.ticketsystem.presentation.screen.settings.accounts.AccountManageScreen
+import com.anismhub.ticketsystem.presentation.screen.settings.accounts.create.AccountsCreateScreen
 import com.anismhub.ticketsystem.presentation.screen.settings.accounts.update.AccountsUpdateContent
 import com.anismhub.ticketsystem.presentation.screen.settings.exportreport.ExportReportScreen
 import com.anismhub.ticketsystem.presentation.screen.tickets.addticket.AddTicketScreen
@@ -39,7 +39,7 @@ fun NavGraphBuilder.ticketNavGraph(
             ExportReportScreen()
         }
         composable(route = TicketNav.ManageAccount.route) {
-            AccountManageContent(
+            AccountManageScreen(
                 navigateToCreateAccount = {
                     navController.navigate(TicketNav.CreateAccount.route)
                 },
@@ -50,7 +50,9 @@ fun NavGraphBuilder.ticketNavGraph(
             onTitleChange("Kelola Pengguna")
         }
         composable(route = TicketNav.CreateAccount.route) {
-            AccountsCreateContent()
+            AccountsCreateScreen(
+                onNavUp = { navController.navigateUp() }
+            )
             onTitleChange("Buat Pengguna")
         }
         composable(route = TicketNav.UpdateAccount.route) {

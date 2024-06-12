@@ -91,6 +91,7 @@ fun InputTextWithLabel(
     singleLine: Boolean = true,
     enabled: Boolean = true,
     keyboardOption: KeyboardOptions = KeyboardOptions.Default,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable () -> Unit = {}
 ) {
     var isError by remember { mutableStateOf(false) }
@@ -112,6 +113,7 @@ fun InputTextWithLabel(
             minLines = minLines,
             singleLine = singleLine,
             keyboardOption = keyboardOption,
+            visualTransformation = visualTransformation,
             trailingIcon = {
                 trailingIcon()
             },

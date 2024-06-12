@@ -1,5 +1,6 @@
 package com.anismhub.ticketsystem.presentation.screen.settings.accounts
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,19 +26,49 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.R
-import com.anismhub.ticketsystem.data.DataDummy
+import com.anismhub.ticketsystem.domain.model.ProfileData
 import com.anismhub.ticketsystem.presentation.components.CustomDialog
 import com.anismhub.ticketsystem.presentation.components.MySearchBar
 import com.anismhub.ticketsystem.presentation.components.ProfilCard
+import com.anismhub.ticketsystem.utils.Resource
 
 @Composable
-fun AccountManageScreen() {
+fun AccountManageScreen(
+    navigateToCreateAccount: () -> Unit,
+    navigateToUpdateAccount: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: AccountsManageViewModel = hiltViewModel()
+) {
+    val usersState by viewModel.usersData.collectAsStateWithLifecycle()
+    var listUsers by remember { mutableStateOf(emptyList<ProfileData>()) }
+
+    when (val users = usersState) {
+        is Resource.Loading -> {
+            Log.d("Loading Manage", "Loading...")
+        }
+        is Resource.Success -> {
+            listUsers = users.data.data
+        }
+        is Resource.Error -> {
+            Log.d("Error Manage", users.error)
+        }
+        else -> {}
+    }
+    AccountManageContent(
+        listUsers = listUsers,
+        navigateToCreateAccount = navigateToCreateAccount,
+        navigateToUpdateAccount = navigateToUpdateAccount,
+        modifier = modifier
+    )
 
 }
 
 @Composable
 fun AccountManageContent(
+    listUsers: List<ProfileData>,
     navigateToCreateAccount: () -> Unit,
     navigateToUpdateAccount: () -> Unit,
     modifier: Modifier = Modifier
@@ -77,8 +108,8 @@ fun AccountManageContent(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             modifier = Modifier.padding(top = 8.dp)
         ) {
-            items(DataDummy.dummyPenggunas, key = { it.nama }) {
-                ProfilCard(title = it.nama, subtitle = it.role,
+            items(listUsers, key = { it.userId }) {
+                ProfilCard(title = it.userFullName, subtitle = it.departmentName,
                     icon = {
                         Icon(
                             painter = painterResource(id = R.drawable.person_remove_24px),

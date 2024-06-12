@@ -6,6 +6,7 @@ import com.anismhub.ticketsystem.data.remote.dto.ProfileDTO
 import com.anismhub.ticketsystem.data.remote.dto.ResponseDTO
 import com.anismhub.ticketsystem.data.remote.dto.TechProfileDTO
 import com.anismhub.ticketsystem.data.remote.dto.TicketDTO
+import com.anismhub.ticketsystem.data.remote.dto.UsersDTO
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.Field
@@ -26,7 +27,18 @@ interface ApiService {
     ): LoginDTO
 
     @GET("users")
-    suspend fun getUsers(): ProfileDTO
+    suspend fun getUsers(): UsersDTO
+
+    @FormUrlEncoded
+    @POST("users")
+    suspend fun addUser(
+        @Field("username") username: String,
+        @Field("fullname") fullname: String,
+        @Field("password") password: String,
+        @Field("role") role: String,
+        @Field("department") department: Int,
+        @Field("phoneNumber") phoneNumber: String
+    ): ResponseDTO
 
     @GET("users/profile")
     suspend fun getProfile(): ProfileDTO
