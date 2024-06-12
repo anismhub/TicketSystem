@@ -45,6 +45,7 @@ import com.anismhub.ticketsystem.utils.toDateTime
 @Composable
 fun DetailTicketScreen(
     ticketId: Int,
+    onNavUp: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DetailTicketViewModel = hiltViewModel()
 ) {
@@ -115,7 +116,8 @@ fun DetailTicketScreen(
             }
 
             is Resource.Success -> {
-                viewModel.getTicketById(ticketId)
+//                viewModel.getTicketById(ticketId)
+                onNavUp()
                 Log.d("Comment Success", "Success: ${unhandled.data}: ")
             }
 
@@ -157,7 +159,8 @@ fun DetailTicketScreen(
                 }
 
                 is Resource.Success -> {
-                    viewModel.getTicketById(ticketId)
+//                    viewModel.getTicketById(ticketId)
+                    onNavUp()
                     Log.d("Close Ticket Success", "Success: ${unhandled.data}: ")
                 }
 
@@ -323,8 +326,8 @@ fun DetailTicketContent(
             Button(onClick = {
                 // Use the enteredText value
 //                replyText = enteredText
-//                showDialog = false
                 addResolution(enteredText)
+                showDialog = false
             }) {
                 Text("Tutup Tiket")
             }

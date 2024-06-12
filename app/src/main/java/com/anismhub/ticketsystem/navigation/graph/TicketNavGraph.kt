@@ -28,7 +28,7 @@ fun NavGraphBuilder.ticketNavGraph(
             arguments = listOf(navArgument("ticketId") { type = NavType.IntType })
         ) {
             val ticketId = it.arguments?.getInt("ticketId") ?: 0
-            DetailTicketScreen(ticketId = ticketId)
+            DetailTicketScreen(ticketId = ticketId, onNavUp = { navController.navigateUp() })
         }
         composable(route = TicketNav.Create.route) {
             AddTicketScreen(
