@@ -5,8 +5,12 @@ import com.anismhub.ticketsystem.domain.model.Response
 import com.anismhub.ticketsystem.domain.model.Ticket
 import com.anismhub.ticketsystem.utils.Resource
 import kotlinx.coroutines.flow.Flow
+import okhttp3.ResponseBody
+import retrofit2.Response as RetrofitResponse
 
 interface TicketRepository {
+    fun exportReport(): Flow<Resource<RetrofitResponse<ResponseBody>>>
+
     fun getOpenTickets(status: String = "Open"): Flow<Resource<Ticket>>
     fun getOnProgressTickets(status: String = "On Progress"): Flow<Resource<Ticket>>
     fun getClosedTickets(status: String = "Closed"): Flow<Resource<Ticket>>

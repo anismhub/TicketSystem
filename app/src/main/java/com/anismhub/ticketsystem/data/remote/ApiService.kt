@@ -6,12 +6,15 @@ import com.anismhub.ticketsystem.data.remote.dto.ProfileDTO
 import com.anismhub.ticketsystem.data.remote.dto.ResponseDTO
 import com.anismhub.ticketsystem.data.remote.dto.TechProfileDTO
 import com.anismhub.ticketsystem.data.remote.dto.TicketDTO
+import retrofit2.Response
+import okhttp3.ResponseBody
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Streaming
 
 interface ApiService {
 
@@ -43,6 +46,10 @@ interface ApiService {
         @Field("ticketCategory") ticketCategory: Int
     ): ResponseDTO
 
+    @Streaming
+    @GET("tickets/export")
+    suspend fun exportTickets(): Response<ResponseBody>
+
     @GET("tickets/{ticketId}")
     suspend fun ticketById(
         @Path("ticketId") ticketId: Int
@@ -68,4 +75,5 @@ interface ApiService {
         @Path("ticketId") ticketId: Int,
         @Field("content") content: String,
     ): ResponseDTO
+
 }
