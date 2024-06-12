@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +45,10 @@ fun AccountManageScreen(
 ) {
     val usersState by viewModel.usersData.collectAsStateWithLifecycle()
     var listUsers by remember { mutableStateOf(emptyList<ProfileData>()) }
+
+    LaunchedEffect(Unit) {
+        viewModel.getUsers()
+    }
 
     when (val users = usersState) {
         is Resource.Loading -> {

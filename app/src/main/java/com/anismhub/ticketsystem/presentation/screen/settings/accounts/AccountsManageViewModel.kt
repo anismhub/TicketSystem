@@ -19,11 +19,11 @@ class AccountsManageViewModel @Inject constructor(
     private val _usersData: MutableStateFlow<Resource<Users>> = MutableStateFlow(Resource.None)
     val usersData: StateFlow<Resource<Users>> = _usersData
 
-    init {
-        getUsers()
-    }
+//    init {
+//        getUsers()
+//    }
 
-    private fun getUsers() {
+    fun getUsers() {
         viewModelScope.launch {
             authRepository.getUsers().collect {
                 _usersData.value = it
