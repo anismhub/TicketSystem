@@ -37,7 +37,7 @@ class TicketRepositoryImpl(
     override fun getOpenTickets(status: String): Flow<Resource<Ticket>> = flow {
         emit(Resource.Loading)
         try {
-            val response = apiService.tickets(status)
+            val response = apiService.getTickets(status)
             emit(Resource.Success(response.toTicket()))
         } catch (e: Exception) {
             if (e is HttpException) {
@@ -53,7 +53,7 @@ class TicketRepositoryImpl(
     override fun getOnProgressTickets(status: String): Flow<Resource<Ticket>> = flow {
         emit(Resource.Loading)
         try {
-            val response = apiService.tickets(status)
+            val response = apiService.getTickets(status)
             emit(Resource.Success(response.toTicket()))
         } catch (e: Exception) {
             if (e is HttpException) {
@@ -69,7 +69,7 @@ class TicketRepositoryImpl(
     override fun getClosedTickets(status: String): Flow<Resource<Ticket>> = flow {
         emit(Resource.Loading)
         try {
-            val response = apiService.tickets(status)
+            val response = apiService.getTickets(status)
             emit(Resource.Success(response.toTicket()))
         } catch (e: Exception) {
             if (e is HttpException) {

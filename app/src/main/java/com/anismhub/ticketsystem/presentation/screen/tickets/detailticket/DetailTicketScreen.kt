@@ -31,7 +31,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.anismhub.ticketsystem.domain.model.DetailTicket
+import com.anismhub.ticketsystem.domain.model.DetailTicketData
 import com.anismhub.ticketsystem.domain.model.TechProfileData
 import com.anismhub.ticketsystem.presentation.components.CustomDialog
 import com.anismhub.ticketsystem.presentation.components.DetailCard
@@ -80,15 +80,15 @@ fun DetailTicketScreen(
 
     when (val resultData = detailTicket) {
         is Resource.Loading -> {
-            Log.d("DetailTicket Loading", "Loading: ")
+            Log.d("DetailTicket Loading", "Loading..")
         }
 
         is Resource.Success -> {
             DetailTicketContent(
-                data = resultData.data,
+                data = resultData.data.data,
                 listTech = listTeknisi,
-                isClosed = resultData.data.ticketStatus == "Closed",
-                isAssigned = resultData.data.ticketAssignedTo != null,
+                isClosed = resultData.data.data.ticketStatus == "Closed",
+                isAssigned = resultData.data.data.ticketAssignedTo != null,
                 assignTicket = {
                     if (it != 0) viewModel.assignTicket(ticketId, it)
                 },
@@ -116,7 +116,6 @@ fun DetailTicketScreen(
             }
 
             is Resource.Success -> {
-//                viewModel.getTicketById(ticketId)
                 onNavUp()
                 Log.d("Comment Success", "Success: ${unhandled.data}: ")
             }
@@ -159,7 +158,6 @@ fun DetailTicketScreen(
                 }
 
                 is Resource.Success -> {
-//                    viewModel.getTicketById(ticketId)
                     onNavUp()
                     Log.d("Close Ticket Success", "Success: ${unhandled.data}: ")
                 }
@@ -177,7 +175,7 @@ fun DetailTicketScreen(
 
 @Composable
 fun DetailTicketContent(
-    data: DetailTicket,
+    data: DetailTicketData,
     listTech: List<TechProfileData>,
     assignTicket: (Int) -> Unit,
     addComment: (String) -> Unit,
@@ -324,8 +322,6 @@ fun DetailTicketContent(
         textInput = Pair("Resolusi") { enteredText = it }, // Add text input
         confirmButton = {
             Button(onClick = {
-                // Use the enteredText value
-//                replyText = enteredText
                 addResolution(enteredText)
                 showDialog = false
             }) {

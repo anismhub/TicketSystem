@@ -15,3 +15,20 @@ data class LoginDTO(
     @field:SerializedName("data")
     val data: LoginDataDTO
 )
+
+data class LoginDataDTO(
+    @field:SerializedName("userId")
+    val userId: Int,
+
+    @field:SerializedName("userName")
+    val userName: String,
+
+    @field:SerializedName("userFullName")
+    val userFullName: String,
+
+    @field:SerializedName("userRole")
+    val userRole: String,
+
+    @field:SerializedName("accessToken")
+    val accessToken: String
+)

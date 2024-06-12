@@ -6,3 +6,8 @@ data class TechProfile(
     val message: String,
     val data: List<TechProfileData>
 )
+
+data class TechProfileData(
+    val userId: Int,
+    val userFullName: String,
+)

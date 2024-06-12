@@ -51,11 +51,26 @@ class AuthRespositoryImpl(
     override fun getAccessToken(): Flow<String> = localDataManager.getAccessToken()
 
     override suspend fun clearData() = localDataManager.clearData()
+    override fun getUsers(): Flow<Resource<Profile>> = flow {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.getUsers()
+            emit(Resource.Success(response.toProfile()))
+        } catch (e: Exception) {
+            if (e is HttpException) {
+                val jsonInString = e.response()?.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonInString, Response::class.java)
+                emit(Resource.Error(errorBody.message))
+            } else {
+                emit(Resource.Error(e.message.toString()))
+            }
+        }
+    }
 
     override fun getProfile(): Flow<Resource<Profile>> = flow {
         emit(Resource.Loading)
         try {
-            val response = apiService.profile()
+            val response = apiService.getProfile()
             emit(Resource.Success(response.toProfile()))
         } catch (e: Exception) {
             if (e is HttpException) {

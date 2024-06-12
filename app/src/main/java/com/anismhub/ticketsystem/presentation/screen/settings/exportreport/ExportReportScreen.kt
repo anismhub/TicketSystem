@@ -58,7 +58,6 @@ fun ExportReportScreen(
     val baseUrl = BuildConfig.BASE_URL
     val exportReportState by viewModel.exportReport.collectAsStateWithLifecycle()
     val accessToken by viewModel.accessToken
-    Log.d("Access Token", "token: $accessToken ")
 
     exportReportState.let {
         if (!it.hasBeenHandled) {

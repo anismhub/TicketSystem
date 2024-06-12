@@ -2,12 +2,14 @@ package com.anismhub.ticketsystem.data.mapper
 
 import com.anismhub.ticketsystem.data.remote.dto.CommentDTO
 import com.anismhub.ticketsystem.data.remote.dto.DetailTicketDTO
+import com.anismhub.ticketsystem.data.remote.dto.DetailTicketDataDTO
 import com.anismhub.ticketsystem.data.remote.dto.ResolutionDTO
 import com.anismhub.ticketsystem.data.remote.dto.ResponseDTO
 import com.anismhub.ticketsystem.data.remote.dto.TicketDTO
 import com.anismhub.ticketsystem.data.remote.dto.TicketDataDTO
 import com.anismhub.ticketsystem.domain.model.Comment
 import com.anismhub.ticketsystem.domain.model.DetailTicket
+import com.anismhub.ticketsystem.domain.model.DetailTicketData
 import com.anismhub.ticketsystem.domain.model.Resolution
 import com.anismhub.ticketsystem.domain.model.Response
 import com.anismhub.ticketsystem.domain.model.Ticket
@@ -33,6 +35,12 @@ fun TicketDTO.toTicket(): Ticket {
 
 fun DetailTicketDTO.toDetailTicket(): DetailTicket {
     return DetailTicket(
+        error = error, status = status, message = message, data = data.toDetailTicketData()
+    )
+}
+
+fun DetailTicketDataDTO.toDetailTicketData(): DetailTicketData {
+    return DetailTicketData(
         ticketId = ticketId,
         ticketSubject = ticketSubject,
         ticketDescription = ticketDescription,

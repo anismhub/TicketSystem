@@ -21,6 +21,7 @@ interface AuthRepository {
 
     suspend fun clearData()
 
+    fun getUsers(): Flow<Resource<Profile>>
     fun getProfile(): Flow<Resource<Profile>>
 
     fun getProfileData(): Flow<ProfileData>

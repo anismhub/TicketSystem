@@ -3,7 +3,7 @@ package com.anismhub.ticketsystem.data.mapper
 import com.anismhub.ticketsystem.data.remote.dto.LoginDTO
 import com.anismhub.ticketsystem.data.remote.dto.LoginDataDTO
 import com.anismhub.ticketsystem.data.remote.dto.ProfileDTO
-import com.anismhub.ticketsystem.data.remote.dto.ProfileDataDto
+import com.anismhub.ticketsystem.data.remote.dto.ProfileDataDTO
 import com.anismhub.ticketsystem.data.remote.dto.TechProfileDTO
 import com.anismhub.ticketsystem.data.remote.dto.TechProfileDataDTO
 import com.anismhub.ticketsystem.domain.model.Login
@@ -32,7 +32,7 @@ fun LoginDTO.toLogin(): Login {
     )
 }
 
-fun ProfileDataDto.toProfileData(): ProfileData {
+fun ProfileDataDTO.toProfileData(): ProfileData {
     return ProfileData(
         userId = userId,
         userName = userName,

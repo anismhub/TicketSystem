@@ -7,8 +7,7 @@ import androidx.navigation.compose.composable
 import com.anismhub.ticketsystem.navigation.BottomNav
 import com.anismhub.ticketsystem.navigation.TicketNav
 import com.anismhub.ticketsystem.presentation.screen.notification.NotificationContent
-import com.anismhub.ticketsystem.presentation.screen.settings.SettingsContent
-import com.anismhub.ticketsystem.presentation.screen.tickets.TicketContent
+import com.anismhub.ticketsystem.presentation.screen.settings.SettingsScreen
 import com.anismhub.ticketsystem.presentation.screen.tickets.TicketScreen
 
 @Composable
@@ -33,7 +32,7 @@ fun BottomNavGraph(
             NotificationContent()
         }
         composable(route = BottomNav.Settings.route) {
-            SettingsContent(
+            SettingsScreen(
                 navigateToAuth = { navigateToLogin() },
                 navigateToManageAccount = { title ->
                     navController.navigate(TicketNav.ManageAccount.route)

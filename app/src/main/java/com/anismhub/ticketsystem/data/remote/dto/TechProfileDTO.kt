@@ -15,3 +15,10 @@ data class TechProfileDTO(
     @field:SerializedName("data")
     val data: List<TechProfileDataDTO>
 )
+
+data class TechProfileDataDTO(
+    @field:SerializedName("userId")
+    val userId: Int,
+    @field:SerializedName("userFullName")
+    val userFullName: String,
+)
