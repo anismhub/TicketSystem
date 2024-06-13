@@ -54,7 +54,7 @@ fun SettingsScreen(
 
     SettingsContent(
         localProfileData = localProfile,
-        isAdmin = profileData.userRole == "Administrator",
+        isAdmin = localProfile.userRole == "Administrator",
         navigateToAuth = { navigateToAuth() },
         navigateToManageAccount = { navigateToManageAccount(it) },
         navigateToExport = { navigateToExport(it) },

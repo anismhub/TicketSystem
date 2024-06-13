@@ -8,5 +8,7 @@ sealed class TicketNav(val route: String) {
     data object Export : TicketNav("export")
     data object ManageAccount : TicketNav("manage_account")
     data object CreateAccount : TicketNav("create_account")
-    data object UpdateAccount : TicketNav("update_account")
+    data object UpdateAccount : TicketNav("update_account/{userId}") {
+        fun createRoute(userId: Int) = "update_account/$userId"
+    }
 }

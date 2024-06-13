@@ -1,5 +1,6 @@
 package com.anismhub.ticketsystem.data.remote
 
+import com.anismhub.ticketsystem.data.remote.dto.DepartmentsDTO
 import com.anismhub.ticketsystem.data.remote.dto.DetailTicketDTO
 import com.anismhub.ticketsystem.data.remote.dto.LoginDTO
 import com.anismhub.ticketsystem.data.remote.dto.ProfileDTO
@@ -28,6 +29,32 @@ interface ApiService {
 
     @GET("users")
     suspend fun getUsers(): UsersDTO
+
+    @GET("resources/department")
+    suspend fun getDepartments(): DepartmentsDTO
+
+    @GET("users/{userId}")
+    suspend fun getUserById(
+        @Path("userId") userId: Int
+    ): ProfileDTO
+
+    @FormUrlEncoded
+    @POST("users/{userId}")
+    suspend fun editUser(
+        @Path("userId") userId: Int,
+        @Field("username") username: String,
+        @Field("fullname") fullname: String,
+        @Field("role") role: String,
+        @Field("department") department: Int,
+        @Field("phoneNumber") phoneNumber: String
+    ): ResponseDTO
+
+    @FormUrlEncoded
+    @POST("users/{userId}/password")
+    suspend fun changePassword(
+        @Path("userId") userId: Int,
+        @Field("password") password: String
+    ): ResponseDTO
 
     @FormUrlEncoded
     @POST("users")

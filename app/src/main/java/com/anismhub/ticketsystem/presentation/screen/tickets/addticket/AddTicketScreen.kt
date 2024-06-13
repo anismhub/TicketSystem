@@ -47,13 +47,13 @@ fun AddTicketScreen(
     viewModel: AddTicketViewModel = hiltViewModel()
 ) {
     val addTicket by viewModel.addTicket.collectAsStateWithLifecycle()
-    var selectedArea by remember { mutableStateOf(areaOptions[0]) }
+    var selectedArea by remember { mutableStateOf("") }
     var selectedAreaIndex by remember { mutableIntStateOf(0) }
     var selectedPriorityIndex by remember { mutableIntStateOf(0) }
     var selectedTypeTicketIndex by remember { mutableIntStateOf(0) }
 
     var selectedPriority by remember { mutableStateOf(priorityOptions[0]) }
-    var selectedTypeTicket by remember { mutableStateOf(typeTicketOptions[0]) }
+    var selectedTypeTicket by remember { mutableStateOf("") }
     var subject by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
 

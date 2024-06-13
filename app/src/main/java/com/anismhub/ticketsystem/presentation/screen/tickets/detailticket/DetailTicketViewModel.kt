@@ -20,29 +20,25 @@ class DetailTicketViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val ticketRepository: TicketRepository
 ) : ViewModel() {
-    private val _detailTicket: MutableStateFlow<Resource<DetailTicket>> =
-        MutableStateFlow(Resource.None)
+    private val _detailTicket = MutableStateFlow<Resource<DetailTicket>>(Resource.None)
     val detailTicket: StateFlow<Resource<DetailTicket>> = _detailTicket
 
-    private val _assignTicket: MutableStateFlow<Event<Resource<Response>>> =
-        MutableStateFlow(Event(Resource.None))
+    private val _assignTicket = MutableStateFlow<Event<Resource<Response>>>(Event(Resource.None))
     val assignTicket: StateFlow<Event<Resource<Response>>> = _assignTicket
 
-    private val _comments: MutableStateFlow<Event<Resource<Response>>> =
-        MutableStateFlow(Event(Resource.None))
+    private val _comments = MutableStateFlow<Event<Resource<Response>>>(Event(Resource.None))
     val comments: StateFlow<Event<Resource<Response>>> = _comments
 
-    private val _closeTicket: MutableStateFlow<Event<Resource<Response>>> =
-        MutableStateFlow(Event(Resource.None))
+    private val _closeTicket = MutableStateFlow<Event<Resource<Response>>>(Event(Resource.None))
     val closeTicket: StateFlow<Event<Resource<Response>>> = _closeTicket
 
-    private val _techUsers: MutableStateFlow<Resource<TechProfile>> =
-        MutableStateFlow(Resource.None)
+    private val _techUsers = MutableStateFlow<Resource<TechProfile>>(Resource.None)
     val techUsers: StateFlow<Resource<TechProfile>> = _techUsers
 
     init {
         getTechUsers()
     }
+
     private fun getTechUsers() {
         viewModelScope.launch {
             authRepository.getTechUsers().collect {

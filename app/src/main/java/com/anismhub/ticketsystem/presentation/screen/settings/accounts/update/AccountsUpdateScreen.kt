@@ -1,5 +1,6 @@
 package com.anismhub.ticketsystem.presentation.screen.settings.accounts.update
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -18,31 +20,141 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.anismhub.ticketsystem.data.DataDummy
-import com.anismhub.ticketsystem.presentation.common.departmentOptions
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.anismhub.ticketsystem.domain.model.DepartmentsData
 import com.anismhub.ticketsystem.presentation.common.roleOptions
 import com.anismhub.ticketsystem.presentation.components.DropdownMenuWithLabel
 import com.anismhub.ticketsystem.presentation.components.InputTextWithLabel
+import com.anismhub.ticketsystem.utils.Resource
 
 @Composable
-fun AccountsUpdateScreen() {
+fun AccountsUpdateScreen(
+    userId: Int,
+    onNavUp: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: AccountsUpdateViewModel = hiltViewModel()
+) {
+    LaunchedEffect(userId) {
+        viewModel.getUserById(userId)
+    }
 
+    val department by viewModel.departments.collectAsStateWithLifecycle()
+    val detailUser by viewModel.detailUser.collectAsStateWithLifecycle()
+    val editUser by viewModel.editUser.collectAsStateWithLifecycle()
+
+    var username by remember { mutableStateOf("") }
+    var fullname by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf("") }
+    var selectedRole by remember { mutableStateOf("") }
+    var selectedRoleIndex by remember { mutableIntStateOf(0) }
+    var listDepartments by remember { mutableStateOf(emptyList<DepartmentsData>()) }
+    var selectedDepartment by remember { mutableStateOf("") }
+    var selectedDepartmentIndex by remember { mutableIntStateOf(0) }
+
+    when(val result = department) {
+        is Resource.Success -> {
+            listDepartments = result.data.data
+        }
+        is Resource.Error -> {
+            Log.d("Update Screen Error", result.error)
+        }
+        else -> {}
+    }
+
+    editUser.let {
+        if (!it.hasBeenHandled) {
+            when (val result = it.getContentIfNotHandled()) {
+                is Resource.Loading -> {
+                    Log.d("Update Screen Loading", "Loading...")
+                }
+
+                is Resource.Success -> {
+                    onNavUp()
+                }
+
+                is Resource.Error -> {
+                    Log.d("Update Screen Error", result.error)
+                }
+
+                else -> {}
+            }
+        }
+    }
+
+    LaunchedEffect(detailUser) {
+        when (val resultData = detailUser) {
+            is Resource.Loading -> {
+                Log.d("Update Screen Loading", "Loading...")
+            }
+
+            is Resource.Success -> {
+                username = resultData.data.data.userName
+                fullname = resultData.data.data.userFullName
+                phoneNumber = resultData.data.data.userPhone
+                selectedRole = resultData.data.data.userRole
+                selectedDepartmentIndex = listDepartments.indexOfFirst {
+                   it.departmentName == resultData.data.data.departmentName
+                }
+                selectedDepartment = listDepartments[selectedDepartmentIndex].departmentName
+            }
+
+            is Resource.Error -> {
+                Log.d("Update Screen Error", resultData.error)
+            }
+
+            else -> {}
+        }
+    }
+
+    AccountsUpdateContent(
+        username = username,
+        onUsernameChange = { username = it },
+        fullname = fullname,
+        onFullnameChange = { fullname = it },
+        role = selectedRole,
+        onRoleChange = { value, index ->
+            selectedRole = value
+            selectedRoleIndex = index
+        },
+        listDepartments = listDepartments,
+        department = selectedDepartment,
+        onDepartmentChange = { value, index ->
+            selectedDepartment = value
+            selectedDepartmentIndex = index
+        },
+        phoneNumber = phoneNumber,
+        onPhoneChange = { phoneNumber = it },
+        updateUser = {
+            viewModel.editUser(
+                userId = userId,
+                username = username,
+                fullname = fullname,
+                role = selectedRole,
+                department = listDepartments[selectedDepartmentIndex].departmentId,
+                phoneNumber = phoneNumber
+            )
+        },
+        modifier = modifier
+    )
 }
 
 @Composable
-fun AccountsUpdateContent(modifier: Modifier = Modifier) {
-    val dummyPengguna = DataDummy.dummyPenggunas[0]
-
-    var username by remember { mutableStateOf("jdoe") }
-    var fullname by remember { mutableStateOf(dummyPengguna.nama) }
-    var phoneNumber by remember { mutableStateOf("") }
-
-    var selectedDepartment by remember { mutableStateOf("") }
-    var selectedDepartmentIndex by remember { mutableIntStateOf(0) }
-    var selectedRole by remember { mutableStateOf(dummyPengguna.role) }
-    var selectedRoleIndex by remember { mutableIntStateOf(0) }
-
-
+fun AccountsUpdateContent(
+    username: String,
+    onUsernameChange: (String) -> Unit,
+    fullname: String,
+    onFullnameChange: (String) -> Unit,
+    role: String,
+    onRoleChange: (String, Int) -> Unit,
+    department: String,
+    onDepartmentChange: (String, Int) -> Unit,
+    listDepartments: List<DepartmentsData>,
+    phoneNumber: String,
+    onPhoneChange: (String) -> Unit,
+    updateUser: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -54,41 +166,39 @@ fun AccountsUpdateContent(modifier: Modifier = Modifier) {
         InputTextWithLabel(
             title = "Username",
             value = username,
-            onValueChange = { username = it },
+            onValueChange = onUsernameChange,
             enabled = false
         )
         // Fullname
         InputTextWithLabel(
             title = "Nama Lengkap",
             value = fullname,
-            onValueChange = { fullname = it })
+            onValueChange = onFullnameChange
+        )
         // Role
         DropdownMenuWithLabel(
-            title = "Role", value = selectedRole,
-            onValueChange = { value, index ->
-                selectedRole = value
-                selectedRoleIndex = index
-            },
+            title = "Role", value = role,
+            onValueChange = onRoleChange,
             options = roleOptions
         )
         // Departemen
         DropdownMenuWithLabel(
             title = "Departemen",
-            value = selectedDepartment,
-            onValueChange = { value, index ->
-                selectedDepartment = value
-                selectedDepartmentIndex = index
-            },
-            options = departmentOptions
+            value = department,
+            onValueChange = onDepartmentChange,
+            options = listDepartments.map { it.departmentName }
         )
         // Phone Number
         InputTextWithLabel(
             title = "Nomor Telepon",
             value = phoneNumber,
-            onValueChange = { phoneNumber = it })
+            onValueChange = onPhoneChange
+        )
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                updateUser()
+            },
             shape = RoundedCornerShape(20),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)

@@ -4,10 +4,12 @@ import android.content.Context
 import com.anismhub.ticketsystem.BuildConfig
 import com.anismhub.ticketsystem.data.manager.LocalDataManagerImpl
 import com.anismhub.ticketsystem.data.remote.ApiService
-import com.anismhub.ticketsystem.data.repository.AuthRespositoryImpl
+import com.anismhub.ticketsystem.data.repository.AuthRepositoryImpl
+import com.anismhub.ticketsystem.data.repository.ResourcesRepositoryImpl
 import com.anismhub.ticketsystem.data.repository.TicketRepositoryImpl
 import com.anismhub.ticketsystem.domain.manager.LocalDataManager
 import com.anismhub.ticketsystem.domain.repository.AuthRepository
+import com.anismhub.ticketsystem.domain.repository.ResourcesRepository
 import com.anismhub.ticketsystem.domain.repository.TicketRepository
 import dagger.Module
 import dagger.Provides
@@ -61,7 +63,7 @@ object AppModule {
     fun provideAuthRepository(
         apiService: ApiService,
         localDataManager: LocalDataManager
-    ): AuthRepository = AuthRespositoryImpl(
+    ): AuthRepository = AuthRepositoryImpl(
         apiService = apiService,
         localDataManager = localDataManager
     )
@@ -81,4 +83,9 @@ object AppModule {
     @Singleton
     fun provideTicketRepository(apiService: ApiService): TicketRepository =
         TicketRepositoryImpl(apiService = apiService)
+
+    @Provides
+    @Singleton
+    fun provideResourcesRepository(apiService: ApiService): ResourcesRepository =
+        ResourcesRepositoryImpl(apiService = apiService)
 }

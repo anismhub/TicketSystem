@@ -9,7 +9,7 @@ import androidx.navigation.navigation
 import com.anismhub.ticketsystem.navigation.TicketNav
 import com.anismhub.ticketsystem.presentation.screen.settings.accounts.AccountManageScreen
 import com.anismhub.ticketsystem.presentation.screen.settings.accounts.create.AccountsCreateScreen
-import com.anismhub.ticketsystem.presentation.screen.settings.accounts.update.AccountsUpdateContent
+import com.anismhub.ticketsystem.presentation.screen.settings.accounts.update.AccountsUpdateScreen
 import com.anismhub.ticketsystem.presentation.screen.settings.exportreport.ExportReportScreen
 import com.anismhub.ticketsystem.presentation.screen.tickets.addticket.AddTicketScreen
 import com.anismhub.ticketsystem.presentation.screen.tickets.detailticket.DetailTicketScreen
@@ -27,7 +27,7 @@ fun NavGraphBuilder.ticketNavGraph(
             route = TicketNav.Detail.route,
             arguments = listOf(navArgument("ticketId") { type = NavType.IntType })
         ) {
-            val ticketId = it.arguments?.getInt("ticketId") ?: 0
+            val ticketId = it.arguments?.getInt("ticketId") ?: -1
             DetailTicketScreen(ticketId = ticketId, onNavUp = { navController.navigateUp() })
         }
         composable(route = TicketNav.Create.route) {
@@ -43,8 +43,8 @@ fun NavGraphBuilder.ticketNavGraph(
                 navigateToCreateAccount = {
                     navController.navigate(TicketNav.CreateAccount.route)
                 },
-                navigateToUpdateAccount = {
-                    navController.navigate(TicketNav.UpdateAccount.route)
+                navigateToUpdateAccount = { userId ->
+                    navController.navigate(TicketNav.UpdateAccount.createRoute(userId))
                 }
             )
             onTitleChange("Kelola Pengguna")
@@ -55,8 +55,13 @@ fun NavGraphBuilder.ticketNavGraph(
             )
             onTitleChange("Buat Pengguna")
         }
-        composable(route = TicketNav.UpdateAccount.route) {
-            AccountsUpdateContent()
+        composable(
+            route = TicketNav.UpdateAccount.route,
+            arguments = listOf(navArgument("userId") { type = NavType.IntType })
+        ) {
+            val userId = it.arguments?.getInt("userId") ?: -1
+            AccountsUpdateScreen(userId = userId,
+                onNavUp = { navController.navigateUp() })
             onTitleChange("Perbarui Pengguna")
         }
     }
