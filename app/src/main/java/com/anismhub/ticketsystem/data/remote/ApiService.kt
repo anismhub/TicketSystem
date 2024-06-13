@@ -10,6 +10,7 @@ import com.anismhub.ticketsystem.data.remote.dto.TicketDTO
 import com.anismhub.ticketsystem.data.remote.dto.UsersDTO
 import okhttp3.ResponseBody
 import retrofit2.Response
+import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -47,6 +48,11 @@ interface ApiService {
         @Field("role") role: String,
         @Field("department") department: Int,
         @Field("phoneNumber") phoneNumber: String
+    ): ResponseDTO
+
+    @DELETE("users/{userId}")
+    suspend fun deleteUser(
+        @Path("userId") userId: Int
     ): ResponseDTO
 
     @FormUrlEncoded

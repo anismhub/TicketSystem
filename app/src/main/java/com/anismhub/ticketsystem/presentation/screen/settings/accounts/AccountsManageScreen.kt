@@ -1,7 +1,6 @@
 package com.anismhub.ticketsystem.presentation.screen.settings.accounts
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -44,6 +43,7 @@ fun AccountManageScreen(
     viewModel: AccountsManageViewModel = hiltViewModel()
 ) {
     val usersState by viewModel.usersData.collectAsStateWithLifecycle()
+    val deleteState by viewModel.deleteUser.collectAsStateWithLifecycle()
     var listUsers by remember { mutableStateOf(emptyList<ProfileData>()) }
 
     LaunchedEffect(Unit) {
@@ -54,11 +54,25 @@ fun AccountManageScreen(
         is Resource.Loading -> {
             Log.d("Loading Manage", "Loading...")
         }
+
         is Resource.Success -> {
             listUsers = users.data.data
         }
+
         is Resource.Error -> {
             Log.d("Error Manage", users.error)
+        }
+
+        else -> {}
+    }
+
+    when(val result = deleteState) {
+        is Resource.Success -> {
+            viewModel.getUsers()
+            Log.d("Success Delete", "Success deleting ${result.data}")
+        }
+        is Resource.Error -> {
+            Log.d("Error Manage", result.error)
         }
         else -> {}
     }
@@ -66,6 +80,9 @@ fun AccountManageScreen(
         listUsers = listUsers,
         navigateToCreateAccount = navigateToCreateAccount,
         navigateToUpdateAccount = navigateToUpdateAccount,
+        deleteUsers = {
+            viewModel.deleteUser(it)
+        },
         modifier = modifier
     )
 
@@ -76,8 +93,10 @@ fun AccountManageContent(
     listUsers: List<ProfileData>,
     navigateToCreateAccount: () -> Unit,
     navigateToUpdateAccount: (ticketId: Int) -> Unit,
+    deleteUsers: (userId: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var userId by remember { mutableStateOf(-1) }
     var query by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
 
@@ -121,7 +140,10 @@ fun AccountManageContent(
                             contentDescription = "Hapus Pengguna"
                         )
                     },
-                    onClickIcon = { showDialog = true },
+                    onClickIcon = {
+                        userId = it.userId
+                        showDialog = true
+                    },
                     onClick = {
                         navigateToUpdateAccount(it.userId)
                     }
@@ -138,11 +160,7 @@ fun AccountManageContent(
         },
         confirmButton = {
             Button(onClick = {
-                Toast.makeText(
-                    context,
-                    "Confirmed",
-                    Toast.LENGTH_SHORT
-                ).show()
+                deleteUsers(userId)
                 showDialog = false  // Close the dialog on confirm
             }) {
                 Text("Ya")

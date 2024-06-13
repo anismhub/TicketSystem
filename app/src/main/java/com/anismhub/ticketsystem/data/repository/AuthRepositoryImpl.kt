@@ -116,6 +116,22 @@ class AuthRepositoryImpl(
         }
     }
 
+    override fun deleteUser(userId: Int): Flow<Resource<Response>> = flow {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.deleteUser(userId = userId)
+            emit(Resource.Success(response.toResponse()))
+        } catch (e: Exception) {
+            if (e is HttpException) {
+                val jsonInString = e.response()?.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonInString, Response::class.java)
+                emit(Resource.Error(errorBody.message))
+            } else {
+                emit(Resource.Error(e.message.toString()))
+            }
+        }
+    }
+
     override fun postEditUser(
         userId: Int,
         username: String,

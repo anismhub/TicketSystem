@@ -33,6 +33,7 @@ interface AuthRepository {
     ): Flow<Resource<Response>>
     fun getUsers(): Flow<Resource<Users>>
     fun getUserById(userId: Int): Flow<Resource<Profile>>
+    fun deleteUser(userId: Int): Flow<Resource<Response>>
     fun postEditUser(userId: Int, username: String, fullname: String, role: String, department: Int, phoneNumber: String): Flow<Resource<Response>>
     fun postChangePassword(userId: Int, password: String): Flow<Resource<Response>>
     fun getProfile(): Flow<Resource<Profile>>

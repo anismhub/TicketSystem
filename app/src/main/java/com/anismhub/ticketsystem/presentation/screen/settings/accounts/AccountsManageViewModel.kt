@@ -2,6 +2,7 @@ package com.anismhub.ticketsystem.presentation.screen.settings.accounts
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.anismhub.ticketsystem.domain.model.Response
 import com.anismhub.ticketsystem.domain.model.Users
 import com.anismhub.ticketsystem.domain.repository.AuthRepository
 import com.anismhub.ticketsystem.utils.Resource
@@ -16,17 +17,24 @@ class AccountsManageViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    private val _usersData: MutableStateFlow<Resource<Users>> = MutableStateFlow(Resource.None)
+    private val _usersData = MutableStateFlow<Resource<Users>>(Resource.None)
     val usersData: StateFlow<Resource<Users>> = _usersData
 
-//    init {
-//        getUsers()
-//    }
+    private val _deleteUser = MutableStateFlow<Resource<Response>>(Resource.None)
+    val deleteUser: StateFlow<Resource<Response>> = _deleteUser
 
     fun getUsers() {
         viewModelScope.launch {
             authRepository.getUsers().collect {
                 _usersData.value = it
+            }
+        }
+    }
+
+    fun deleteUser(userId: Int) {
+        viewModelScope.launch {
+            authRepository.deleteUser(userId).collect {
+                _deleteUser.value = it
             }
         }
     }
