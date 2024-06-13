@@ -1,6 +1,5 @@
 package com.anismhub.ticketsystem.data
 
-import com.anismhub.ticketsystem.domain.DummyPengguna
 import com.anismhub.ticketsystem.domain.DummyTicket
 
 object DataDummy {
@@ -25,18 +24,5 @@ object DataDummy {
         DummyTicket("Update dependencies", "Upgrade the app's dependencies to the latest versions", "Low", "Closed", "2023-08-18"),
         DummyTicket("Implement new design", "Redesign the app's user interface", "High", "Open", "2023-08-19"),
         DummyTicket("Improve performance on low-end devices", "Optimize the app for better performance on low-end devices", "Medium", "On Progress", "2023-08-20")
-    )
-
-    val dummyPenggunas = listOf(
-        DummyPengguna("John Doe", "Administrator"),
-        DummyPengguna("Jane Smith", "Karyawan"),
-        DummyPengguna("Bob Johnson", "Teknisi"),
-        DummyPengguna("Alice Brown", "Administrator"),
-        DummyPengguna("Tom Green", "Karyawan"),
-        DummyPengguna("Mary Miller", "Teknisi"),
-        DummyPengguna("David Wilson", "Administrator"),
-        DummyPengguna("Sarah Jones", "Karyawan"),
-        DummyPengguna("Michael Davis", "Teknisi"),
-        DummyPengguna("Lisa Martinez", "Administrator")
     )
 }
