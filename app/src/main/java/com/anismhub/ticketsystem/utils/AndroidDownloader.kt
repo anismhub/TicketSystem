@@ -10,10 +10,10 @@ interface Downloader {
 }
 
 class AndroidDownloader(
-    context: Context, baseUrl: String
+    context: Context, baseUrl: String, startDate: String, endDate: String
 ): Downloader {
     private val downloadManager = context.getSystemService(DownloadManager::class.java)
-    private val url = "${baseUrl}tickets/export/"
+    private val url = "${baseUrl}tickets/export?startDate=${startDate}&endDate=${endDate}"
 
     override fun downloadFile(token: String): Long {
         val request = DownloadManager.Request(Uri.parse(url))
@@ -26,5 +26,4 @@ class AndroidDownloader(
             .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "report.xlsx")
         return downloadManager.enqueue(request)
     }
-
 }

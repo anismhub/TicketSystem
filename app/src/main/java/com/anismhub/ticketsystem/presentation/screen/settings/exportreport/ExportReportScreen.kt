@@ -30,6 +30,7 @@ import com.anismhub.ticketsystem.BuildConfig
 import com.anismhub.ticketsystem.presentation.components.ReusableDatePicker
 import com.anismhub.ticketsystem.utils.AndroidDownloader
 import com.anismhub.ticketsystem.utils.Resource
+import com.anismhub.ticketsystem.utils.toFormattedString
 import java.time.LocalDate
 
 @Composable
@@ -87,6 +88,7 @@ fun ExportReportScreen(
         }
     }
 
+    val initalDate = LocalDate.now().minusYears(2)
     var startDate by remember { mutableStateOf<LocalDate?>(LocalDate.now()) }
     var endDate by remember { mutableStateOf<LocalDate?>(null) }
 
@@ -113,7 +115,9 @@ fun ExportReportScreen(
                 if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
                     storagePermissionResultLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 } else {
-                    val downloader = AndroidDownloader(context, baseUrl)
+                    val downloader = AndroidDownloader(context, baseUrl,
+                        startDate?.toFormattedString() ?: initalDate.toFormattedString(),
+                        endDate?.toFormattedString() ?: LocalDate.now().toFormattedString())
                     downloader.downloadFile(accessToken)
                 }
             },

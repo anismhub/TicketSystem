@@ -294,7 +294,10 @@ fun ReusableDatePicker(
     ) {
         InputText(
             value = dateState,
-            onChange = { dateState = it },
+            onChange = { newValue ->
+                dateState = newValue
+                isError = newValue.isEmpty()
+            },
             placeholder = {
                 Text(text = "DD/MM/YYYY")
             },
@@ -305,6 +308,11 @@ fun ReusableDatePicker(
                         painter = painterResource(R.drawable.calendar_month_24px),
                         contentDescription = "Select Date"
                     )
+                }
+            },
+            supportingText = {
+                if (isError) {
+                    Text(text = "Tanggal harus diisi", style = MyTypography.labelSmall)
                 }
             },
             modifier = Modifier.fillMaxWidth()

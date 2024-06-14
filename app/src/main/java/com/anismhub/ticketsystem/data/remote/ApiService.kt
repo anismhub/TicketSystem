@@ -99,7 +99,10 @@ interface ApiService {
 
     @Streaming
     @GET("tickets/export")
-    suspend fun exportTickets(): Response<ResponseBody>
+    suspend fun exportTickets(
+        @Query("startDate") startDate: String,
+        @Query("endDate") endDate: String
+    ): Response<ResponseBody>
 
     @GET("tickets/{ticketId}")
     suspend fun ticketById(

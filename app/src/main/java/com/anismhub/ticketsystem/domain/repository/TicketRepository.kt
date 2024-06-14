@@ -9,8 +9,7 @@ import okhttp3.ResponseBody
 import retrofit2.Response as RetrofitResponse
 
 interface TicketRepository {
-    fun exportReport(): Flow<Resource<RetrofitResponse<ResponseBody>>>
-
+    fun exportReport(startDate: String, endDate: String): Flow<Resource<RetrofitResponse<ResponseBody>>>
     fun getOpenTickets(status: String, search: String? = null): Flow<Resource<Ticket>>
     fun getOnProgressTickets(status: String, search: String? = null): Flow<Resource<Ticket>>
     fun getClosedTickets(status: String, search: String? = null): Flow<Resource<Ticket>>

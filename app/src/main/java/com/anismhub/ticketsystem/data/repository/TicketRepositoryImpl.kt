@@ -14,14 +14,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.ResponseBody
 import retrofit2.HttpException
+import retrofit2.Response as retrofitResponse
 
 class TicketRepositoryImpl(
     private val apiService: ApiService
 ) : TicketRepository {
-    override fun exportReport(): Flow<Resource<retrofit2.Response<ResponseBody>>> = flow {
+    override fun exportReport(
+        startDate: String,
+        endDate: String
+    ): Flow<Resource<retrofitResponse<ResponseBody>>> = flow {
         emit(Resource.Loading)
         try {
-            val response = apiService.exportTickets()
+            val response = apiService.exportTickets(startDate, endDate)
             emit(Resource.Success(response))
         } catch (e: Exception) {
             if (e is HttpException) {

@@ -10,6 +10,7 @@ import retrofit2.Response
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -29,6 +30,11 @@ fun String.toDateTime(
     val formattedDate = jakartaZonedDateTime.toLocalDate().format(dateFormatter)
     val formattedTime = jakartaZonedDateTime.toLocalTime().format(timeFormatter)
     return "$formattedDate $formattedTime"
+}
+
+fun LocalDate.toFormattedString(): String {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    return this.format(formatter)
 }
 
 fun handleFileResponse(context: Context, response: Response<ResponseBody>) {
