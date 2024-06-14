@@ -235,8 +235,8 @@ fun DetailTicketContent(
                     ticketCreatedAt = data.ticketCreatedAt.toDateTime(),
                     ticketUpdatedAt = data.ticketUpdateAt.toDateTime(),
                     ticketCategory = data.ticketCategory,
-                    userFullName = "Nama Karyawan",
-                    departmentName = "Procurement",
+                    userFullName = data.ticketCreatedBy,
+                    departmentName = data.ticketDepartmentBy,
                     ticketArea = data.ticketArea,
                     ticketPriority = data.ticketPriority
                 )

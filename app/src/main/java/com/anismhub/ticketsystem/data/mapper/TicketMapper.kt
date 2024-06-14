@@ -49,6 +49,7 @@ fun DetailTicketDataDTO.toDetailTicketData(): DetailTicketData {
         ticketCategory = ticketCategory,
         ticketArea = ticketArea,
         ticketCreatedBy = ticketCreatedBy,
+        ticketDepartmentBy = ticketDepartmentBy,
         ticketCreatedAt = ticketCreatedAt,
         ticketUpdateAt = ticketUpdatedAt,
         ticketAssignedTo = ticketAssignedTo,

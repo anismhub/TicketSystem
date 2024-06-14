@@ -16,6 +16,7 @@ data class DetailTicketData(
     val ticketCategory: String,
     val ticketArea: String,
     val ticketCreatedBy: String,
+    val ticketDepartmentBy: String,
     val ticketCreatedAt: String,
     val ticketUpdateAt: String,
     val ticketAssignedTo: String? = null,

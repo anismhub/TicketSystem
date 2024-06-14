@@ -41,6 +41,9 @@ data class DetailTicketDataDTO(
     @field:SerializedName("ticketCreatedBy")
     val ticketCreatedBy: String,
 
+    @field:SerializedName("ticketDepartmentBy")
+    val ticketDepartmentBy: String,
+
     @field:SerializedName("ticketCreatedAt")
     val ticketCreatedAt: String,
 
