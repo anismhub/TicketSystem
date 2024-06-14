@@ -23,9 +23,9 @@ class AccountsManageViewModel @Inject constructor(
     private val _deleteUser = MutableStateFlow<Resource<Response>>(Resource.None)
     val deleteUser: StateFlow<Resource<Response>> = _deleteUser
 
-    fun getUsers() {
+    fun getUsers(query: String? = null) {
         viewModelScope.launch {
-            authRepository.getUsers().collect {
+            authRepository.getUsers(query).collect {
                 _usersData.value = it
             }
         }

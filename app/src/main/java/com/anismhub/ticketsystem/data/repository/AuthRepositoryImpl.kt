@@ -84,10 +84,10 @@ class AuthRepositoryImpl(
         }
     }
 
-    override fun getUsers(): Flow<Resource<Users>> = flow {
+    override fun getUsers(search: String?): Flow<Resource<Users>> = flow {
         emit(Resource.Loading)
         try {
-            val response = apiService.getUsers()
+            val response = apiService.getUsers(search)
             emit(Resource.Success(response.toUsers()))
         } catch (e: Exception) {
             if (e is HttpException) {

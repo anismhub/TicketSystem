@@ -22,7 +22,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,9 +44,10 @@ fun AccountManageScreen(
     val usersState by viewModel.usersData.collectAsStateWithLifecycle()
     val deleteState by viewModel.deleteUser.collectAsStateWithLifecycle()
     var listUsers by remember { mutableStateOf(emptyList<ProfileData>()) }
+    var query by remember { mutableStateOf("") }
 
-    LaunchedEffect(Unit) {
-        viewModel.getUsers()
+    LaunchedEffect(query) {
+        viewModel.getUsers(query)
     }
 
     when (val users = usersState) {
@@ -68,7 +68,7 @@ fun AccountManageScreen(
 
     when(val result = deleteState) {
         is Resource.Success -> {
-            viewModel.getUsers()
+            viewModel.getUsers(query)
             Log.d("Success Delete", "Success deleting ${result.data}")
         }
         is Resource.Error -> {
@@ -78,6 +78,10 @@ fun AccountManageScreen(
     }
     AccountManageContent(
         listUsers = listUsers,
+        query = query,
+        onQueryChange = {
+            query = it
+        },
         navigateToCreateAccount = navigateToCreateAccount,
         navigateToUpdateAccount = navigateToUpdateAccount,
         deleteUsers = {
@@ -91,17 +95,15 @@ fun AccountManageScreen(
 @Composable
 fun AccountManageContent(
     listUsers: List<ProfileData>,
+    query: String,
+    onQueryChange: (String) -> Unit,
     navigateToCreateAccount: () -> Unit,
     navigateToUpdateAccount: (ticketId: Int) -> Unit,
     deleteUsers: (userId: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var userId by remember { mutableStateOf(-1) }
-    var query by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
-
-    val context = LocalContext.current
-
 
     Column(
         modifier = modifier
@@ -116,7 +118,7 @@ fun AccountManageContent(
         ) {
             MySearchBar(
                 query = query,
-                onQueryChange = { query = it },
+                onQueryChange = onQueryChange,
                 modifier = Modifier
                     .weight(0.5f)
             )
