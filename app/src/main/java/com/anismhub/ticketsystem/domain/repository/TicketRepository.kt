@@ -11,9 +11,9 @@ import retrofit2.Response as RetrofitResponse
 interface TicketRepository {
     fun exportReport(): Flow<Resource<RetrofitResponse<ResponseBody>>>
 
-    fun getOpenTickets(status: String = "Open"): Flow<Resource<Ticket>>
-    fun getOnProgressTickets(status: String = "On Progress"): Flow<Resource<Ticket>>
-    fun getClosedTickets(status: String = "Closed"): Flow<Resource<Ticket>>
+    fun getOpenTickets(status: String, search: String? = null): Flow<Resource<Ticket>>
+    fun getOnProgressTickets(status: String, search: String? = null): Flow<Resource<Ticket>>
+    fun getClosedTickets(status: String, search: String? = null): Flow<Resource<Ticket>>
 
     fun getTicketById(ticketId: Int): Flow<Resource<DetailTicket>>
 

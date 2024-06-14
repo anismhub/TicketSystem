@@ -43,18 +43,16 @@ fun TicketScreen(
     var listTicketOnProgress by remember { mutableStateOf(emptyList<TicketData>()) }
     var listTicketClosed by remember { mutableStateOf(emptyList<TicketData>()) }
 
+    var query by remember { mutableStateOf("") }
+
     val ticketOpen by viewModel.ticketOpen.collectAsStateWithLifecycle()
     val ticketOnProgress by viewModel.ticketOnProgress.collectAsStateWithLifecycle()
     val ticketClosed by viewModel.ticketClosed.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        viewModel.getOpenTicket()
-    }
-    LaunchedEffect(Unit) {
-        viewModel.getOnProgressTicket()
-    }
-    LaunchedEffect(Unit) {
-        viewModel.getClosedTicket()
+    LaunchedEffect(query) {
+        viewModel.getOpenTicket(status = "Open", query = query)
+        viewModel.getOnProgressTicket(status = "On Progress", query = query)
+        viewModel.getClosedTicket(status = "Closed", query = query)
     }
 
     when (val result = ticketOpen) {
@@ -109,6 +107,8 @@ fun TicketScreen(
     }
 
     TicketContent(
+        query = query,
+        onQueryChange = { query = it },
         ticketOpen = listTicketOpen,
         ticketOnProgress = listTicketOnProgress,
         ticketClosed = listTicketClosed,
@@ -120,6 +120,8 @@ fun TicketScreen(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TicketContent(
+    query: String,
+    onQueryChange: (String) -> Unit,
     ticketOpen: List<TicketData>,
     ticketOnProgress: List<TicketData>,
     ticketClosed: List<TicketData>,
@@ -128,7 +130,6 @@ fun TicketContent(
 ) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val pagerState = rememberPagerState { TabItem.entries.size }
-    var query by remember { mutableStateOf("") }
 
     LaunchedEffect(selectedTabIndex) {
         pagerState.animateScrollToPage(selectedTabIndex)
@@ -145,7 +146,7 @@ fun TicketContent(
     ) {
         MySearchBar(
             query = query,
-            onQueryChange = { query = it },
+            onQueryChange = onQueryChange,
             modifier = Modifier.padding(horizontal = 24.dp)
         )
         TabRow(selectedTabIndex = selectedTabIndex) {

@@ -16,7 +16,7 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.QueryMap
 import retrofit2.http.Streaming
 
 interface ApiService {
@@ -78,7 +78,8 @@ interface ApiService {
 
     @GET("tickets")
     suspend fun getTickets(
-        @Query("status") status: String
+//        @Query("status") status: String
+        @QueryMap queries: Map<String, String>
     ): TicketDTO
 
     @GET("users/tech")

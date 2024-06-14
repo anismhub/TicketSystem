@@ -26,25 +26,25 @@ class TicketViewModel @Inject constructor(
     val ticketClosed: MutableStateFlow<Resource<Ticket>> = _ticketClosed
 
 
-    fun getOpenTicket() {
+    fun getOpenTicket(status: String, query: String? = null) {
         viewModelScope.launch {
-            ticketRepository.getOpenTickets().collect {
+            ticketRepository.getOpenTickets(status, query).collect {
                 _ticketOpen.value = it
             }
         }
     }
 
-    fun getOnProgressTicket() {
+    fun getOnProgressTicket(status: String, query: String? = null) {
         viewModelScope.launch {
-            ticketRepository.getOnProgressTickets().collect {
+            ticketRepository.getOnProgressTickets(status, query).collect {
                 _ticketOnProgress.value = it
             }
         }
     }
 
-    fun getClosedTicket() {
+    fun getClosedTicket(status: String, query: String? = null) {
         viewModelScope.launch {
-            ticketRepository.getClosedTickets().collect {
+            ticketRepository.getClosedTickets(status,query).collect {
                 _ticketClosed.value = it
             }
         }
