@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -102,7 +103,7 @@ fun AccountManageContent(
     deleteUsers: (userId: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var userId by remember { mutableStateOf(-1) }
+    var userId by remember { mutableIntStateOf(-1) }
     var showDialog by remember { mutableStateOf(false) }
 
     Column(
@@ -122,10 +123,10 @@ fun AccountManageContent(
                 modifier = Modifier
                     .weight(0.5f)
             )
-            Spacer(modifier = Modifier.weight(0.2f))
+            Spacer(modifier = Modifier.weight(0.15f))
             Button(onClick = {
                 navigateToCreateAccount()
-            }, shape = RoundedCornerShape(20), modifier = Modifier.weight(0.3f)) {
+            }, shape = RoundedCornerShape(20), modifier = Modifier.weight(0.35f)) {
                 Text(text = "Buat Pengguna", textAlign = TextAlign.Center)
             }
         }

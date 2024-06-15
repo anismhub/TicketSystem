@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.anismhub.ticketsystem.navigation.BottomNav
 import com.anismhub.ticketsystem.navigation.TicketNav
-import com.anismhub.ticketsystem.presentation.screen.notification.NotificationContent
+import com.anismhub.ticketsystem.presentation.screen.notification.NotificationScreen
 import com.anismhub.ticketsystem.presentation.screen.settings.SettingsScreen
 import com.anismhub.ticketsystem.presentation.screen.tickets.TicketScreen
 
@@ -29,7 +29,7 @@ fun BottomNavGraph(
                 })
         }
         composable(route = BottomNav.Notification.route) {
-            NotificationContent()
+            NotificationScreen()
         }
         composable(route = BottomNav.Settings.route) {
             SettingsScreen(
