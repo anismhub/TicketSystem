@@ -307,7 +307,7 @@ fun DetailTicketContent(
             ) {
                 Button(onClick = {
                     if (selectedTeknisi?.userId != null || isAssigned) {
-                        assignTicket(selectedTeknisi?.userId ?: 0)
+                        assignTicket(selectedTeknisi?.userId ?: -1)
                     }
                     if (replyText.trim().isNotEmpty()) {
                         addComment(replyText)
@@ -315,8 +315,10 @@ fun DetailTicketContent(
                 }) {
                     Text(text = "Perbarui")
                 }
-                Button(onClick = { showDialog = true }) {
-                    Text(text = "Tutup")
+                if (!isKaryawan) {
+                    Button(onClick = { showDialog = true }) {
+                        Text(text = "Tutup")
+                    }
                 }
             }
         }

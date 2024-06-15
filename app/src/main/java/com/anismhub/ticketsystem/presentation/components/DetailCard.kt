@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.anismhub.ticketsystem.presentation.theme.MyTypography
 
 @Composable
 fun DetailCard(
@@ -102,8 +103,8 @@ fun DetailSectionCard(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            Text(text = title, textAlign = TextAlign.Center)
-            Text(text = subtitle, textAlign = TextAlign.Center)
+            Text(text = title, textAlign = TextAlign.Center, style = MyTypography.bodyMedium)
+            Text(text = subtitle, textAlign = TextAlign.Center, style = MyTypography.bodySmall)
         }
     }
 }

@@ -54,6 +54,7 @@ fun SettingsScreen(
 
     SettingsContent(
         localProfileData = localProfile,
+        isKaryawan = localProfile.userRole == "Karyawan",
         isAdmin = localProfile.userRole == "Administrator",
         navigateToAuth = { navigateToAuth() },
         navigateToManageAccount = { navigateToManageAccount(it) },
@@ -68,6 +69,7 @@ fun SettingsContent(
     navigateToManageAccount: (title: String) -> Unit,
     navigateToExport: (title: String) -> Unit,
     localProfileData: ProfileData,
+    isKaryawan: Boolean,
     isAdmin: Boolean,
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = hiltViewModel()
@@ -85,11 +87,13 @@ fun SettingsContent(
             subtitle = localProfileData.departmentName,
             modifier = Modifier.padding(vertical = 36.dp)
         )
-        if (isAdmin) {
-            SettingsMenu(
-                icon = painterResource(R.drawable.manage_accounts_24px),
-                text = "Kelola Pengguna",
-                onClick = { navigateToManageAccount("Kelola Pengguna") })
+        if (!isKaryawan) {
+            if (isAdmin) {
+                SettingsMenu(
+                    icon = painterResource(R.drawable.manage_accounts_24px),
+                    text = "Kelola Pengguna",
+                    onClick = { navigateToManageAccount("Kelola Pengguna") })
+            }
             SettingsMenu(
                 icon = painterResource(id = R.drawable.open_in_new_24px),
                 text = "Ekspor Laporan",
