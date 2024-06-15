@@ -53,6 +53,7 @@ fun DetailTicketScreen(
         viewModel.getTicketById(ticketId)
     }
 
+    val localProfile by viewModel.localProfileData
     val techUsers by viewModel.techUsers.collectAsStateWithLifecycle()
     val detailTicket by viewModel.detailTicket.collectAsStateWithLifecycle()
     val assignTicket by viewModel.assignTicket.collectAsStateWithLifecycle()
@@ -89,6 +90,7 @@ fun DetailTicketScreen(
                 listTech = listTeknisi,
                 isClosed = resultData.data.data.ticketStatus == "Closed",
                 isAssigned = resultData.data.data.ticketAssignedTo != null,
+                isKaryawan = localProfile!!.userRole == "Karyawan",
                 assignTicket = {
                     if (it != 0) viewModel.assignTicket(ticketId, it)
                 },
@@ -182,7 +184,8 @@ fun DetailTicketContent(
     addResolution: (String) -> Unit,
     modifier: Modifier = Modifier,
     isClosed: Boolean = false,
-    isAssigned: Boolean = false
+    isAssigned: Boolean = false,
+    isKaryawan: Boolean = false
 ) {
     var replyText by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
@@ -216,20 +219,24 @@ fun DetailTicketContent(
                     modifier = Modifier.align(Alignment.End)
                 )
                 Row {
-                    Spacer(modifier = Modifier.weight(0.6f))
-                    MyDropdownMenuTech(
-                        value = if (isAssigned) {
-                            data.ticketAssignedTo
-                        } else {
-                            selectedTeknisi?.userFullName ?: "Pilih Teknisi"
-                        },
-                        onValueChange = {
-                            selectedTeknisi = it
-                        },
-                        listTech = listTech,
-                        enabled = !isAssigned,
-                        modifier = Modifier.weight(0.4f)
-                    )
+                    Spacer(modifier = Modifier.weight(0.5f))
+                    if (!isKaryawan) {
+                        MyDropdownMenuTech(
+                            value = if (isAssigned) {
+                                data.ticketAssignedTo
+                            } else {
+                                selectedTeknisi?.userFullName ?: "Pilih Teknisi"
+                            },
+                            onValueChange = {
+                                selectedTeknisi = it
+                            },
+                            listTech = listTech,
+                            enabled = !isAssigned,
+                            modifier = Modifier.weight(0.5f)
+                        )
+                    } else {
+                        Text(text = data.ticketAssignedTo ?: "Belum ada teknisi")
+                    }
                 }
                 DetailCard(
                     ticketCreatedAt = data.ticketCreatedAt.toDateTime(),
@@ -245,7 +252,7 @@ fun DetailTicketContent(
                 Text(
                     text = data.ticketDescription,
                     textAlign = TextAlign.Justify,
-                    minLines = 3,
+                    minLines = 2,
                     modifier = Modifier
                         .border(
                             border = ButtonDefaults.outlinedButtonBorder,

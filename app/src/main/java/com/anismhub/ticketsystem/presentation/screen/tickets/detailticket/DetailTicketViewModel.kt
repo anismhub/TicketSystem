@@ -1,8 +1,11 @@
 package com.anismhub.ticketsystem.presentation.screen.tickets.detailticket
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anismhub.ticketsystem.domain.model.DetailTicket
+import com.anismhub.ticketsystem.domain.model.ProfileData
 import com.anismhub.ticketsystem.domain.model.Response
 import com.anismhub.ticketsystem.domain.model.TechProfile
 import com.anismhub.ticketsystem.domain.repository.AuthRepository
@@ -35,8 +38,20 @@ class DetailTicketViewModel @Inject constructor(
     private val _techUsers = MutableStateFlow<Resource<TechProfile>>(Resource.None)
     val techUsers: StateFlow<Resource<TechProfile>> = _techUsers
 
+    private val _localProfileData = mutableStateOf<ProfileData?>(null)
+    val localProfileData: State<ProfileData?> = _localProfileData
+
     init {
         getTechUsers()
+        getLocalProfile()
+    }
+
+    private fun getLocalProfile() {
+        viewModelScope.launch {
+            authRepository.getProfileData().collect {
+                _localProfileData.value = it
+            }
+        }
     }
 
     private fun getTechUsers() {
