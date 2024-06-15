@@ -90,11 +90,11 @@ fun SettingsContent(
                 icon = painterResource(R.drawable.manage_accounts_24px),
                 text = "Kelola Pengguna",
                 onClick = { navigateToManageAccount("Kelola Pengguna") })
+            SettingsMenu(
+                icon = painterResource(id = R.drawable.open_in_new_24px),
+                text = "Ekspor Laporan",
+                onClick = { navigateToExport("Ekspor Laporan") })
         }
-        SettingsMenu(
-            icon = painterResource(id = R.drawable.open_in_new_24px),
-            text = "Ekspor Laporan",
-            onClick = { navigateToExport("Ekspor Laporan") })
         SettingsMenu(
             icon = painterResource(id = R.drawable.close_24px),
             text = "Sign Out",
