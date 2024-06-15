@@ -47,7 +47,7 @@ fun ReplyCard(
                 Text(text = name, style = MyTypography.titleLarge)
                 Text(text = date, style = MyTypography.bodySmall)
             }
-            Text(text = content, minLines = 5, style = MyTypography.bodyMedium)
+            Text(text = content, minLines = 3, style = MyTypography.bodyMedium)
         }
     }
 }
