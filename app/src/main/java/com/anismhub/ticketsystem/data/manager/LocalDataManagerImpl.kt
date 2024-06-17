@@ -69,6 +69,7 @@ class LocalDataManagerImpl(context: Context) : LocalDataManager {
             pref.remove(departmentIdKey)
             pref.remove(departmentNameKey)
             pref.remove(userPhoneKey)
+            pref.remove(deviceIdKey)
         }
     }
 
