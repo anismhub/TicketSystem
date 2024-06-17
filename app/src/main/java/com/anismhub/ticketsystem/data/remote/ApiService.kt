@@ -3,6 +3,7 @@ package com.anismhub.ticketsystem.data.remote
 import com.anismhub.ticketsystem.data.remote.dto.DepartmentsDTO
 import com.anismhub.ticketsystem.data.remote.dto.DetailTicketDTO
 import com.anismhub.ticketsystem.data.remote.dto.LoginDTO
+import com.anismhub.ticketsystem.data.remote.dto.NotificationDTO
 import com.anismhub.ticketsystem.data.remote.dto.ProfileDTO
 import com.anismhub.ticketsystem.data.remote.dto.ResponseDTO
 import com.anismhub.ticketsystem.data.remote.dto.TechProfileDTO
@@ -142,4 +143,7 @@ interface ApiService {
     suspend fun deleteToken(
         @Field("deviceId") deviceId: String
     )
+
+    @GET("users/notification")
+    suspend fun getNotification(): NotificationDTO
 }

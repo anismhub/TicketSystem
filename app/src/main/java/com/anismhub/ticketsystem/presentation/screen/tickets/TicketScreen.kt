@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,6 +33,7 @@ import com.anismhub.ticketsystem.presentation.components.TabItem
 import com.anismhub.ticketsystem.presentation.components.TicketItem
 import com.anismhub.ticketsystem.utils.Resource
 import com.anismhub.ticketsystem.utils.toDateTime
+import kotlinx.coroutines.launch
 
 @Composable
 fun TicketScreen(
@@ -131,13 +133,9 @@ fun TicketContent(
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val pagerState = rememberPagerState { TabItem.entries.size }
 
-    LaunchedEffect(selectedTabIndex) {
-        pagerState.animateScrollToPage(selectedTabIndex)
-    }
-    LaunchedEffect(pagerState.currentPage, pagerState.isScrollInProgress) {
-        if (!pagerState.isScrollInProgress) {
-            selectedTabIndex = pagerState.currentPage
-        }
+    val scope = rememberCoroutineScope()
+    LaunchedEffect(pagerState.currentPage) {
+        selectedTabIndex = pagerState.currentPage
     }
 
     Column(
@@ -153,7 +151,12 @@ fun TicketContent(
             TabItem.entries.forEachIndexed { index, currentTab ->
                 Tab(
                     selected = selectedTabIndex == index,
-                    onClick = { selectedTabIndex = index },
+                    onClick = {
+                        scope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                        selectedTabIndex = index
+                    },
                     text = { Text(text = currentTab.title) },
                 )
             }
@@ -170,7 +173,9 @@ fun TicketContent(
             ) {
                 when (index) {
                     0 -> {
-                        items(ticketOpen.sortedByDescending { it.ticketId }, key = { it.ticketId }) {
+                        items(
+                            ticketOpen.sortedByDescending { it.ticketId },
+                            key = { it.ticketId }) {
                             TicketItem(
                                 number = it.ticketId,
                                 title = it.ticketSubject,
@@ -183,7 +188,9 @@ fun TicketContent(
                     }
 
                     1 -> {
-                        items(ticketOnProgress.sortedByDescending { it.ticketId }, key = { it.ticketId }) {
+                        items(
+                            ticketOnProgress.sortedByDescending { it.ticketId },
+                            key = { it.ticketId }) {
                             TicketItem(
                                 number = it.ticketId,
                                 title = it.ticketSubject,
@@ -196,7 +203,9 @@ fun TicketContent(
                     }
 
                     2 -> {
-                        items(ticketClosed.sortedByDescending { it.ticketId }, key = { it.ticketId }) {
+                        items(
+                            ticketClosed.sortedByDescending { it.ticketId },
+                            key = { it.ticketId }) {
                             TicketItem(
                                 number = it.ticketId,
                                 title = it.ticketSubject,

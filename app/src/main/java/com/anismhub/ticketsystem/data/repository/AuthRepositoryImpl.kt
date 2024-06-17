@@ -2,6 +2,7 @@ package com.anismhub.ticketsystem.data.repository
 
 import android.util.Log
 import com.anismhub.ticketsystem.data.mapper.toLogin
+import com.anismhub.ticketsystem.data.mapper.toNotification
 import com.anismhub.ticketsystem.data.mapper.toProfile
 import com.anismhub.ticketsystem.data.mapper.toResponse
 import com.anismhub.ticketsystem.data.mapper.toTechProfile
@@ -10,6 +11,7 @@ import com.anismhub.ticketsystem.data.remote.ApiService
 import com.anismhub.ticketsystem.domain.manager.LocalDataManager
 import com.anismhub.ticketsystem.domain.model.Login
 import com.anismhub.ticketsystem.domain.model.LoginData
+import com.anismhub.ticketsystem.domain.model.Notification
 import com.anismhub.ticketsystem.domain.model.Profile
 import com.anismhub.ticketsystem.domain.model.ProfileData
 import com.anismhub.ticketsystem.domain.model.Response
@@ -233,6 +235,22 @@ class AuthRepositoryImpl(
             apiService.deleteToken(deviceId)
         } catch (e: Exception) {
             Log.e("TAG", "deleteFCMToken: $e")
+        }
+    }
+
+    override fun getNotification(): Flow<Resource<Notification>> = flow {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.getNotification()
+            emit(Resource.Success(response.toNotification()))
+        } catch (e: Exception) {
+            if (e is HttpException) {
+                val jsonInString = e.response()?.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonInString, Response::class.java)
+                emit(Resource.Error(errorBody.message))
+            } else {
+                emit(Resource.Error(e.message.toString()))
+            }
         }
     }
 }

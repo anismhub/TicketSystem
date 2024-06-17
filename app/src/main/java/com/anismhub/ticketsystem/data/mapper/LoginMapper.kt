@@ -2,6 +2,8 @@ package com.anismhub.ticketsystem.data.mapper
 
 import com.anismhub.ticketsystem.data.remote.dto.LoginDTO
 import com.anismhub.ticketsystem.data.remote.dto.LoginDataDTO
+import com.anismhub.ticketsystem.data.remote.dto.NotificationDTO
+import com.anismhub.ticketsystem.data.remote.dto.NotificationDataDTO
 import com.anismhub.ticketsystem.data.remote.dto.ProfileDTO
 import com.anismhub.ticketsystem.data.remote.dto.ProfileDataDTO
 import com.anismhub.ticketsystem.data.remote.dto.TechProfileDTO
@@ -9,6 +11,8 @@ import com.anismhub.ticketsystem.data.remote.dto.TechProfileDataDTO
 import com.anismhub.ticketsystem.data.remote.dto.UsersDTO
 import com.anismhub.ticketsystem.domain.model.Login
 import com.anismhub.ticketsystem.domain.model.LoginData
+import com.anismhub.ticketsystem.domain.model.Notification
+import com.anismhub.ticketsystem.domain.model.NotificationData
 import com.anismhub.ticketsystem.domain.model.Profile
 import com.anismhub.ticketsystem.domain.model.ProfileData
 import com.anismhub.ticketsystem.domain.model.TechProfile
@@ -75,5 +79,23 @@ fun TechProfileDTO.toTechProfile(): TechProfile {
         status = status,
         message = message,
         data = data.map { it.toTechProfileData() }
+    )
+}
+
+fun NotificationDTO.toNotification(): Notification {
+    return Notification(
+        error = error,
+        status = status,
+        message = message,
+        data = data.map { it.toNotificationData() }
+    )
+}
+
+fun NotificationDataDTO.toNotificationData(): NotificationData {
+    return NotificationData(
+        notificationId = notificationId,
+        notificationTicket = notificationTicket,
+        notificationContent = notificationContent,
+        notificationCreateAt = notificationCreateAt
     )
 }

@@ -21,7 +21,7 @@ import javax.inject.Inject
 class NotificationFirebaseMessagingService : FirebaseMessagingService() {
 
     @Inject
-    private lateinit var authRepository: AuthRepository
+    lateinit var authRepository: AuthRepository
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)

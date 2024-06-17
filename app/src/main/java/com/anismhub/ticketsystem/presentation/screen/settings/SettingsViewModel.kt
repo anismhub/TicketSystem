@@ -60,8 +60,8 @@ class SettingsViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
-            authRepository.clearData()
             authRepository.deleteFCMToken()
+            authRepository.clearData()
         }
     }
 }
