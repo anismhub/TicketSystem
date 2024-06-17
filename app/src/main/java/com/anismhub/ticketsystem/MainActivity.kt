@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -15,10 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import com.anismhub.ticketsystem.presentation.screen.MainViewModel
 import com.anismhub.ticketsystem.presentation.theme.TicketSystemTheme
@@ -51,7 +47,7 @@ class MainActivity : ComponentActivity() {
     private fun checkNotificationPolicyPermission() {
         Log.d("TAG", "checkNotificationPolicyPermission: function called")
         val context = this
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Log.d("TAG", "checkNotificationPolicyPermission: if android 12 or above")
 
             val isPermissionGranted = ContextCompat.checkSelfPermission(
