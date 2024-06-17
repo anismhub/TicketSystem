@@ -43,4 +43,8 @@ interface AuthRepository {
     fun getTechUsers(): Flow<Resource<TechProfile>>
 
     suspend fun saveProfileData(profileData: ProfileData)
+
+    suspend fun updateFCMToken(token: String)
+
+    suspend fun deleteFCMToken()
 }

@@ -130,4 +130,16 @@ interface ApiService {
         @Field("content") content: String,
     ): ResponseDTO
 
+    @FormUrlEncoded
+    @POST("users/token")
+    suspend fun refreshToken(
+        @Field("deviceId") deviceId: String,
+        @Field("token") token: String
+    )
+
+    @FormUrlEncoded
+    @DELETE("users/token")
+    suspend fun deleteToken(
+        @Field("deviceId") deviceId: String
+    )
 }

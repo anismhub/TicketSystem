@@ -7,6 +7,7 @@ import com.anismhub.ticketsystem.domain.model.LoginData
 import com.anismhub.ticketsystem.domain.repository.AuthRepository
 import com.anismhub.ticketsystem.utils.Event
 import com.anismhub.ticketsystem.utils.Resource
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -50,6 +51,14 @@ class SignInViewModel @Inject constructor(
         viewModelScope.launch {
             authRepository.getLoginState().collect {
                 _loginState.value = it
+            }
+        }
+    }
+
+    fun updateFCMToken() {
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            viewModelScope.launch {
+                authRepository.updateFCMToken(it)
             }
         }
     }
