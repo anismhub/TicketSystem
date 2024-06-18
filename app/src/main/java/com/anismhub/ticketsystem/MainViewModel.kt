@@ -1,4 +1,4 @@
-package com.anismhub.ticketsystem.presentation.screen
+package com.anismhub.ticketsystem
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State

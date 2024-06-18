@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,7 +15,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
-import com.anismhub.ticketsystem.presentation.screen.MainViewModel
 import com.anismhub.ticketsystem.presentation.theme.TicketSystemTheme
 import dagger.hilt.android.AndroidEntryPoint
 
