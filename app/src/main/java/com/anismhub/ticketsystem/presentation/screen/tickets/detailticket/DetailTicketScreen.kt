@@ -90,7 +90,8 @@ fun DetailTicketScreen(
                 listTech = listTeknisi,
                 isClosed = resultData.data.data.ticketStatus == "Closed",
                 isAssigned = resultData.data.data.ticketAssignedTo != null,
-                isKaryawan = localProfile!!.userRole == "Karyawan",
+                isKaryawan = localProfile!!.userRole == "Administrator",
+                isAdmin = localProfile!!.userRole == "Administrator",
                 assignTicket = {
                     if (it != 0) viewModel.assignTicket(ticketId, it)
                 },
@@ -185,7 +186,8 @@ fun DetailTicketContent(
     modifier: Modifier = Modifier,
     isClosed: Boolean = false,
     isAssigned: Boolean = false,
-    isKaryawan: Boolean = false
+    isKaryawan: Boolean = false,
+    isAdmin: Boolean = false
 ) {
     var replyText by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
@@ -220,7 +222,7 @@ fun DetailTicketContent(
                 )
                 Row {
                     Spacer(modifier = Modifier.weight(0.5f))
-                    if (!isKaryawan) {
+                    if (isAdmin) {
                         MyDropdownMenuTech(
                             value = if (isAssigned) {
                                 data.ticketAssignedTo
