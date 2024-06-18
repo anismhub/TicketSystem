@@ -90,7 +90,7 @@ fun DetailTicketScreen(
                 listTech = listTeknisi,
                 isClosed = resultData.data.data.ticketStatus == "Closed",
                 isAssigned = resultData.data.data.ticketAssignedTo != null,
-                isKaryawan = localProfile!!.userRole == "Administrator",
+                isKaryawan = localProfile!!.userRole == "Karyawan",
                 isAdmin = localProfile!!.userRole == "Administrator",
                 assignTicket = {
                     if (it != 0) viewModel.assignTicket(ticketId, it)
