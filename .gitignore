@@ -19,3 +19,4 @@
 local.properties
 /.idea/codeStyles/Project.xml
 /.idea/codeStyles/codeStyleConfig.xml
+/app/google-services.json
