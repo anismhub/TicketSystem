@@ -3,6 +3,7 @@ package com.anismhub.ticketsystem.data.remote
 import com.anismhub.ticketsystem.data.remote.dto.DepartmentsDTO
 import com.anismhub.ticketsystem.data.remote.dto.DetailTicketDTO
 import com.anismhub.ticketsystem.data.remote.dto.LoginDTO
+import com.anismhub.ticketsystem.data.remote.dto.NotificationDTO
 import com.anismhub.ticketsystem.data.remote.dto.ProfileDTO
 import com.anismhub.ticketsystem.data.remote.dto.ResponseDTO
 import com.anismhub.ticketsystem.data.remote.dto.TechProfileDTO
@@ -15,6 +16,7 @@ import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.QueryMap
@@ -130,4 +132,19 @@ interface ApiService {
         @Field("content") content: String,
     ): ResponseDTO
 
+    @FormUrlEncoded
+    @POST("users/token")
+    suspend fun refreshToken(
+        @Field("deviceId") deviceId: String,
+        @Field("token") token: String
+    )
+
+    @FormUrlEncoded
+    @PUT("users/token")
+    suspend fun deleteToken(
+        @Field("deviceId") deviceId: String
+    )
+
+    @GET("users/notification")
+    suspend fun getNotification(): NotificationDTO
 }

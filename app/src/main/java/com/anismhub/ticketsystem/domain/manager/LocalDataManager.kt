@@ -18,4 +18,6 @@ interface LocalDataManager {
     fun getProfileData(): Flow<ProfileData>
 
     suspend fun saveProfileData(profileData: ProfileData)
+
+    suspend fun getDeviceId(): Flow<String>
 }

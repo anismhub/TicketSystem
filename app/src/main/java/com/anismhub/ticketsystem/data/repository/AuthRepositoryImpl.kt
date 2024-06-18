@@ -1,6 +1,8 @@
 package com.anismhub.ticketsystem.data.repository
 
+import android.util.Log
 import com.anismhub.ticketsystem.data.mapper.toLogin
+import com.anismhub.ticketsystem.data.mapper.toNotification
 import com.anismhub.ticketsystem.data.mapper.toProfile
 import com.anismhub.ticketsystem.data.mapper.toResponse
 import com.anismhub.ticketsystem.data.mapper.toTechProfile
@@ -9,6 +11,7 @@ import com.anismhub.ticketsystem.data.remote.ApiService
 import com.anismhub.ticketsystem.domain.manager.LocalDataManager
 import com.anismhub.ticketsystem.domain.model.Login
 import com.anismhub.ticketsystem.domain.model.LoginData
+import com.anismhub.ticketsystem.domain.model.Notification
 import com.anismhub.ticketsystem.domain.model.Profile
 import com.anismhub.ticketsystem.domain.model.ProfileData
 import com.anismhub.ticketsystem.domain.model.Response
@@ -18,6 +21,7 @@ import com.anismhub.ticketsystem.domain.repository.AuthRepository
 import com.anismhub.ticketsystem.utils.Resource
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 
@@ -162,21 +166,22 @@ class AuthRepositoryImpl(
         }
     }
 
-    override fun postChangePassword(userId: Int, password: String): Flow<Resource<Response>> = flow {
-        emit(Resource.Loading)
-        try {
-            val response = apiService.changePassword(userId = userId, password = password)
-            emit(Resource.Success(response.toResponse()))
-        } catch (e: Exception) {
-            if (e is HttpException) {
-                val jsonInString = e.response()?.errorBody()?.string()
-                val errorBody = Gson().fromJson(jsonInString, Response::class.java)
-                emit(Resource.Error(errorBody.message))
-            } else {
-                emit(Resource.Error(e.message.toString()))
+    override fun postChangePassword(userId: Int, password: String): Flow<Resource<Response>> =
+        flow {
+            emit(Resource.Loading)
+            try {
+                val response = apiService.changePassword(userId = userId, password = password)
+                emit(Resource.Success(response.toResponse()))
+            } catch (e: Exception) {
+                if (e is HttpException) {
+                    val jsonInString = e.response()?.errorBody()?.string()
+                    val errorBody = Gson().fromJson(jsonInString, Response::class.java)
+                    emit(Resource.Error(errorBody.message))
+                } else {
+                    emit(Resource.Error(e.message.toString()))
+                }
             }
         }
-    }
 
     override fun getProfile(): Flow<Resource<Profile>> = flow {
         emit(Resource.Loading)
@@ -213,5 +218,39 @@ class AuthRepositoryImpl(
 
     override suspend fun saveProfileData(profileData: ProfileData) {
         localDataManager.saveProfileData(profileData)
+    }
+
+    override suspend fun updateFCMToken(token: String) {
+        try {
+            val deviceId = localDataManager.getDeviceId().first()
+            apiService.refreshToken(deviceId, token)
+        } catch (e: Exception) {
+            Log.e("TAG", "updateFCMToken: $e")
+        }
+    }
+
+    override suspend fun deleteFCMToken() {
+        try {
+            val deviceId = localDataManager.getDeviceId().first()
+            apiService.deleteToken(deviceId)
+        } catch (e: Exception) {
+            Log.e("TAG", "deleteFCMToken: $e")
+        }
+    }
+
+    override fun getNotification(): Flow<Resource<Notification>> = flow {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.getNotification()
+            emit(Resource.Success(response.toNotification()))
+        } catch (e: Exception) {
+            if (e is HttpException) {
+                val jsonInString = e.response()?.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonInString, Response::class.java)
+                emit(Resource.Error(errorBody.message))
+            } else {
+                emit(Resource.Error(e.message.toString()))
+            }
+        }
     }
 }

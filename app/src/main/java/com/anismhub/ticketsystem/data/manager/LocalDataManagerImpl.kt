@@ -12,7 +12,10 @@ import com.anismhub.ticketsystem.domain.manager.LocalDataManager
 import com.anismhub.ticketsystem.domain.model.LoginData
 import com.anismhub.ticketsystem.domain.model.ProfileData
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import java.util.UUID
 
 private val Context.datastore: DataStore<Preferences> by preferencesDataStore(name = "TicketSystem")
 
@@ -66,6 +69,7 @@ class LocalDataManagerImpl(context: Context) : LocalDataManager {
             pref.remove(departmentIdKey)
             pref.remove(departmentNameKey)
             pref.remove(userPhoneKey)
+            pref.remove(deviceIdKey)
         }
     }
 
@@ -95,6 +99,22 @@ class LocalDataManagerImpl(context: Context) : LocalDataManager {
         }
     }
 
+    override suspend fun getDeviceId(): Flow<String> = flow {
+        val deviceId = dataStore.data.map { pref ->
+            pref[deviceIdKey] ?: ""
+        }
+        val currentDeviceId = deviceId.first()
+        if (currentDeviceId.isEmpty()) {
+            val newDeviceId = UUID.randomUUID().toString()
+            dataStore.edit { pref ->
+                pref[deviceIdKey] = newDeviceId
+            }
+            emit(newDeviceId)
+        } else {
+            emit(currentDeviceId)
+        }
+    }
+
     private companion object {
         val userIdKey = intPreferencesKey("user_id_key")
         val userNameKey = stringPreferencesKey("user_name_key")
@@ -105,5 +125,6 @@ class LocalDataManagerImpl(context: Context) : LocalDataManager {
         val departmentIdKey = intPreferencesKey("department_id_key")
         val departmentNameKey = stringPreferencesKey("department_name_key")
         val userPhoneKey = stringPreferencesKey("user_phone_key")
+        val deviceIdKey = stringPreferencesKey("device_id_key")
     }
 }

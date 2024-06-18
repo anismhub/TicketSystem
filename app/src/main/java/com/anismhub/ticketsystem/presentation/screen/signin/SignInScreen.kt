@@ -84,6 +84,7 @@ fun SignInScreen(
                 is Resource.Success -> {
                     isLoading = false
                     viewModel.saveLoginData(unhandled.data.data)
+                    viewModel.updateFCMToken()
                     navigateToHome()
                 }
 

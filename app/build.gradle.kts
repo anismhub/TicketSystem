@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.androidKsp)
     alias(libs.plugins.androidDaggerHilt)
+    alias(libs.plugins.googleGmsGoogleServices)
 }
 
 val baseUrl: String = gradleLocalProperties(rootDir, providers).getProperty("api.url")
@@ -72,6 +73,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.google.dagger.hilt)
+    implementation(libs.firebase.messaging)
     ksp(libs.google.dagger.hilt.compiler)
     ksp(libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
