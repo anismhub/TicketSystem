@@ -45,18 +45,13 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun checkNotificationPolicyPermission() {
-        Log.d("TAG", "checkNotificationPolicyPermission: function called")
         val context = this
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Log.d("TAG", "checkNotificationPolicyPermission: if android 12 or above")
 
             val isPermissionGranted = ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
-
-            Log.d("TAG", "permission state: $isPermissionGranted")
-
 
             if (!isPermissionGranted) {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
