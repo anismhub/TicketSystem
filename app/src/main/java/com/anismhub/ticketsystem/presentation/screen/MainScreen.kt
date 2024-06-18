@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -23,8 +24,11 @@ fun MainScreen(
     navigateToLogin: () -> Unit,
     navigateToCreate: () -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    viewModel: MainScreenViewModel = hiltViewModel()
 ) {
+    val localProfile by viewModel.localProfileData
+
     var title by rememberSaveable { mutableStateOf("") }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -47,7 +51,9 @@ fun MainScreen(
         },
         floatingActionButton = {
             if (currentRoute == "home") {
-                CreateFAB { navigateToCreate()
+                if (localProfile!!.userRole == "Karyawan") {
+                    CreateFAB { navigateToCreate()
+                    }
                 }
             }
         }
