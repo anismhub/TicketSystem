@@ -1,7 +1,6 @@
 package com.anismhub.ticketsystem.presentation.screen.tickets.detailticket
 
 import android.util.Log
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +12,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -255,13 +253,7 @@ fun DetailTicketContent(
                     text = data.ticketDescription,
                     textAlign = TextAlign.Justify,
                     minLines = 2,
-                    modifier = Modifier
-                        .border(
-                            border = ButtonDefaults.outlinedButtonBorder,
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        .fillMaxWidth()
-                        .padding(8.dp)
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         }
