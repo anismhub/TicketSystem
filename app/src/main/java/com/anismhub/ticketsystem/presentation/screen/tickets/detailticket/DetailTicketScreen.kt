@@ -308,18 +308,18 @@ fun DetailTicketContent(
                 verticalAlignment = Alignment.Bottom,
             ) {
                 Button(onClick = {
-                    if (selectedTeknisi?.userId != null || isAssigned) {
+                    if (selectedTeknisi?.userId != null && !isAssigned) {
                         assignTicket(selectedTeknisi?.userId ?: -1)
                     }
                     if (replyText.trim().isNotEmpty()) {
                         addComment(replyText)
                     }
                 }) {
-                    Text(text = "Perbarui")
+                    Text(text = "Balas Pesan")
                 }
                 if (!isKaryawan) {
                     Button(onClick = { showDialog = true }) {
-                        Text(text = "Tutup")
+                        Text(text = "Tutup Tiket")
                     }
                 }
             }
