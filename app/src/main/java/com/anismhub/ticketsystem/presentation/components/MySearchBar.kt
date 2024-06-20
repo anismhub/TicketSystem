@@ -1,9 +1,8 @@
 package com.anismhub.ticketsystem.presentation.components
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +17,7 @@ fun MySearchBar(
     query: String = "",
     onQueryChange: (String) -> Unit = {},
     onSearch: (String) -> Unit = {},
+    trailingIcon: @Composable (() -> Unit)? = null,
     active: Boolean = false,
     onActiveChange: (Boolean) -> Unit = {},
     ) {
@@ -30,8 +30,18 @@ fun MySearchBar(
         leadingIcon = {
             Icon(painter = painterResource(id = R.drawable.search_24px), contentDescription = "Search Icon")
         },
+        trailingIcon = {
+            if (query.isNotEmpty()) {
+                IconButton(onClick = { onQueryChange("") }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.close_24px),
+                        contentDescription = ""
+                    )
+                }
+            }
+        },
         placeholder = {
-            Text(text = "Search")
+            Text(text = "Cari...")
         },
         modifier = modifier
     ) { }
