@@ -42,7 +42,7 @@ fun TicketItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "#$number", style = MyTypography.bodyLarge
+                    text = "Tiket#$number", style = MyTypography.bodyLarge
                 )
                 Text(
                     text = date, style = MyTypography.bodySmall
