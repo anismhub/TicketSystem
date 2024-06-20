@@ -190,7 +190,7 @@ fun MyDropdownMenuTech(
     onValueChange: (TechProfileData) -> Unit,
     listTech: List<TechProfileData>,
     modifier: Modifier = Modifier,
-    enabled: Boolean,
+    enabled: Boolean = true,
     supportingText: @Composable () -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }

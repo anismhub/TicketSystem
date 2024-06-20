@@ -17,7 +17,6 @@ fun MySearchBar(
     query: String = "",
     onQueryChange: (String) -> Unit = {},
     onSearch: (String) -> Unit = {},
-    trailingIcon: @Composable (() -> Unit)? = null,
     active: Boolean = false,
     onActiveChange: (Boolean) -> Unit = {},
     ) {
