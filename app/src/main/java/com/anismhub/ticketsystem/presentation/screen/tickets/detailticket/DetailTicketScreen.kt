@@ -226,9 +226,7 @@ fun DetailTicketContent(
                         } else {
                             MyDropdownMenuTech(
                                 value = selectedTeknisi?.userFullName ?: "Pilih Teknisi",
-                                onValueChange = {
-                                    selectedTeknisi = it
-                                },
+                                onValueChange = { selectedTeknisi = it },
                                 listTech = listTech,
                                 modifier = Modifier.weight(0.5f)
                             )
@@ -251,7 +249,6 @@ fun DetailTicketContent(
                 Text(
                     text = data.ticketDescription,
                     textAlign = TextAlign.Justify,
-                    minLines = 2,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
