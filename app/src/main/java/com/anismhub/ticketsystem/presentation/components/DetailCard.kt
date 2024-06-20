@@ -10,14 +10,19 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.anismhub.ticketsystem.R
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
+import com.anismhub.ticketsystem.presentation.theme.Yellow
 
 @Composable
 fun DetailCard(
@@ -46,16 +51,20 @@ fun DetailCard(
             DetailSectionCard(
                 title = userFullName,
                 subtitle = departmentName,
+                painter = painterResource(id = R.drawable.person),
+                contentDescription = "User",
                 modifier = Modifier.weight(1f)
             )
             DetailSectionCard(
                 title = "Dibuat",
                 subtitle = ticketCreatedAt,
+                painter = painterResource(id = R.drawable.schedule),
                 modifier = Modifier.weight(1f)
             )
             DetailSectionCard(
                 title = "Terakhir diperbarui",
                 subtitle = ticketUpdatedAt,
+                painter = painterResource(id = R.drawable.update),
                 modifier = Modifier.weight(1f)
             )
         }
@@ -68,16 +77,19 @@ fun DetailCard(
             DetailSectionCard(
                 title = "Area",
                 subtitle = ticketArea,
+                painter = painterResource(id = R.drawable.location_on),
                 modifier = Modifier.weight(1f)
             )
             DetailSectionCard(
                 title = "Kategori",
                 subtitle = ticketCategory,
+                painter = painterResource(id = R.drawable.category),
                 modifier = Modifier.weight(1f)
             )
             DetailSectionCard(
                 title = "Prioritas",
                 subtitle = ticketPriority,
+                painter = painterResource(id = R.drawable.flag),
                 modifier = Modifier.weight(1f)
             )
         }
@@ -88,13 +100,21 @@ fun DetailCard(
 fun DetailSectionCard(
     title: String,
     subtitle: String,
-    modifier: Modifier = Modifier
+    painter: Painter,
+    modifier: Modifier = Modifier,
+    contentDescription: String = ""
 ) {
     Card(
         modifier = modifier
             .padding(vertical = 8.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(MaterialTheme.colorScheme.tertiaryContainer)
+        colors = if (subtitle == "Tinggi") {
+            CardDefaults.cardColors(MaterialTheme.colorScheme.error)
+        } else if (subtitle == "Sedang") {
+            CardDefaults.cardColors(Yellow)
+        } else {
+            CardDefaults.cardColors()
+        }
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -103,7 +123,12 @@ fun DetailSectionCard(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            Text(text = title, textAlign = TextAlign.Center, style = MyTypography.bodyMedium)
+            Row(horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()) {
+                Icon(painter = painter, contentDescription = contentDescription)
+                Text(text = title, textAlign = TextAlign.Center, style = MyTypography.bodyMedium)
+            }
             Text(text = subtitle, textAlign = TextAlign.Center, style = MyTypography.bodySmall)
         }
     }
