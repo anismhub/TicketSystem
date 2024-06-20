@@ -223,19 +223,19 @@ fun DetailTicketContent(
                 Row {
                     Spacer(modifier = Modifier.weight(0.5f))
                     if (isAdmin) {
-                        MyDropdownMenuTech(
-                            value = if (isAssigned) {
-                                data.ticketAssignedTo
-                            } else {
-                                selectedTeknisi?.userFullName ?: "Pilih Teknisi"
-                            },
-                            onValueChange = {
-                                selectedTeknisi = it
-                            },
-                            listTech = listTech,
-                            enabled = !isAssigned,
-                            modifier = Modifier.weight(0.5f)
-                        )
+                        if (isAssigned) {
+                            data.ticketAssignedTo?.let { Text(text = it) }
+                        } else {
+                            MyDropdownMenuTech(
+                                value = selectedTeknisi?.userFullName ?: "Pilih Teknisi",
+                                onValueChange = {
+                                    selectedTeknisi = it
+                                },
+                                listTech = listTech,
+                                enabled = !isAssigned,
+                                modifier = Modifier.weight(0.5f)
+                            )
+                        }
                     } else {
                         Text(text = data.ticketAssignedTo ?: "Belum ada teknisi")
                     }
