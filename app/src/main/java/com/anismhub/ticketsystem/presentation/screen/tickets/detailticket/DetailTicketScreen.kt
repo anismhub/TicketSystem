@@ -230,7 +230,6 @@ fun DetailTicketContent(
                                     selectedTeknisi = it
                                 },
                                 listTech = listTech,
-                                enabled = !isAssigned,
                                 modifier = Modifier.weight(0.5f)
                             )
                         }
@@ -270,6 +269,7 @@ fun DetailTicketContent(
                     date = it.commentTime.toDateTime(),
                     content = it.commentContent
                 )
+                Spacer(modifier = Modifier.height(4.dp))
             }
         }
         if (data.resolution.isNotEmpty()) {
