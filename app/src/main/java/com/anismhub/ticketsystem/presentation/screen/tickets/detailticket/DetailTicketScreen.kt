@@ -14,6 +14,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,11 +26,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.anismhub.ticketsystem.R
 import com.anismhub.ticketsystem.domain.model.DetailTicketData
 import com.anismhub.ticketsystem.domain.model.TechProfileData
 import com.anismhub.ticketsystem.presentation.components.CustomDialog
@@ -285,6 +289,16 @@ fun DetailTicketContent(
                 value = replyText,
                 onChange = { newValue ->
                     replyText = newValue
+                },
+                trailingIcon = {
+                    if (replyText.isNotEmpty()) {
+                        IconButton(onClick = { replyText = "" }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.close_24px),
+                                contentDescription = ""
+                            )
+                        }
+                    }
                 },
                 minLines = 5,
                 singleLine = false,

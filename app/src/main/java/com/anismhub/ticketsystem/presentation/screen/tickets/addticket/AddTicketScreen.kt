@@ -63,6 +63,7 @@ fun AddTicketScreen(
                 is Resource.Loading -> {
                     Toast.makeText(LocalContext.current, "Loading", Toast.LENGTH_SHORT).show()
                 }
+
                 is Resource.Success -> {
                     onNavUp()
                 }
@@ -152,7 +153,15 @@ fun AddTicketContent(
                 style = MyTypography.headlineMedium.copy(fontWeight = FontWeight.Bold),
             )
         }
-        InputTextWithLabel(title = "Subjek", value = subjectValue, onValueChange = onSubjectChange)
+        InputTextWithLabel(title = "Subjek", value = subjectValue, onValueChange = onSubjectChange,
+            trailingIcon = {
+                IconButton(onClick = { onSubjectChange("") }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.close_24px),
+                        contentDescription = ""
+                    )
+                }
+            })
         DropdownMenuWithLabel(
             title = "Area", value = areaValue,
             onValueChange = onAreaChange,
@@ -173,6 +182,14 @@ fun AddTicketContent(
             title = "Deskripsi",
             value = descriptionValue,
             onValueChange = onDescriptionChange,
+            trailingIcon = {
+                IconButton(onClick = { onDescriptionChange("") }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.close_24px),
+                        contentDescription = ""
+                    )
+                }
+            },
             minLines = 7,
             singleLine = false
         )
