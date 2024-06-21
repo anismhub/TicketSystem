@@ -21,8 +21,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.anismhub.ticketsystem.R
+import com.anismhub.ticketsystem.presentation.theme.LocalCustomColors
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
-import com.anismhub.ticketsystem.presentation.theme.Yellow
 
 @Composable
 fun DetailCard(
@@ -104,16 +104,21 @@ fun DetailSectionCard(
     modifier: Modifier = Modifier,
     contentDescription: String = ""
 ) {
+    val customColors = LocalCustomColors.current
     Card(
         modifier = modifier
             .padding(vertical = 8.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = if (subtitle == "Tinggi") {
-            CardDefaults.cardColors(MaterialTheme.colorScheme.error)
-        } else if (subtitle == "Sedang") {
-            CardDefaults.cardColors(Yellow)
-        } else {
-            CardDefaults.cardColors()
+        colors = when (subtitle) {
+            "Tinggi" -> {
+                CardDefaults.cardColors(MaterialTheme.colorScheme.error)
+            }
+            "Sedang" -> {
+                CardDefaults.cardColors(customColors.warning.colorContainer)
+            }
+            else -> {
+                CardDefaults.cardColors()
+            }
         }
     ) {
         Column(
