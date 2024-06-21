@@ -10,6 +10,7 @@ import com.anismhub.ticketsystem.navigation.TicketNav
 import com.anismhub.ticketsystem.presentation.screen.settings.accounts.AccountManageScreen
 import com.anismhub.ticketsystem.presentation.screen.settings.accounts.create.AccountsCreateScreen
 import com.anismhub.ticketsystem.presentation.screen.settings.accounts.update.AccountsUpdateScreen
+import com.anismhub.ticketsystem.presentation.screen.settings.changepassword.ChangePasswordScreen
 import com.anismhub.ticketsystem.presentation.screen.settings.exportreport.ExportReportScreen
 import com.anismhub.ticketsystem.presentation.screen.tickets.addticket.AddTicketScreen
 import com.anismhub.ticketsystem.presentation.screen.tickets.detailticket.DetailTicketScreen
@@ -63,6 +64,10 @@ fun NavGraphBuilder.ticketNavGraph(
             AccountsUpdateScreen(userId = userId,
                 onNavUp = { navController.navigateUp() })
             onTitleChange("Perbarui Pengguna")
+        }
+        composable(route = TicketNav.ChangePassword.route) {
+            ChangePasswordScreen()
+            onTitleChange("Ubah Password")
         }
     }
 }

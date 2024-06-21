@@ -26,6 +26,7 @@ import com.anismhub.ticketsystem.utils.Resource
 @Composable
 fun SettingsScreen(
     navigateToAuth: () -> Unit,
+    navigateToChangePassword: (title: String) -> Unit,
     navigateToManageAccount: (title: String) -> Unit,
     navigateToExport: (title: String) -> Unit,
     modifier: Modifier = Modifier,
@@ -57,6 +58,7 @@ fun SettingsScreen(
         isKaryawan = localProfile.userRole == "Karyawan",
         isAdmin = localProfile.userRole == "Administrator",
         navigateToAuth = { navigateToAuth() },
+        navigateToChangePassword = { navigateToChangePassword("Ganti Password") },
         navigateToManageAccount = { navigateToManageAccount(it) },
         navigateToExport = { navigateToExport(it) },
         modifier = modifier
@@ -66,6 +68,7 @@ fun SettingsScreen(
 @Composable
 fun SettingsContent(
     navigateToAuth: () -> Unit,
+    navigateToChangePassword: () -> Unit,
     navigateToManageAccount: (title: String) -> Unit,
     navigateToExport: (title: String) -> Unit,
     localProfileData: ProfileData,
@@ -99,6 +102,10 @@ fun SettingsContent(
                 text = "Ekspor Laporan",
                 onClick = { navigateToExport("Ekspor Laporan") })
         }
+        SettingsMenu(
+            icon = painterResource(id = R.drawable.key),
+            text = "Ganti Password",
+            onClick = { navigateToChangePassword() })
         SettingsMenu(
             icon = painterResource(id = R.drawable.close_24px),
             text = "Sign Out",

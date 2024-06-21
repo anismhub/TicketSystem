@@ -46,6 +46,10 @@ fun BottomNavGraph(
                 navigateToExport = { title ->
                     navController.navigate(TicketNav.Export.route)
                     onTitleChange(title)
+                },
+                navigateToChangePassword = { title ->
+                    navController.navigate(TicketNav.ChangePassword.route)
+                    onTitleChange(title)
                 }
             )
         }
