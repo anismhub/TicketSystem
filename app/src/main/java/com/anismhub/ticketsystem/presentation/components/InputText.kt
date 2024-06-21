@@ -115,7 +115,9 @@ fun InputTextWithLabel(
             keyboardOption = keyboardOption,
             visualTransformation = visualTransformation,
             trailingIcon = {
-                trailingIcon()
+                if (value.isNotEmpty()) {
+                    trailingIcon()
+                }
             },
             supportingText = {
                 if (isError) {

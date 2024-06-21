@@ -140,13 +140,33 @@ fun AccountsCreateContent(
         InputTextWithLabel(
             title = "Username",
             value = usernameValue,
-            onValueChange = onUsernameChange
+            onValueChange = onUsernameChange,
+            trailingIcon = {
+                if (usernameValue.isNotEmpty()) {
+                    IconButton(onClick = { onUsernameChange("") }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.close_24px),
+                            contentDescription = ""
+                        )
+                    }
+                }
+            }
         )
         // Fullname
         InputTextWithLabel(
             title = "Nama Lengkap",
             value = fullnameValue,
-            onValueChange = onFullnameChange
+            onValueChange = onFullnameChange,
+            trailingIcon = {
+                if (fullnameValue.isNotEmpty()) {
+                    IconButton(onClick = { onFullnameChange("") }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.close_24px),
+                            contentDescription = ""
+                        )
+                    }
+                }
+            }
         )
         // Role
         DropdownMenuWithLabel(
@@ -166,6 +186,16 @@ fun AccountsCreateContent(
             title = "Nomor Telepon",
             value = phoneNumberValue,
             onValueChange = onPhoneNumberChange,
+            trailingIcon = {
+                if (phoneNumberValue.isNotEmpty()) {
+                    IconButton(onClick = { onPhoneNumberChange("") }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.close_24px),
+                            contentDescription = ""
+                        )
+                    }
+                }
+            }
         )
         // Password
         InputTextWithLabel(
@@ -186,12 +216,6 @@ fun AccountsCreateContent(
                 }
             },
         )
-//        // Confirmed Password
-//        InputTextWithLabel(
-//            title = "Konfirmasi Password",
-//            initialTextState = confirmPassword,
-//            keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password)
-//        )
         Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = { createUser() },
