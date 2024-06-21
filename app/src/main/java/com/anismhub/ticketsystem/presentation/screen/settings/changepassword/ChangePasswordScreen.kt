@@ -36,6 +36,7 @@ fun ChangePasswordScreen(modifier: Modifier = Modifier) {
 
     var passwordConfirmationValue by remember { mutableStateOf("") }
     var passwordConfirmationVisibility by remember { mutableStateOf(false) }
+    var passwordConfirmationError by remember { mutableStateOf(false) }
 
 
     Column(modifier = modifier.padding(16.dp)) {
@@ -49,8 +50,7 @@ fun ChangePasswordScreen(modifier: Modifier = Modifier) {
                 val icon =
                     if (currentPasswordVisibility) painterResource(R.drawable.visibility_off_24px) else
                         painterResource(R.drawable.visibility_24px)
-                val desc =
-                    if (currentPasswordVisibility) "Hide password" else "Show password"
+                val desc = if (currentPasswordVisibility) "Hide password" else "Show password"
 
                 IconButton(onClick = { currentPasswordVisibility = !currentPasswordVisibility }) {
                     Icon(painter = icon, contentDescription = desc)
@@ -69,8 +69,7 @@ fun ChangePasswordScreen(modifier: Modifier = Modifier) {
                 val icon =
                     if (passwordVisibility) painterResource(R.drawable.visibility_off_24px) else
                         painterResource(R.drawable.visibility_24px)
-                val desc =
-                    if (passwordVisibility) "Hide password" else "Show password"
+                val desc = if (passwordVisibility) "Hide password" else "Show password"
 
                 IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                     Icon(painter = icon, contentDescription = desc)
@@ -90,9 +89,7 @@ fun ChangePasswordScreen(modifier: Modifier = Modifier) {
                 val icon =
                     if (passwordConfirmationVisibility) painterResource(R.drawable.visibility_off_24px) else
                         painterResource(R.drawable.visibility_24px)
-                val desc =
-                    if (passwordConfirmationVisibility) "Hide password" else "Show password"
-
+                val desc = if (passwordConfirmationVisibility) "Hide password" else "Show password"
                 IconButton(onClick = {
                     passwordConfirmationVisibility = !passwordConfirmationVisibility
                 }) {

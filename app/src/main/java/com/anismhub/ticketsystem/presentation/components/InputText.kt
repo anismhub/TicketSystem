@@ -106,7 +106,7 @@ fun InputTextWithLabel(
             value = value,
             onChange = { newValue ->
                 onValueChange(newValue)
-                isError = newValue.isEmpty()
+                isError = newValue.isNullOrEmpty()
             },
             label = "",
             isError = isError,
