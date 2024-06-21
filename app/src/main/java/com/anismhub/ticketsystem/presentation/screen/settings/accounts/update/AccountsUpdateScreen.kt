@@ -96,7 +96,7 @@ fun AccountsUpdateScreen(
                 selectedDepartmentIndex = listDepartments.indexOfFirst {
                    it.departmentName == resultData.data.data.departmentName
                 }
-                selectedDepartment = listDepartments[selectedDepartmentIndex].departmentName
+                selectedDepartment = if (selectedDepartmentIndex != -1) {listDepartments[selectedDepartmentIndex].departmentName} else {"Departemen tidak ditemukan"}
             }
 
             is Resource.Error -> {
