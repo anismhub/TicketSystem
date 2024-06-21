@@ -26,6 +26,7 @@ import com.anismhub.ticketsystem.utils.toDateTime
 
 @Composable
 fun NotificationScreen(
+    navigateToDetail: (title: String, ticketId: Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: NotificationViewModel = hiltViewModel()
 ) {
@@ -39,6 +40,9 @@ fun NotificationScreen(
         is Resource.Success -> {
             NotificationContent(
                 data = result.data.data,
+                navigateToDetail = {
+                    navigateToDetail("Detail Tiket", it)
+                },
                 modifier = modifier
             )
         }
@@ -54,6 +58,7 @@ fun NotificationScreen(
 @Composable
 fun NotificationContent(
     data: List<NotificationData>,
+    navigateToDetail: (ticketId: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -74,7 +79,10 @@ fun NotificationContent(
             items(data, key = { it.notificationId }) {
                 NotificationCard(
                     message = it.notificationContent,
-                    date = it.notificationCreateAt.toDateTime()
+                    date = it.notificationCreateAt.toDateTime(),
+                    onClick = {
+                        navigateToDetail(it.notificationTicket)
+                    }
                 )
             }
         }

@@ -29,7 +29,12 @@ fun BottomNavGraph(
                 })
         }
         composable(route = BottomNav.Notification.route) {
-            NotificationScreen()
+            NotificationScreen(
+                navigateToDetail = { title, ticketId ->
+                    navController.navigate(TicketNav.Detail.createRoute(ticketId))
+                    onTitleChange(title)
+                }
+            )
         }
         composable(route = BottomNav.Settings.route) {
             SettingsScreen(

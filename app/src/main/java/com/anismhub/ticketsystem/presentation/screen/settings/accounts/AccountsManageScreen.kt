@@ -38,7 +38,7 @@ import com.anismhub.ticketsystem.utils.Resource
 @Composable
 fun AccountManageScreen(
     navigateToCreateAccount: () -> Unit,
-    navigateToUpdateAccount: (ticketId: Int) -> Unit,
+    navigateToUpdateAccount: (userId: Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AccountsManageViewModel = hiltViewModel()
 ) {
@@ -99,7 +99,7 @@ fun AccountManageContent(
     query: String,
     onQueryChange: (String) -> Unit,
     navigateToCreateAccount: () -> Unit,
-    navigateToUpdateAccount: (ticketId: Int) -> Unit,
+    navigateToUpdateAccount: (userId: Int) -> Unit,
     deleteUsers: (userId: Int) -> Unit,
     modifier: Modifier = Modifier
 ) {

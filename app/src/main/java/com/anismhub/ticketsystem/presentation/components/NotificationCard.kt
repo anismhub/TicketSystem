@@ -1,5 +1,6 @@
 package com.anismhub.ticketsystem.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,11 +18,15 @@ import androidx.compose.ui.unit.dp
 fun NotificationCard(
     message: String,
     date: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         shape = RoundedCornerShape(16.dp),
         modifier = modifier.fillMaxWidth()
+            .clickable {
+                onClick()
+            }
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -38,5 +43,5 @@ fun NotificationCard(
 @Preview
 @Composable
 private fun NotificationCardPreview() {
-    NotificationCard(message = "Ini adalah notifikasi dari tiket 123", date = "9/9/1999")
+    NotificationCard(message = "Ini adalah notifikasi dari tiket 123", date = "9/9/1999", onClick = {})
 }
