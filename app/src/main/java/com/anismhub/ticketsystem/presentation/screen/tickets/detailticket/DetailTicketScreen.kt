@@ -62,7 +62,7 @@ fun DetailTicketScreen(
     val comment by viewModel.comments.collectAsStateWithLifecycle()
     val closeTicket by viewModel.closeTicket.collectAsStateWithLifecycle()
 
-    var listTeknisi by remember { mutableStateOf(emptyList<TechProfileData>()) }
+    var listTech by remember { mutableStateOf(emptyList<TechProfileData>()) }
 
     when (val resultTech = techUsers) {
         is Resource.Loading -> {
@@ -71,7 +71,7 @@ fun DetailTicketScreen(
 
         is Resource.Success -> {
             Log.d("TechUsers Success", "Success: ${resultTech.data.data}: ")
-            listTeknisi = resultTech.data.data
+            listTech = resultTech.data.data
         }
 
         is Resource.Error -> {
@@ -89,7 +89,7 @@ fun DetailTicketScreen(
         is Resource.Success -> {
             DetailTicketContent(
                 data = resultData.data.data,
-                listTech = listTeknisi,
+                listTech = listTech,
                 isClosed = resultData.data.data.ticketStatus == "Closed",
                 isAssigned = resultData.data.data.ticketAssignedTo != null,
                 isKaryawan = localProfile!!.userRole == "Karyawan",

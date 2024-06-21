@@ -34,6 +34,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.anismhub.ticketsystem.R
 import com.anismhub.ticketsystem.domain.model.TechProfileData
+import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.presentation.theme.fontFamily
 import java.time.Instant
@@ -84,8 +85,8 @@ fun InputText(
 @Composable
 fun InputTextWithLabel(
     title: String,
-    value: String,
-    onValueChange: (String) -> Unit,
+    textState: InputTextState,
+    onValueChange: (InputTextState) -> Unit,
     modifier: Modifier = Modifier,
     minLines: Int = 1,
     singleLine: Boolean = true,
@@ -94,7 +95,6 @@ fun InputTextWithLabel(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     trailingIcon: @Composable () -> Unit = {}
 ) {
-    var isError by remember { mutableStateOf(false) }
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -103,24 +103,26 @@ fun InputTextWithLabel(
     ) {
         Text(text = title, modifier = Modifier.weight(0.35f))
         InputText(
-            value = value,
+            value = textState.value,
             onChange = { newValue ->
-                onValueChange(newValue)
-                isError = newValue.isEmpty()
+                onValueChange(textState.copy(
+                    value = newValue,
+                    isError = newValue.isEmpty()
+                ))
             },
             label = "",
-            isError = isError,
+            isError = textState.isError,
             minLines = minLines,
             singleLine = singleLine,
             keyboardOption = keyboardOption,
             visualTransformation = visualTransformation,
             trailingIcon = {
-                if (value.isNotEmpty()) {
+                if (textState.value.isNotEmpty()) {
                     trailingIcon()
                 }
             },
             supportingText = {
-                if (isError) {
+                if (textState.isError) {
                     Text(text = "$title harus diisi", style = MyTypography.labelSmall)
                 }
             },
