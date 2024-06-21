@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,9 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.anismhub.ticketsystem.R
 import com.anismhub.ticketsystem.domain.model.DepartmentsData
 import com.anismhub.ticketsystem.presentation.common.roleOptions
 import com.anismhub.ticketsystem.presentation.components.DropdownMenuWithLabel
@@ -52,13 +56,15 @@ fun AccountsUpdateScreen(
     var selectedDepartment by remember { mutableStateOf("") }
     var selectedDepartmentIndex by remember { mutableIntStateOf(0) }
 
-    when(val result = department) {
+    when (val result = department) {
         is Resource.Success -> {
             listDepartments = result.data.data
         }
+
         is Resource.Error -> {
             Log.d("Update Screen Error", result.error)
         }
+
         else -> {}
     }
 
@@ -94,9 +100,13 @@ fun AccountsUpdateScreen(
                 phoneNumber = resultData.data.data.userPhone
                 selectedRole = resultData.data.data.userRole
                 selectedDepartmentIndex = listDepartments.indexOfFirst {
-                   it.departmentName == resultData.data.data.departmentName
+                    it.departmentName == resultData.data.data.departmentName
                 }
-                selectedDepartment = if (selectedDepartmentIndex != -1) {listDepartments[selectedDepartmentIndex].departmentName} else {"Departemen tidak ditemukan"}
+                selectedDepartment = if (selectedDepartmentIndex != -1) {
+                    listDepartments[selectedDepartmentIndex].departmentName
+                } else {
+                    "Departemen tidak ditemukan"
+                }
             }
 
             is Resource.Error -> {
@@ -173,7 +183,15 @@ fun AccountsUpdateContent(
         InputTextWithLabel(
             title = "Nama Lengkap",
             value = fullname,
-            onValueChange = onFullnameChange
+            onValueChange = onFullnameChange,
+            trailingIcon = {
+                IconButton(onClick = { onFullnameChange("") }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.close_24px),
+                        contentDescription = ""
+                    )
+                }
+            }
         )
         // Role
         DropdownMenuWithLabel(
@@ -192,7 +210,15 @@ fun AccountsUpdateContent(
         InputTextWithLabel(
             title = "Nomor Telepon",
             value = phoneNumber,
-            onValueChange = onPhoneChange
+            onValueChange = onPhoneChange,
+            trailingIcon = {
+                IconButton(onClick = { onPhoneChange("") }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.close_24px),
+                        contentDescription = ""
+                    )
+                }
+            }
         )
         Spacer(modifier = Modifier.weight(1f))
         Button(

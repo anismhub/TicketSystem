@@ -142,13 +142,11 @@ fun AccountsCreateContent(
             value = usernameValue,
             onValueChange = onUsernameChange,
             trailingIcon = {
-                if (usernameValue.isNotEmpty()) {
-                    IconButton(onClick = { onUsernameChange("") }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.close_24px),
-                            contentDescription = ""
-                        )
-                    }
+                IconButton(onClick = { onUsernameChange("") }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.close_24px),
+                        contentDescription = ""
+                    )
                 }
             }
         )
@@ -158,13 +156,11 @@ fun AccountsCreateContent(
             value = fullnameValue,
             onValueChange = onFullnameChange,
             trailingIcon = {
-                if (fullnameValue.isNotEmpty()) {
-                    IconButton(onClick = { onFullnameChange("") }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.close_24px),
-                            contentDescription = ""
-                        )
-                    }
+                IconButton(onClick = { onFullnameChange("") }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.close_24px),
+                        contentDescription = ""
+                    )
                 }
             }
         )
@@ -187,13 +183,11 @@ fun AccountsCreateContent(
             value = phoneNumberValue,
             onValueChange = onPhoneNumberChange,
             trailingIcon = {
-                if (phoneNumberValue.isNotEmpty()) {
-                    IconButton(onClick = { onPhoneNumberChange("") }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.close_24px),
-                            contentDescription = ""
-                        )
-                    }
+                IconButton(onClick = { onPhoneNumberChange("") }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.close_24px),
+                        contentDescription = ""
+                    )
                 }
             }
         )
