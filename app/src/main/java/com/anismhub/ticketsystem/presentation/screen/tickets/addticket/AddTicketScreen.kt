@@ -40,6 +40,7 @@ import com.anismhub.ticketsystem.presentation.components.InputTextWithLabel
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.presentation.theme.fontFamily
 import com.anismhub.ticketsystem.utils.Resource
+import com.anismhub.ticketsystem.utils.isInvalid
 
 @Composable
 fun AddTicketScreen(
@@ -213,7 +214,13 @@ fun AddTicketContent(
 
         Button(
             onClick = {
-                createTicket()
+                when {
+                    subject.isInvalid() -> onSubjectChange(subject.copy(isError = true))
+                    description.isInvalid() -> onDescriptionChange(description.copy(isError = true))
+                    else -> {
+                        createTicket()
+                    }
+                }
             },
             shape = RoundedCornerShape(16.dp),
             contentPadding = PaddingValues(14.dp),
