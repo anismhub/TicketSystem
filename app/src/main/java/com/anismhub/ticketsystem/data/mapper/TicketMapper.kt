@@ -67,6 +67,7 @@ fun ResponseDTO.toResponse(): Response {
 fun CommentDTO.toComment(): Comment {
     return Comment(
         commentTime = commentTime,
+        commentUserRole = commentUserRole,
         commentName = commentName,
         commentContent = commentContent
     )

@@ -236,7 +236,14 @@ fun DetailTicketContent(
                     Spacer(modifier = Modifier.weight(0.1f))
                     if (isAdmin) {
                         if (isAssigned) {
-                            data.ticketAssignedTo?.let { Text(text = it) }
+                            Row(
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(painter = painterResource(id = R.drawable.engineer), contentDescription = "Teknisi")
+                                Spacer(modifier = Modifier.width(12.dp))
+                              Text(text = data.ticketAssignedTo ?: "Nama Teknisi", style = MyTypography.titleLarge)
+                            }
                         } else {
                             MyDropdownMenuTech(
                                 value = selectedTeknisi?.userFullName ?: "Pilih Teknisi",
@@ -263,7 +270,9 @@ fun DetailTicketContent(
                 Text(
                     text = data.ticketDescription,
                     textAlign = TextAlign.Justify,
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
                 )
             }
         }
@@ -278,7 +287,8 @@ fun DetailTicketContent(
                 ReplyCard(
                     name = it.commentName,
                     date = it.commentTime.toDateTime(),
-                    content = it.commentContent
+                    content = it.commentContent,
+                    painter = if (it.commentUserRole == "Karyawan") painterResource(id = R.drawable.person) else painterResource(id = R.drawable.engineer)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
             }
