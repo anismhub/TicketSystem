@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.R
 import com.anismhub.ticketsystem.domain.model.DepartmentsData
+import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.common.roleOptions
 import com.anismhub.ticketsystem.presentation.components.DropdownMenuWithLabel
 import com.anismhub.ticketsystem.presentation.components.InputTextWithLabel
@@ -47,9 +48,9 @@ fun AccountsUpdateScreen(
     val detailUser by viewModel.detailUser.collectAsStateWithLifecycle()
     val editUser by viewModel.editUser.collectAsStateWithLifecycle()
 
-    var username by remember { mutableStateOf("") }
-    var fullname by remember { mutableStateOf("") }
-    var phoneNumber by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf(InputTextState()) }
+    var fullname by remember { mutableStateOf(InputTextState()) }
+    var phoneNumber by remember { mutableStateOf(InputTextState()) }
     var selectedRole by remember { mutableStateOf("") }
     var selectedRoleIndex by remember { mutableIntStateOf(0) }
     var listDepartments by remember { mutableStateOf(emptyList<DepartmentsData>()) }
@@ -95,9 +96,9 @@ fun AccountsUpdateScreen(
             }
 
             is Resource.Success -> {
-                username = resultData.data.data.userName
-                fullname = resultData.data.data.userFullName
-                phoneNumber = resultData.data.data.userPhone
+                username = username.copy(value = resultData.data.data.userName)
+                fullname = fullname.copy(value = resultData.data.data.userFullName)
+                phoneNumber = phoneNumber.copy(value = resultData.data.data.userPhone)
                 selectedRole = resultData.data.data.userRole
                 selectedDepartmentIndex = listDepartments.indexOfFirst {
                     it.departmentName == resultData.data.data.departmentName
@@ -138,11 +139,11 @@ fun AccountsUpdateScreen(
         updateUser = {
             viewModel.editUser(
                 userId = userId,
-                username = username,
-                fullname = fullname,
+                username = username.value,
+                fullname = fullname.value,
                 role = selectedRole,
                 department = listDepartments[selectedDepartmentIndex].departmentId,
-                phoneNumber = phoneNumber
+                phoneNumber = phoneNumber.value
             )
         },
         modifier = modifier
@@ -151,17 +152,17 @@ fun AccountsUpdateScreen(
 
 @Composable
 fun AccountsUpdateContent(
-    username: String,
-    onUsernameChange: (String) -> Unit,
-    fullname: String,
-    onFullnameChange: (String) -> Unit,
+    username: InputTextState,
+    onUsernameChange: (InputTextState) -> Unit,
+    fullname: InputTextState,
+    onFullnameChange: (InputTextState) -> Unit,
     role: String,
     onRoleChange: (String, Int) -> Unit,
     department: String,
     onDepartmentChange: (String, Int) -> Unit,
     listDepartments: List<DepartmentsData>,
-    phoneNumber: String,
-    onPhoneChange: (String) -> Unit,
+    phoneNumber: InputTextState,
+    onPhoneChange: (InputTextState) -> Unit,
     updateUser: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -175,17 +176,24 @@ fun AccountsUpdateContent(
         // Username
         InputTextWithLabel(
             title = "Username",
-            value = username,
+            textState = username,
             onValueChange = onUsernameChange,
             enabled = false
         )
         // Fullname
         InputTextWithLabel(
             title = "Nama Lengkap",
-            value = fullname,
+            textState = fullname,
             onValueChange = onFullnameChange,
             trailingIcon = {
-                IconButton(onClick = { onFullnameChange("") }) {
+                IconButton(onClick = {
+                    onFullnameChange(
+                        fullname.copy(
+                            value = "",
+                            isError = true
+                        )
+                    )
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.close_24px),
                         contentDescription = ""
@@ -209,17 +217,16 @@ fun AccountsUpdateContent(
         // Phone Number
         InputTextWithLabel(
             title = "Nomor Telepon",
-            value = phoneNumber,
-            onValueChange = onPhoneChange,
-            trailingIcon = {
-                IconButton(onClick = { onPhoneChange("") }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.close_24px),
-                        contentDescription = ""
-                    )
-                }
+            textState = phoneNumber,
+            onValueChange = onPhoneChange
+        ) {
+            IconButton(onClick = { onPhoneChange(phoneNumber.copy("", true)) }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.close_24px),
+                    contentDescription = ""
+                )
             }
-        )
+        }
         Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = {

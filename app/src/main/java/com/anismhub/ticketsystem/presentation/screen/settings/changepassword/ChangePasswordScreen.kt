@@ -24,17 +24,18 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.anismhub.ticketsystem.R
+import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.components.InputTextWithLabel
 
 @Composable
 fun ChangePasswordScreen(modifier: Modifier = Modifier) {
-    var currentPasswordValue by remember { mutableStateOf("") }
+    var currentPassword by remember { mutableStateOf(InputTextState()) }
     var currentPasswordVisibility by remember { mutableStateOf(false) }
 
-    var passwordValue by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf(InputTextState()) }
     var passwordVisibility by remember { mutableStateOf(false) }
 
-    var passwordConfirmationValue by remember { mutableStateOf("") }
+    var passwordConfirmation by remember { mutableStateOf(InputTextState()) }
     var passwordConfirmationVisibility by remember { mutableStateOf(false) }
     var passwordConfirmationError by remember { mutableStateOf(false) }
 
@@ -42,8 +43,8 @@ fun ChangePasswordScreen(modifier: Modifier = Modifier) {
     Column(modifier = modifier.padding(16.dp)) {
         InputTextWithLabel(
             title = "Password saat ini",
-            value = currentPasswordValue,
-            onValueChange = { currentPasswordValue = it },
+            textState = currentPassword,
+            onValueChange = { currentPassword = it },
             keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (currentPasswordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
@@ -61,8 +62,8 @@ fun ChangePasswordScreen(modifier: Modifier = Modifier) {
 
         InputTextWithLabel(
             title = "Password Baru",
-            value = passwordValue,
-            onValueChange = { passwordValue = it },
+            textState = password,
+            onValueChange = { password = it },
             keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
@@ -81,8 +82,8 @@ fun ChangePasswordScreen(modifier: Modifier = Modifier) {
 
         InputTextWithLabel(
             title = "Konfirmasi Password Baru",
-            value = passwordConfirmationValue,
-            onValueChange = { passwordConfirmationValue = it },
+            textState = passwordConfirmation,
+            onValueChange = { passwordConfirmation = it },
             keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (passwordConfirmationVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {

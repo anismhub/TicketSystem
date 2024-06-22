@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.R
+import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.common.areaOptions
 import com.anismhub.ticketsystem.presentation.common.priorityOptions
 import com.anismhub.ticketsystem.presentation.common.typeTicketOptions
@@ -48,14 +49,14 @@ fun AddTicketScreen(
 ) {
     val addTicket by viewModel.addTicket.collectAsStateWithLifecycle()
     var selectedArea by remember { mutableStateOf("") }
-    var selectedAreaIndex by remember { mutableIntStateOf(0) }
-    var selectedPriorityIndex by remember { mutableIntStateOf(0) }
-    var selectedTypeTicketIndex by remember { mutableIntStateOf(0) }
+    var selectedAreaIndex by remember { mutableIntStateOf(-1) }
+    var selectedPriorityIndex by remember { mutableIntStateOf(-1) }
+    var selectedTypeTicketIndex by remember { mutableIntStateOf(-1) }
 
-    var selectedPriority by remember { mutableStateOf(priorityOptions[0]) }
+    var selectedPriority by remember { mutableStateOf("") }
     var selectedTypeTicket by remember { mutableStateOf("") }
-    var subject by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+    var subject by remember { mutableStateOf(InputTextState()) }
+    var description by remember { mutableStateOf(InputTextState()) }
 
     addTicket.let {
         if (!it.hasBeenHandled) {
@@ -81,14 +82,14 @@ fun AddTicketScreen(
         onNavUp = onNavUp,
         createTicket = {
             viewModel.addTicket(
-                ticketSubject = subject,
-                ticketDescription = description,
+                ticketSubject = subject.value,
+                ticketDescription = description.value,
                 ticketArea = selectedAreaIndex + 1,
                 ticketPriority = selectedPriority,
                 ticketCategory = selectedTypeTicketIndex + 1
             )
         },
-        subjectValue = subject,
+        subject = subject,
         onSubjectChange = { subject = it },
         areaValue = selectedArea,
         onAreaChange = { area, index ->
@@ -105,7 +106,7 @@ fun AddTicketScreen(
             selectedTypeTicket = typeTicket
             selectedTypeTicketIndex = index
         },
-        descriptionValue = description,
+        description = description,
         onDescriptionChange = { description = it },
         modifier = modifier
     )
@@ -116,16 +117,16 @@ fun AddTicketScreen(
 fun AddTicketContent(
     onNavUp: () -> Unit,
     createTicket: () -> Unit,
-    subjectValue: String,
-    onSubjectChange: (String) -> Unit,
+    subject: InputTextState,
+    onSubjectChange: (InputTextState) -> Unit,
     areaValue: String,
     onAreaChange: (String, Int) -> Unit,
     priorityValue: String,
     onPriorityChange: (String, Int) -> Unit,
     categoryValue: String,
     onCategoryChange: (String, Int) -> Unit,
-    descriptionValue: String,
-    onDescriptionChange: (String) -> Unit,
+    description: InputTextState,
+    onDescriptionChange: (InputTextState) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -153,9 +154,16 @@ fun AddTicketContent(
                 style = MyTypography.headlineMedium.copy(fontWeight = FontWeight.Bold),
             )
         }
-        InputTextWithLabel(title = "Subjek", value = subjectValue, onValueChange = onSubjectChange,
+        InputTextWithLabel(title = "Subjek", textState = subject, onValueChange = onSubjectChange,
             trailingIcon = {
-                IconButton(onClick = { onSubjectChange("") }) {
+                IconButton(onClick = {
+                    onSubjectChange(
+                        subject.copy(
+                            value = "",
+                            isError = true
+                        )
+                    )
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.close_24px),
                         contentDescription = ""
@@ -180,10 +188,17 @@ fun AddTicketContent(
         )
         InputTextWithLabel(
             title = "Deskripsi",
-            value = descriptionValue,
+            textState = description,
             onValueChange = onDescriptionChange,
             trailingIcon = {
-                IconButton(onClick = { onDescriptionChange("") }) {
+                IconButton(onClick = {
+                    onDescriptionChange(
+                        description.copy(
+                            value = "",
+                            isError = true
+                        )
+                    )
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.close_24px),
                         contentDescription = ""

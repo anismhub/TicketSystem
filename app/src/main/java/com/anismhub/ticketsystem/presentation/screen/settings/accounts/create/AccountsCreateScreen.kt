@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.R
+import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.common.departmentOptions
 import com.anismhub.ticketsystem.presentation.common.roleOptions
 import com.anismhub.ticketsystem.presentation.components.DropdownMenuWithLabel
@@ -44,11 +45,11 @@ fun AccountsCreateScreen(
 ) {
     val addUser by viewModel.addUser.collectAsStateWithLifecycle()
 
-    var username by remember { mutableStateOf("") }
-    var fullname by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf(InputTextState()) }
+    var fullname by remember { mutableStateOf(InputTextState()) }
+    var password by remember { mutableStateOf(InputTextState()) }
     var passwordVisibility by remember { mutableStateOf(false) }
-    var phoneNumber by remember { mutableStateOf("") }
+    var phoneNumber by remember { mutableStateOf(InputTextState()) }
     var selectedRole by remember { mutableStateOf("") }
     var selectedRoleIndex by remember { mutableIntStateOf(0) }
     var selectedDepartment by remember { mutableStateOf("") }
@@ -77,17 +78,17 @@ fun AccountsCreateScreen(
     AccountsCreateContent(
         createUser = {
             viewModel.addUser(
-                username = username,
-                fullname = fullname,
-                password = password,
+                username = username.value,
+                fullname = fullname.value,
+                password = password.value,
                 role = selectedRole,
                 department = selectedDepartmentIndex + 1,
-                phoneNumber = phoneNumber,
+                phoneNumber = phoneNumber.value,
             )
         },
-        usernameValue = username,
+        username = username,
         onUsernameChange = { username = it },
-        fullnameValue = fullname,
+        fullname = fullname,
         onFullnameChange = { fullname = it },
         roleValue = selectedRole,
         onRoleChange = { role, index ->
@@ -99,9 +100,9 @@ fun AccountsCreateScreen(
             selectedDepartment = department
             selectedDepartmentIndex = index
         },
-        phoneNumberValue = phoneNumber,
+        phoneNumber = phoneNumber,
         onPhoneNumberChange = { phoneNumber = it },
-        passwordValue = password,
+        password = password,
         onPasswordChange = { password = it },
         passwordVisibility = passwordVisibility,
         onPasswordVisibilityChange = { passwordVisibility = it },
@@ -112,18 +113,18 @@ fun AccountsCreateScreen(
 @Composable
 fun AccountsCreateContent(
     createUser: () -> Unit,
-    usernameValue: String,
-    onUsernameChange: (String) -> Unit,
-    fullnameValue: String,
-    onFullnameChange: (String) -> Unit,
+    username: InputTextState,
+    onUsernameChange: (InputTextState) -> Unit,
+    fullname: InputTextState,
+    onFullnameChange: (InputTextState) -> Unit,
     roleValue: String,
     onRoleChange: (String, Int) -> Unit,
     departmentValue: String,
     onDepartmentChange: (String, Int) -> Unit,
-    phoneNumberValue: String,
-    onPhoneNumberChange: (String) -> Unit,
-    passwordValue: String,
-    onPasswordChange: (String) -> Unit,
+    phoneNumber: InputTextState,
+    onPhoneNumberChange: (InputTextState) -> Unit,
+    password: InputTextState,
+    onPasswordChange: (InputTextState) -> Unit,
     passwordVisibility: Boolean,
     onPasswordVisibilityChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
@@ -139,10 +140,17 @@ fun AccountsCreateContent(
         // Username
         InputTextWithLabel(
             title = "Username",
-            value = usernameValue,
+            textState = username,
             onValueChange = onUsernameChange,
             trailingIcon = {
-                IconButton(onClick = { onUsernameChange("") }) {
+                IconButton(onClick = {
+                    onUsernameChange(
+                        username.copy(
+                            value = "",
+                            isError = true
+                        )
+                    )
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.close_24px),
                         contentDescription = ""
@@ -153,10 +161,17 @@ fun AccountsCreateContent(
         // Fullname
         InputTextWithLabel(
             title = "Nama Lengkap",
-            value = fullnameValue,
+            textState = fullname,
             onValueChange = onFullnameChange,
             trailingIcon = {
-                IconButton(onClick = { onFullnameChange("") }) {
+                IconButton(onClick = {
+                    onFullnameChange(
+                        fullname.copy(
+                            value = "",
+                            isError = true
+                        )
+                    )
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.close_24px),
                         contentDescription = ""
@@ -172,7 +187,7 @@ fun AccountsCreateContent(
         )
         // Departemen
         DropdownMenuWithLabel(
-            title = "Departemen",
+            title = "Department",
             value = departmentValue,
             onValueChange = onDepartmentChange,
             options = departmentOptions
@@ -180,10 +195,17 @@ fun AccountsCreateContent(
         // Phone Number
         InputTextWithLabel(
             title = "Nomor Telepon",
-            value = phoneNumberValue,
+            textState = phoneNumber,
             onValueChange = onPhoneNumberChange,
             trailingIcon = {
-                IconButton(onClick = { onPhoneNumberChange("") }) {
+                IconButton(onClick = {
+                    onPhoneNumberChange(
+                        phoneNumber.copy(
+                            value = "",
+                            isError = true
+                        )
+                    )
+                }) {
                     Icon(
                         painter = painterResource(id = R.drawable.close_24px),
                         contentDescription = ""
@@ -194,7 +216,7 @@ fun AccountsCreateContent(
         // Password
         InputTextWithLabel(
             title = "Password",
-            value = passwordValue,
+            textState = password,
             onValueChange = onPasswordChange,
             keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
