@@ -263,7 +263,7 @@ fun DetailTicketContent(
                 Text(
                     text = data.ticketDescription,
                     textAlign = TextAlign.Justify,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                 )
             }
         }
