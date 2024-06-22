@@ -33,7 +33,7 @@ class AccountsUpdateViewModel @Inject constructor(
         getDepartments()
     }
 
-    fun getDepartments() {
+    private fun getDepartments() {
         viewModelScope.launch {
             resourcesRepository.getDepartments().collect {
                 _departments.value = it
