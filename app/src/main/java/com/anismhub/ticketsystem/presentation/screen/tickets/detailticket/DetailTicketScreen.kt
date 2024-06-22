@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -223,7 +224,16 @@ fun DetailTicketContent(
                     modifier = Modifier.align(Alignment.End)
                 )
                 Row {
-                    Spacer(modifier = Modifier.weight(0.5f))
+                    if (!isAssigned) {
+                        Button(
+                            onClick = { assignTicket(selectedTeknisi?.userId ?: -1) },
+                            enabled = selectedTeknisi?.userId != null,
+                            modifier = Modifier.weight(0.3f)
+                        ) {
+                            Text(text = "Tugaskan Teknisi", textAlign = TextAlign.Center)
+                        }
+                    }
+                    Spacer(modifier = Modifier.weight(0.1f))
                     if (isAdmin) {
                         if (isAssigned) {
                             data.ticketAssignedTo?.let { Text(text = it) }
@@ -310,19 +320,22 @@ fun DetailTicketContent(
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.Bottom,
             ) {
-                Button(onClick = {
-                    if (selectedTeknisi?.userId != null && !isAssigned) {
-                        assignTicket(selectedTeknisi?.userId ?: -1)
-                    }
-                    if (replyText.trim().isNotEmpty()) {
-                        addComment(replyText)
-                    }
-                }) {
-                    Text(text = "Balas Pesan")
+                Button(
+                    onClick = {
+                        if (replyText.trim().isNotEmpty()) {
+                            addComment(replyText)
+                        }
+                    },
+                ) {
+                    Text(text = "Balas Pesan", textAlign = TextAlign.Center)
                 }
+                Spacer(modifier = Modifier.width(3.dp))
                 if (!isKaryawan) {
-                    Button(onClick = { showDialog = true }) {
-                        Text(text = "Tutup Tiket")
+                    Spacer(modifier = Modifier.width(3.dp))
+                    Button(
+                        onClick = { showDialog = true },
+                    ) {
+                        Text(text = "Tutup Tiket", textAlign = TextAlign.Center)
                     }
                 }
             }
