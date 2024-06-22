@@ -36,6 +36,7 @@ import com.anismhub.ticketsystem.presentation.common.roleOptions
 import com.anismhub.ticketsystem.presentation.components.DropdownMenuWithLabel
 import com.anismhub.ticketsystem.presentation.components.InputTextWithLabel
 import com.anismhub.ticketsystem.utils.Resource
+import com.anismhub.ticketsystem.utils.isInvalid
 
 @Composable
 fun AccountsCreateScreen(
@@ -234,7 +235,17 @@ fun AccountsCreateContent(
         )
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = { createUser() },
+            onClick = {
+                when {
+                    username.isInvalid() -> onUsernameChange(username.copy(isError = true))
+                    fullname.isInvalid() -> onFullnameChange(fullname.copy(isError = true))
+                    password.isInvalid() -> onPasswordChange(password.copy(isError = true))
+                    phoneNumber.isInvalid() -> onPhoneNumberChange(phoneNumber.copy(isError = true))
+                    else -> {
+                        createUser()
+                    }
+                }
+            },
             shape = RoundedCornerShape(20),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
