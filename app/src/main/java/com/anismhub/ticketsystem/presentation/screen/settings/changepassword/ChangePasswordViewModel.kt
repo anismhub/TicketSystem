@@ -30,11 +30,10 @@ class ChangePasswordViewModel @Inject constructor(
     }
 
     fun changePassword(
-        userId: Int,
         password: String,
     ) {
         viewModelScope.launch {
-            authRepository.postChangePassword(userId, password).collect {
+            authRepository.postChangePassword(password).collect {
                 _changePassword.value = Event(it)
             }
         }

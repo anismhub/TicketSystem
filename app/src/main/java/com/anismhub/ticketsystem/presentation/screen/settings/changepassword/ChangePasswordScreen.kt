@@ -1,7 +1,6 @@
 package com.anismhub.ticketsystem.presentation.screen.settings.changepassword
 
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -52,19 +51,26 @@ fun ChangePasswordScreen(
     var passwordConfirmation by remember { mutableStateOf(InputTextState()) }
     var passwordConfirmationVisibility by remember { mutableStateOf(false) }
 
+    var isSuccesss by remember { mutableStateOf(false) }
+
     changePassword.let {
         if (!it.hasBeenHandled) {
             when (val result = it.getContentIfNotHandled()) {
                 is Resource.Loading -> {
                     Log.d("Change Password Loading", "Loading changing passwod...")
+                    isSuccesss = false
                 }
 
                 is Resource.Success -> {
-                    Toast.makeText(context, "Password Berhasil Diubah", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(context, "Password Berhasil Diubah", Toast.LENGTH_SHORT).show()
+                    password = InputTextState()
+                    passwordConfirmation = InputTextState()
+                    isSuccesss = true
                 }
 
                 is Resource.Error -> {
                     Log.d("Update Screen Error", result.error)
+                    isSuccesss = false
                 }
 
                 else -> {}
@@ -73,7 +79,7 @@ fun ChangePasswordScreen(
     }
 
     ChangePasswordContent(
-        changePassword = { viewModel.changePassword(localProfile!!.userId, it) },
+        changePassword = { viewModel.changePassword(it) },
         password = password,
         onPasswordChange = { password = it },
         passwordVisibility = passwordVisibility,
@@ -82,7 +88,8 @@ fun ChangePasswordScreen(
         onPasswordConfirmationChange = { passwordConfirmation = it },
         passwordConfirmationVisibility = passwordConfirmationVisibility,
         onPasswordConfirmationVisibilityChange = { passwordConfirmationVisibility = it },
-        modifier = modifier
+        modifier = modifier,
+        isSuccess = isSuccesss
     )
 }
 
@@ -97,8 +104,11 @@ fun ChangePasswordContent(
     onPasswordConfirmationChange: (InputTextState) -> Unit,
     passwordConfirmationVisibility: Boolean,
     onPasswordConfirmationVisibilityChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isSuccess: Boolean = false
 ) {
+    var passwordErrorText by remember { mutableStateOf("Password harus diisi") }
+    var passwordConfirmationErrorText by remember { mutableStateOf("Konfirmasi Password harus diisi") }
     Column(modifier = modifier.padding(16.dp)) {
 //        InputTextWithLabel(
 //            title = "Password saat ini",
@@ -121,6 +131,7 @@ fun ChangePasswordContent(
 
         InputTextWithLabel(
             title = "Password Baru",
+            errorText = passwordErrorText,
             textState = password,
             onValueChange = onPasswordChange,
             keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -130,7 +141,6 @@ fun ChangePasswordContent(
                     if (passwordVisibility) painterResource(R.drawable.visibility_off_24px) else
                         painterResource(R.drawable.visibility_24px)
                 val desc = if (passwordVisibility) "Hide password" else "Show password"
-
                 IconButton(onClick = { onPasswordVisibilityChange(!passwordVisibility) }) {
                     Icon(painter = icon, contentDescription = desc)
                 }
@@ -141,6 +151,7 @@ fun ChangePasswordContent(
 
         InputTextWithLabel(
             title = "Konfirmasi Password Baru",
+            errorText = passwordConfirmationErrorText,
             textState = passwordConfirmation,
             onValueChange = onPasswordConfirmationChange,
             keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -157,16 +168,33 @@ fun ChangePasswordContent(
         )
 
         Spacer(modifier = Modifier.weight(1f))
+        if (isSuccess) {
+            Text(text = "Password berhasil diubah", modifier = Modifier.align(Alignment.CenterHorizontally))
+        }
         Button(
             onClick = {
                 when {
-                    password.isInvalid() -> onPasswordChange(password.copy(isError = true))
-                    passwordConfirmation.isInvalid() -> onPasswordConfirmationChange(
-                        passwordConfirmation.copy(isError = true)
-                    )
+                    password.isInvalid() -> {
+                        onPasswordChange(password.copy(isError = true))
+                        passwordErrorText = "Password harus diisi"
+                    }
+
+                    password.value.length < 6 -> {
+                        onPasswordChange(password.copy(isError = true))
+                        passwordErrorText = "Password minimal 6 karakter"
+                    }
+
+                    passwordConfirmation.isInvalid() -> {
+                        onPasswordConfirmationChange(
+                            passwordConfirmation.copy(isError = true)
+                        )
+                        passwordConfirmationErrorText = "Konfirmasi Password harus diisi"
+                    }
+
 
                     password.value != passwordConfirmation.value -> {
                         onPasswordConfirmationChange(passwordConfirmation.copy(isError = true))
+                        passwordConfirmationErrorText = "Password tidak cocok"
                     }
 
                     else -> {
