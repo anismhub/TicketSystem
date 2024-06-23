@@ -150,7 +150,7 @@ fun ChangePasswordContent(
                     if (passwordConfirmationVisibility) painterResource(R.drawable.visibility_off_24px) else
                         painterResource(R.drawable.visibility_24px)
                 val desc = if (passwordConfirmationVisibility) "Hide password" else "Show password"
-                IconButton(onClick = { onPasswordConfirmationVisibilityChange(!passwordVisibility) }) {
+                IconButton(onClick = { onPasswordConfirmationVisibilityChange(!passwordConfirmationVisibility) }) {
                     Icon(painter = icon, contentDescription = desc)
                 }
             },
