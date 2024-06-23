@@ -2,9 +2,11 @@ package com.anismhub.ticketsystem.presentation.screen.tickets.detailticket
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -15,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -63,6 +66,8 @@ fun DetailTicketScreen(
     val comment by viewModel.comments.collectAsStateWithLifecycle()
     val closeTicket by viewModel.closeTicket.collectAsStateWithLifecycle()
 
+    var isLoading by remember { mutableStateOf(false) }
+
     var listTech by remember { mutableStateOf(emptyList<TechProfileData>()) }
 
     when (val resultTech = techUsers) {
@@ -85,9 +90,11 @@ fun DetailTicketScreen(
     when (val resultData = detailTicket) {
         is Resource.Loading -> {
             Log.d("DetailTicket Loading", "Loading..")
+            isLoading = true
         }
 
         is Resource.Success -> {
+            isLoading = false
             DetailTicketContent(
                 data = resultData.data.data,
                 listTech = listTech,
@@ -104,12 +111,14 @@ fun DetailTicketScreen(
                 addResolution = {
                     viewModel.closeTicket(ticketId, it)
                 },
+                isLoading = isLoading,
                 modifier = modifier
             )
         }
 
         is Resource.Error -> {
             Log.d("DetailTicket Error", "Detail Error: ${resultData.error}: ")
+            isLoading = false
         }
 
         else -> {}
@@ -119,15 +128,18 @@ fun DetailTicketScreen(
         when (val unhandled = it.getContentIfNotHandled()) {
             is Resource.Loading -> {
                 Log.d("Comment Loading", "Loading: ")
+                isLoading = true
             }
 
             is Resource.Success -> {
                 onNavUp()
                 Log.d("Comment Success", "Success: ${unhandled.data}: ")
+                isLoading = false
             }
 
             is Resource.Error -> {
                 Log.d("Comment Error", "Error: ${unhandled.error}: ")
+                isLoading = false
             }
 
             else -> {}
@@ -139,15 +151,18 @@ fun DetailTicketScreen(
             when (val unhandled = it.getContentIfNotHandled()) {
                 is Resource.Loading -> {
                     Log.d("Comment Loading", "Loading: ")
+                    isLoading = true
                 }
 
                 is Resource.Success -> {
                     viewModel.getTicketById(ticketId)
                     Log.d("Comment Success", "Success: ${unhandled.data}: ")
+                    isLoading = false
                 }
 
                 is Resource.Error -> {
                     Log.d("Comment Error", "Error: ${unhandled.error}: ")
+                    isLoading = false
                 }
 
                 else -> {}
@@ -161,15 +176,18 @@ fun DetailTicketScreen(
             when (val unhandled = it.getContentIfNotHandled()) {
                 is Resource.Loading -> {
                     Log.d("Close Ticket Loading", "Loading: ")
+                    isLoading = true
                 }
 
                 is Resource.Success -> {
                     onNavUp()
                     Log.d("Close Ticket Success", "Success: ${unhandled.data}: ")
+                    isLoading = false
                 }
 
                 is Resource.Error -> {
                     Log.d("Close Ticket Error", "Error: ${unhandled.error}: ")
+                    isLoading = false
                 }
 
                 else -> {}
@@ -190,162 +208,179 @@ fun DetailTicketContent(
     isClosed: Boolean = false,
     isAssigned: Boolean = false,
     isKaryawan: Boolean = false,
-    isAdmin: Boolean = false
+    isAdmin: Boolean = false,
+    isLoading: Boolean = false,
 ) {
     var replyText by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
     var enteredText by remember { mutableStateOf("") }
     var selectedTeknisi by remember { mutableStateOf<TechProfileData?>(null) }
 
-    Column(
-        modifier = modifier
-            .padding(top = 16.dp)
-            .padding(horizontal = 16.dp)
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Card(
-            colors = CardDefaults.cardColors(Color.Transparent),
-            shape = RoundedCornerShape(16.dp),
-            modifier = modifier.fillMaxWidth()
+        if (isLoading) {
+            CircularProgressIndicator()
+        }
+        Column(
+            modifier = modifier
+                .padding(top = 16.dp)
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
+            Card(
+                colors = CardDefaults.cardColors(Color.Transparent),
+                shape = RoundedCornerShape(16.dp),
+                modifier = modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = "#${data.ticketId} ${data.ticketSubject}",
-                    style = MyTypography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
-                )
-                Text(
-                    text = data.ticketStatus,
-                    style = MyTypography.titleLarge,
-                    modifier = Modifier.align(Alignment.End)
-                )
-                Row {
-                    if (!isAssigned) {
-                        Button(
-                            onClick = { assignTicket(selectedTeknisi?.userId ?: -1) },
-                            enabled = selectedTeknisi?.userId != null,
-                            modifier = Modifier.weight(0.3f)
-                        ) {
-                            Text(text = "Tugaskan Teknisi", textAlign = TextAlign.Center)
-                        }
-                    }
-                    Spacer(modifier = Modifier.weight(0.1f))
-                    if (isAdmin) {
-                        if (isAssigned) {
-                            Row(
-                                horizontalArrangement = Arrangement.End,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Icon(painter = painterResource(id = R.drawable.engineer), contentDescription = "Teknisi")
-                                Spacer(modifier = Modifier.width(12.dp))
-                              Text(text = data.ticketAssignedTo ?: "Nama Teknisi", style = MyTypography.titleLarge)
-                            }
-                        } else {
-                            MyDropdownMenuTech(
-                                value = selectedTeknisi?.userFullName ?: "Pilih Teknisi",
-                                onValueChange = { selectedTeknisi = it },
-                                listTech = listTech,
-                                modifier = Modifier.weight(0.5f)
-                            )
-                        }
-                    } else {
-                        Text(text = data.ticketAssignedTo ?: "Belum ada teknisi")
-                    }
-                }
-                DetailCard(
-                    ticketCreatedAt = data.ticketCreatedAt.toDateTime(),
-                    ticketUpdatedAt = data.ticketUpdateAt.toDateTime(),
-                    ticketCategory = data.ticketCategory,
-                    userFullName = data.ticketCreatedBy,
-                    departmentName = data.ticketDepartmentBy,
-                    ticketArea = data.ticketArea,
-                    ticketPriority = data.ticketPriority
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(text = "Deskripsi", style = MyTypography.titleMedium)
-                Text(
-                    text = data.ticketDescription,
-                    textAlign = TextAlign.Justify,
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 8.dp)
-                )
-            }
-        }
-        Text(
-            text = "Balasan", style = MyTypography.titleMedium,
-            modifier = Modifier
-                .align(Alignment.Start)
-                .padding(top = 12.dp)
-        )
-        if (data.comments.isNotEmpty()) {
-            data.comments.forEach {
-                ReplyCard(
-                    name = it.commentName,
-                    date = it.commentTime.toDateTime(),
-                    content = it.commentContent,
-                    painter = if (it.commentUserRole == "Karyawan") painterResource(id = R.drawable.person) else painterResource(id = R.drawable.engineer)
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-            }
-        }
-        if (data.resolution.isNotEmpty()) {
-            data.resolution.forEach {
-                ReplyCard(
-                    name = it.resolutionResolvedBy,
-                    date = it.resolutionResolvedAt.toDateTime(),
-                    content = it.resolutionContent,
-                    containerColor = Color(0xFFD8EFD3)
-                )
-            }
-        }
-
-        if (!isClosed) {
-            InputText(
-                value = replyText,
-                onChange = { newValue ->
-                    replyText = newValue
-                },
-                trailingIcon = {
-                    if (replyText.isNotEmpty()) {
-                        IconButton(onClick = { replyText = "" }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.close_24px),
-                                contentDescription = ""
-                            )
+                ) {
+                    Text(
+                        text = "#${data.ticketId} ${data.ticketSubject}",
+                        style = MyTypography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
+                    )
+                    Text(
+                        text = data.ticketStatus,
+                        style = MyTypography.titleLarge,
+                        modifier = Modifier.align(Alignment.End)
+                    )
+                    Row {
+                        if (!isAssigned) {
+                            Button(
+                                onClick = { assignTicket(selectedTeknisi?.userId ?: -1) },
+                                enabled = selectedTeknisi?.userId != null,
+                                modifier = Modifier.weight(0.3f)
+                            ) {
+                                Text(text = "Tugaskan Teknisi", textAlign = TextAlign.Center)
+                            }
+                        }
+                        Spacer(modifier = Modifier.weight(0.1f))
+                        if (isAdmin) {
+                            if (isAssigned) {
+                                Row(
+                                    horizontalArrangement = Arrangement.End,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.engineer),
+                                        contentDescription = "Teknisi"
+                                    )
+                                    Spacer(modifier = Modifier.width(12.dp))
+                                    Text(
+                                        text = data.ticketAssignedTo ?: "Nama Teknisi",
+                                        style = MyTypography.titleLarge
+                                    )
+                                }
+                            } else {
+                                MyDropdownMenuTech(
+                                    value = selectedTeknisi?.userFullName ?: "Pilih Teknisi",
+                                    onValueChange = { selectedTeknisi = it },
+                                    listTech = listTech,
+                                    modifier = Modifier.weight(0.5f)
+                                )
+                            }
+                        } else {
+                            Text(text = data.ticketAssignedTo ?: "Belum ada teknisi")
                         }
                     }
-                },
-                minLines = 5,
-                singleLine = false,
-            )
-            Row(
+                    DetailCard(
+                        ticketCreatedAt = data.ticketCreatedAt.toDateTime(),
+                        ticketUpdatedAt = data.ticketUpdateAt.toDateTime(),
+                        ticketCategory = data.ticketCategory,
+                        userFullName = data.ticketCreatedBy,
+                        departmentName = data.ticketDepartmentBy,
+                        ticketArea = data.ticketArea,
+                        ticketPriority = data.ticketPriority
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(text = "Deskripsi", style = MyTypography.titleMedium)
+                    Text(
+                        text = data.ticketDescription,
+                        textAlign = TextAlign.Justify,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp)
+                    )
+                }
+            }
+            Text(
+                text = "Balasan", style = MyTypography.titleMedium,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 24.dp),
-                horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.Bottom,
-            ) {
-                Button(
-                    onClick = {
-                        if (replyText.trim().isNotEmpty()) {
-                            addComment(replyText)
+                    .align(Alignment.Start)
+                    .padding(top = 12.dp)
+            )
+            if (data.comments.isNotEmpty()) {
+                data.comments.forEach {
+                    ReplyCard(
+                        name = it.commentName,
+                        date = it.commentTime.toDateTime(),
+                        content = it.commentContent,
+                        painter = if (it.commentUserRole == "Karyawan") painterResource(id = R.drawable.person) else painterResource(
+                            id = R.drawable.engineer
+                        )
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+            }
+            if (data.resolution.isNotEmpty()) {
+                data.resolution.forEach {
+                    ReplyCard(
+                        name = it.resolutionResolvedBy,
+                        date = it.resolutionResolvedAt.toDateTime(),
+                        content = it.resolutionContent,
+                        containerColor = Color(0xFFD8EFD3)
+                    )
+                }
+            }
+
+            if (!isClosed) {
+                InputText(
+                    value = replyText,
+                    onChange = { newValue ->
+                        replyText = newValue
+                    },
+                    trailingIcon = {
+                        if (replyText.isNotEmpty()) {
+                            IconButton(onClick = { replyText = "" }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.close_24px),
+                                    contentDescription = ""
+                                )
+                            }
                         }
                     },
+                    minLines = 5,
+                    singleLine = false,
+                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 24.dp),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                    verticalAlignment = Alignment.Bottom,
                 ) {
-                    Text(text = "Balas Pesan", textAlign = TextAlign.Center)
-                }
-                Spacer(modifier = Modifier.width(3.dp))
-                if (!isKaryawan) {
-                    Spacer(modifier = Modifier.width(3.dp))
                     Button(
-                        onClick = { showDialog = true },
+                        onClick = {
+                            if (replyText.trim().isNotEmpty()) {
+                                addComment(replyText)
+                            }
+                        },
                     ) {
-                        Text(text = "Tutup Tiket", textAlign = TextAlign.Center)
+                        Text(text = "Balas Pesan", textAlign = TextAlign.Center)
+                    }
+                    Spacer(modifier = Modifier.width(3.dp))
+                    if (!isKaryawan) {
+                        Spacer(modifier = Modifier.width(3.dp))
+                        Button(
+                            onClick = { showDialog = true },
+                        ) {
+                            Text(text = "Tutup Tiket", textAlign = TextAlign.Center)
+                        }
                     }
                 }
             }
