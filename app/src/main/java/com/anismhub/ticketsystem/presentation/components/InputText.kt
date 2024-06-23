@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -88,6 +89,7 @@ fun InputTextWithLabel(
     textState: InputTextState,
     onValueChange: (InputTextState) -> Unit,
     modifier: Modifier = Modifier,
+    errorText: String = "$title harus diisi",
     minLines: Int = 1,
     singleLine: Boolean = true,
     enabled: Boolean = true,
@@ -102,6 +104,7 @@ fun InputTextWithLabel(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = title, modifier = Modifier.weight(0.35f))
+        Spacer(modifier = Modifier.weight(0.05f))
         InputText(
             value = textState.value,
             onChange = { newValue ->
@@ -123,11 +126,11 @@ fun InputTextWithLabel(
             },
             supportingText = {
                 if (textState.isError) {
-                    Text(text = "$title harus diisi", style = MyTypography.labelSmall)
+                    Text(text = errorText, style = MyTypography.labelSmall)
                 }
             },
             enabled = enabled,
-            modifier = Modifier.weight(0.65f)
+            modifier = Modifier.weight(0.60f)
         )
     }
 }
