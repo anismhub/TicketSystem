@@ -37,10 +37,10 @@ import com.anismhub.ticketsystem.domain.model.TechProfileData
 import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.presentation.theme.fontFamily
+import com.anismhub.ticketsystem.utils.toFormattedString
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun InputText(
@@ -88,6 +88,7 @@ fun InputTextWithLabel(
     textState: InputTextState,
     onValueChange: (InputTextState) -> Unit,
     modifier: Modifier = Modifier,
+    errorText: String = "$title harus diisi",
     minLines: Int = 1,
     singleLine: Boolean = true,
     enabled: Boolean = true,
@@ -125,7 +126,7 @@ fun InputTextWithLabel(
             },
             supportingText = {
                 if (textState.isError) {
-                    Text(text = "$title harus diisi", style = MyTypography.labelSmall)
+                    Text(text = errorText, style = MyTypography.labelSmall)
                 }
             },
             enabled = enabled,
@@ -276,17 +277,15 @@ fun DropdownMenuWithLabel(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReusableDatePicker(
+    dateState: InputTextState,
+    onDateSelected: (InputTextState) -> Unit,
     modifier: Modifier = Modifier,
-    initialDate: LocalDate? = null,
+    errorText: String = "Tanggal harus diisi",
     minDateAllowed: LocalDate = LocalDate.now().minusYears(2),
-    onDateSelected: (LocalDate) -> Unit
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
 
-    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    var dateState by remember { mutableStateOf(initialDate?.format(formatter) ?: "") }
-    var isError by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
     Column(
@@ -296,15 +295,19 @@ fun ReusableDatePicker(
         horizontalAlignment = Alignment.Start
     ) {
         InputText(
-            value = dateState,
+            value = dateState.value,
             onChange = { newValue ->
-                dateState = newValue
-                isError = newValue.isEmpty()
+                onDateSelected(
+                    dateState.copy(
+                        value = newValue,
+                        isError = newValue.isEmpty()
+                    )
+                )
             },
             placeholder = {
-                Text(text = "DD/MM/YYYY")
+                Text(text = "yyyy-MM-dd")
             },
-            isError = isError,
+            isError = dateState.isError,
             trailingIcon = {
                 IconButton(onClick = { showDatePicker = true }) {
                     Icon(
@@ -314,11 +317,13 @@ fun ReusableDatePicker(
                 }
             },
             supportingText = {
-                if (isError) {
-                    Text(text = "Tanggal harus diisi", style = MyTypography.labelSmall)
+                if (dateState.isError) {
+                    Text(text = errorText, style = MyTypography.labelSmall)
                 }
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth(),
+            readonly = true
         )
 
         if (showDatePicker) {
@@ -332,17 +337,23 @@ fun ReusableDatePicker(
                             val selectedDate = instant.atZone(ZoneOffset.UTC).toLocalDate()
 
                             if (selectedDate.isAfter(minDateAllowed)) {
-                                onDateSelected(selectedDate)
-                                dateState = selectedDate.format(formatter)
-                                isError = false
+                                onDateSelected(
+                                    dateState.copy(
+                                        value = selectedDate.toFormattedString(),
+                                        isError = false
+                                    )
+                                )
+//                                onDateSelected(selectedDate)
+//                                dateState = selectedDate.format(formatter)
+//                                isError = false
                                 showDatePicker = false
                             } else {
                                 Toast.makeText(
                                     context,
-                                    "Selected date must be after ${minDateAllowed.format(formatter)}",
+                                    "Selected date must be after $minDateAllowed",
                                     Toast.LENGTH_SHORT
                                 ).show()
-                                isError = true
+                                onDateSelected(dateState.copy(isError = true))
                             }
                         }
                     }) { Text("OK") }

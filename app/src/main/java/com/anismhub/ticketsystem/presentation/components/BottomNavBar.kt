@@ -26,7 +26,8 @@ fun BottomNavBar(
                     selected = selected,
                     onClick = {
                         if (!selected) {
-                            navHostController.navigate(item.route) {
+                            navHostController.navigate(item.route)
+                            {
                                 popUpTo(navHostController.graph.startDestinationId)
                                 launchSingleTop = true
                             }
