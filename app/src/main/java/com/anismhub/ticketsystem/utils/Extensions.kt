@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Environment
 import android.util.Log
 import android.widget.Toast
+import com.anismhub.ticketsystem.presentation.common.DropdownMenuState
 import com.anismhub.ticketsystem.presentation.common.InputTextState
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -17,6 +18,10 @@ import java.time.format.DateTimeFormatter
 
 fun InputTextState.isInvalid(): Boolean {
     return this.value.isEmpty() || this.isError
+}
+
+fun DropdownMenuState.inInvalid(validIndex: Int): Boolean {
+    return this.indexValue < validIndex || this.isError
 }
 
 fun String.toDateTime(

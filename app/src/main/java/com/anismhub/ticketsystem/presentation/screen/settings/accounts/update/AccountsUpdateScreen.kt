@@ -27,11 +27,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.R
 import com.anismhub.ticketsystem.domain.model.DepartmentsData
+import com.anismhub.ticketsystem.presentation.common.DropdownMenuState
 import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.common.roleOptions
 import com.anismhub.ticketsystem.presentation.components.DropdownMenuWithLabel
 import com.anismhub.ticketsystem.presentation.components.InputTextWithLabel
 import com.anismhub.ticketsystem.utils.Resource
+import com.anismhub.ticketsystem.utils.inInvalid
+import com.anismhub.ticketsystem.utils.isInvalid
 
 @Composable
 fun AccountsUpdateScreen(
@@ -51,10 +54,10 @@ fun AccountsUpdateScreen(
     var username by remember { mutableStateOf(InputTextState()) }
     var fullname by remember { mutableStateOf(InputTextState()) }
     var phoneNumber by remember { mutableStateOf(InputTextState()) }
-    var selectedRole by remember { mutableStateOf("") }
+    var selectedRole by remember { mutableStateOf(DropdownMenuState("Pilih Role", -1)) }
     var selectedRoleIndex by remember { mutableIntStateOf(0) }
     var listDepartments by remember { mutableStateOf(emptyList<DepartmentsData>()) }
-    var selectedDepartment by remember { mutableStateOf("") }
+    var selectedDepartment by remember { mutableStateOf(DropdownMenuState("Pilih Department", 0)) }
     var selectedDepartmentIndex by remember { mutableIntStateOf(0) }
 
     when (val result = department) {
@@ -99,15 +102,20 @@ fun AccountsUpdateScreen(
                 username = username.copy(value = resultData.data.data.userName)
                 fullname = fullname.copy(value = resultData.data.data.userFullName)
                 phoneNumber = phoneNumber.copy(value = resultData.data.data.userPhone)
-                selectedRole = resultData.data.data.userRole
+                selectedRole =
+                    selectedRole.copy(resultData.data.data.userRole, roleOptions.indexOfFirst {
+                        it == resultData.data.data.userRole
+                    })
+                selectedRoleIndex = roleOptions.indexOfFirst {
+                    it == resultData.data.data.userRole
+                }
                 selectedDepartmentIndex = listDepartments.indexOfFirst {
                     it.departmentName == resultData.data.data.departmentName
                 }
-                selectedDepartment = if (selectedDepartmentIndex != -1) {
-                    listDepartments[selectedDepartmentIndex].departmentName
-                } else {
-                    "Departemen tidak ditemukan"
-                }
+                selectedDepartment = selectedDepartment.copy(
+                    resultData.data.data.departmentName,
+                    selectedDepartmentIndex + 1
+                )
             }
 
             is Resource.Error -> {
@@ -125,15 +133,25 @@ fun AccountsUpdateScreen(
         onFullnameChange = { fullname = it },
         role = selectedRole,
         onRoleChange = { value, index ->
-            selectedRole = value
+            selectedRole = selectedRole.copy(
+                text = value,
+                indexValue = index,
+                isError = false
+            )
             selectedRoleIndex = index
         },
+        onRoleError = { selectedRole = it },
         listDepartments = listDepartments,
         department = selectedDepartment,
         onDepartmentChange = { value, index ->
-            selectedDepartment = value
+            selectedDepartment = selectedDepartment.copy(
+                text = value,
+                indexValue = index + 1,
+                isError = false
+            )
             selectedDepartmentIndex = index
         },
+        onDepartmentError = { selectedDepartment = it },
         phoneNumber = phoneNumber,
         onPhoneChange = { phoneNumber = it },
         updateUser = {
@@ -141,7 +159,7 @@ fun AccountsUpdateScreen(
                 userId = userId,
                 username = username.value,
                 fullname = fullname.value,
-                role = selectedRole,
+                role = selectedRole.text,
                 department = listDepartments[selectedDepartmentIndex].departmentId,
                 phoneNumber = phoneNumber.value
             )
@@ -156,10 +174,12 @@ fun AccountsUpdateContent(
     onUsernameChange: (InputTextState) -> Unit,
     fullname: InputTextState,
     onFullnameChange: (InputTextState) -> Unit,
-    role: String,
+    role: DropdownMenuState,
     onRoleChange: (String, Int) -> Unit,
-    department: String,
+    onRoleError: (DropdownMenuState) -> Unit,
+    department: DropdownMenuState,
     onDepartmentChange: (String, Int) -> Unit,
+    onDepartmentError: (DropdownMenuState) -> Unit,
     listDepartments: List<DepartmentsData>,
     phoneNumber: InputTextState,
     onPhoneChange: (InputTextState) -> Unit,
@@ -203,14 +223,15 @@ fun AccountsUpdateContent(
         )
         // Role
         DropdownMenuWithLabel(
-            title = "Role", value = role,
+            title = "Role",
+            value = role.text,
             onValueChange = onRoleChange,
             options = roleOptions
         )
         // Departemen
         DropdownMenuWithLabel(
             title = "Departemen",
-            value = department,
+            value = department.text,
             onValueChange = onDepartmentChange,
             options = listDepartments.map { it.departmentName }
         )
@@ -230,7 +251,15 @@ fun AccountsUpdateContent(
         Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = {
-                updateUser()
+                when {
+                    username.isInvalid() -> onUsernameChange(username.copy(isError = true))
+                    fullname.isInvalid() -> onFullnameChange(fullname.copy(isError = true))
+                    phoneNumber.isInvalid() -> onPhoneChange(phoneNumber.copy(isError = true))
+                    role.inInvalid(0) -> onRoleError(role.copy(isError = true))
+                    department.inInvalid(1) -> onDepartmentError(department.copy(isError = true))
+                    else -> updateUser()
+                }
+
             },
             shape = RoundedCornerShape(20),
             modifier = Modifier

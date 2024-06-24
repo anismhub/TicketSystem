@@ -37,7 +37,6 @@ fun ChangePasswordScreen(modifier: Modifier = Modifier) {
 
     var passwordConfirmation by remember { mutableStateOf(InputTextState()) }
     var passwordConfirmationVisibility by remember { mutableStateOf(false) }
-    var passwordConfirmationError by remember { mutableStateOf(false) }
 
 
     Column(modifier = modifier.padding(16.dp)) {
@@ -101,7 +100,9 @@ fun ChangePasswordScreen(modifier: Modifier = Modifier) {
 
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = { },
+            onClick = {
+
+            },
             shape = RoundedCornerShape(20),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)

@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.R
+import com.anismhub.ticketsystem.presentation.common.DropdownMenuState
 import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.common.areaOptions
 import com.anismhub.ticketsystem.presentation.common.priorityOptions
@@ -40,6 +41,7 @@ import com.anismhub.ticketsystem.presentation.components.InputTextWithLabel
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.presentation.theme.fontFamily
 import com.anismhub.ticketsystem.utils.Resource
+import com.anismhub.ticketsystem.utils.inInvalid
 import com.anismhub.ticketsystem.utils.isInvalid
 
 @Composable
@@ -49,13 +51,13 @@ fun AddTicketScreen(
     viewModel: AddTicketViewModel = hiltViewModel()
 ) {
     val addTicket by viewModel.addTicket.collectAsStateWithLifecycle()
-    var selectedArea by remember { mutableStateOf("") }
+    var selectedArea by remember { mutableStateOf(DropdownMenuState("Pilih Area", 0)) }
     var selectedAreaIndex by remember { mutableIntStateOf(-1) }
     var selectedPriorityIndex by remember { mutableIntStateOf(-1) }
     var selectedTypeTicketIndex by remember { mutableIntStateOf(-1) }
 
-    var selectedPriority by remember { mutableStateOf("") }
-    var selectedTypeTicket by remember { mutableStateOf("") }
+    var selectedPriority by remember { mutableStateOf(DropdownMenuState("Pilih Prioritas", -1)) }
+    var selectedTypeTicket by remember { mutableStateOf(DropdownMenuState("Pilih Tipe", 0)) }
     var subject by remember { mutableStateOf(InputTextState()) }
     var description by remember { mutableStateOf(InputTextState()) }
 
@@ -85,30 +87,46 @@ fun AddTicketScreen(
             viewModel.addTicket(
                 ticketSubject = subject.value,
                 ticketDescription = description.value,
-                ticketArea = selectedAreaIndex + 1,
-                ticketPriority = selectedPriority,
-                ticketCategory = selectedTypeTicketIndex + 1
+                ticketArea = selectedArea.indexValue,
+                ticketPriority = selectedPriority.text,
+                ticketCategory = selectedTypeTicket.indexValue
             )
         },
         subject = subject,
         onSubjectChange = { subject = it },
-        areaValue = selectedArea,
+        area = selectedArea,
         onAreaChange = { area, index ->
-            selectedArea = area
+            selectedArea = selectedArea.copy(
+                text = area,
+                indexValue = index + 1,
+                isError = false
+            )
             selectedAreaIndex = index
         },
-        priorityValue = selectedPriority,
+        onAreaError = { selectedArea = it },
+        priority = selectedPriority,
         onPriorityChange = { priority, index ->
-            selectedPriority = priority
+            selectedPriority = selectedPriority.copy(
+                text = priority,
+                indexValue = index,
+                isError = false
+            )
             selectedPriorityIndex = index
         },
-        categoryValue = selectedTypeTicket,
+        onPriorityError = { selectedPriority = it },
+        category = selectedTypeTicket,
         onCategoryChange = { typeTicket, index ->
-            selectedTypeTicket = typeTicket
+            selectedTypeTicket = selectedTypeTicket.copy(
+                text = typeTicket,
+                indexValue = index + 1,
+                isError = false
+            )
             selectedTypeTicketIndex = index
         },
+        onCategoryError = { selectedTypeTicket = it },
         description = description,
         onDescriptionChange = { description = it },
+
         modifier = modifier
     )
 
@@ -120,12 +138,15 @@ fun AddTicketContent(
     createTicket: () -> Unit,
     subject: InputTextState,
     onSubjectChange: (InputTextState) -> Unit,
-    areaValue: String,
+    area: DropdownMenuState,
     onAreaChange: (String, Int) -> Unit,
-    priorityValue: String,
+    onAreaError: (DropdownMenuState) -> Unit,
+    priority: DropdownMenuState,
     onPriorityChange: (String, Int) -> Unit,
-    categoryValue: String,
+    onPriorityError: (DropdownMenuState) -> Unit,
+    category: DropdownMenuState,
     onCategoryChange: (String, Int) -> Unit,
+    onCategoryError: (DropdownMenuState) -> Unit,
     description: InputTextState,
     onDescriptionChange: (InputTextState) -> Unit,
     modifier: Modifier = Modifier
@@ -172,20 +193,23 @@ fun AddTicketContent(
                 }
             })
         DropdownMenuWithLabel(
-            title = "Area", value = areaValue,
+            title = "Area", value = area.text,
             onValueChange = onAreaChange,
-            options = areaOptions
+            options = areaOptions,
+            isError = area.isError
         )
         DropdownMenuWithLabel(
             title = "Prioritas",
-            value = priorityValue,
+            value = priority.text,
             onValueChange = onPriorityChange,
-            options = priorityOptions
+            options = priorityOptions,
+            isError = priority.isError
         )
         DropdownMenuWithLabel(
-            title = "Tipe Tiket", value = categoryValue,
+            title = "Tipe Tiket", value = category.text,
             onValueChange = onCategoryChange,
-            options = typeTicketOptions
+            options = typeTicketOptions,
+            isError = category.isError
         )
         InputTextWithLabel(
             title = "Deskripsi",
@@ -217,6 +241,9 @@ fun AddTicketContent(
                 when {
                     subject.isInvalid() -> onSubjectChange(subject.copy(isError = true))
                     description.isInvalid() -> onDescriptionChange(description.copy(isError = true))
+                    area.inInvalid(1) -> onAreaError(area.copy(isError = true))
+                    priority.inInvalid(0) -> onPriorityError(priority.copy(isError = true))
+                    category.inInvalid(1) -> onCategoryError(category.copy(isError = true))
                     else -> {
                         createTicket()
                     }

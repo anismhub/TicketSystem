@@ -105,10 +105,12 @@ fun InputTextWithLabel(
         InputText(
             value = textState.value,
             onChange = { newValue ->
-                onValueChange(textState.copy(
-                    value = newValue,
-                    isError = newValue.isEmpty()
-                ))
+                onValueChange(
+                    textState.copy(
+                        value = newValue,
+                        isError = newValue.isEmpty()
+                    )
+                )
             },
             label = "",
             isError = textState.isError,
@@ -140,10 +142,10 @@ fun MyDropdownMenu(
     options: List<String>,
     modifier: Modifier = Modifier,
     enabled: Boolean,
+    isError: Boolean,
     supportingText: @Composable () -> Unit = {}
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val isError by remember { mutableStateOf(false) }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -161,11 +163,7 @@ fun MyDropdownMenu(
                 }
             },
             isError = isError,
-            supportingText = {
-                if (isError) {
-                    supportingText()
-                }
-            },
+            supportingText = supportingText,
             modifier = Modifier
                 .menuAnchor()
                 .fillMaxWidth()
@@ -248,9 +246,9 @@ fun DropdownMenuWithLabel(
     value: String,
     onValueChange: (String, Int) -> Unit,
     options: List<String>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isError: Boolean = false
 ) {
-    val isError by remember { mutableStateOf(false) }
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -265,6 +263,7 @@ fun DropdownMenuWithLabel(
             options = options,
             enabled = true,
             modifier = Modifier.weight(0.65f),
+            isError = isError,
             supportingText = {
                 if (isError) {
                     Text(text = "$title harus diisi", style = MyTypography.labelSmall)

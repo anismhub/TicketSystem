@@ -30,12 +30,14 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.R
+import com.anismhub.ticketsystem.presentation.common.DropdownMenuState
 import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.common.departmentOptions
 import com.anismhub.ticketsystem.presentation.common.roleOptions
 import com.anismhub.ticketsystem.presentation.components.DropdownMenuWithLabel
 import com.anismhub.ticketsystem.presentation.components.InputTextWithLabel
 import com.anismhub.ticketsystem.utils.Resource
+import com.anismhub.ticketsystem.utils.inInvalid
 import com.anismhub.ticketsystem.utils.isInvalid
 
 @Composable
@@ -51,9 +53,9 @@ fun AccountsCreateScreen(
     var password by remember { mutableStateOf(InputTextState()) }
     var passwordVisibility by remember { mutableStateOf(false) }
     var phoneNumber by remember { mutableStateOf(InputTextState()) }
-    var selectedRole by remember { mutableStateOf("") }
+    var selectedRole by remember { mutableStateOf(DropdownMenuState("Pilih Role", -1)) }
     var selectedRoleIndex by remember { mutableIntStateOf(0) }
-    var selectedDepartment by remember { mutableStateOf("") }
+    var selectedDepartment by remember { mutableStateOf(DropdownMenuState("Pilih Department", 0)) }
     var selectedDepartmentIndex by remember { mutableIntStateOf(0) }
 
     addUser.let {
@@ -82,8 +84,8 @@ fun AccountsCreateScreen(
                 username = username.value,
                 fullname = fullname.value,
                 password = password.value,
-                role = selectedRole,
-                department = selectedDepartmentIndex + 1,
+                role = selectedRole.text,
+                department = selectedDepartment.indexValue,
                 phoneNumber = phoneNumber.value,
             )
         },
@@ -91,16 +93,26 @@ fun AccountsCreateScreen(
         onUsernameChange = { username = it },
         fullname = fullname,
         onFullnameChange = { fullname = it },
-        roleValue = selectedRole,
+        role = selectedRole,
         onRoleChange = { role, index ->
-            selectedRole = role
+            selectedRole = selectedRole.copy(
+                text = role,
+                indexValue = index,
+                isError = false
+            )
             selectedRoleIndex = index
         },
-        departmentValue = selectedDepartment,
+        onRoleError = { selectedRole = it },
+        department = selectedDepartment,
         onDepartmentChange = { department, index ->
-            selectedDepartment = department
+            selectedDepartment = selectedDepartment.copy(
+                text = department,
+                indexValue = index + 1,
+                isError = false
+            )
             selectedDepartmentIndex = index
         },
+        onDepartmentError = { selectedDepartment = it },
         phoneNumber = phoneNumber,
         onPhoneNumberChange = { phoneNumber = it },
         password = password,
@@ -118,10 +130,12 @@ fun AccountsCreateContent(
     onUsernameChange: (InputTextState) -> Unit,
     fullname: InputTextState,
     onFullnameChange: (InputTextState) -> Unit,
-    roleValue: String,
+    role: DropdownMenuState,
     onRoleChange: (String, Int) -> Unit,
-    departmentValue: String,
+    onRoleError: (DropdownMenuState) -> Unit,
+    department: DropdownMenuState,
     onDepartmentChange: (String, Int) -> Unit,
+    onDepartmentError: (DropdownMenuState) -> Unit,
     phoneNumber: InputTextState,
     onPhoneNumberChange: (InputTextState) -> Unit,
     password: InputTextState,
@@ -182,16 +196,18 @@ fun AccountsCreateContent(
         )
         // Role
         DropdownMenuWithLabel(
-            title = "Role", value = roleValue,
+            title = "Role", value = role.text,
             onValueChange = onRoleChange,
-            options = roleOptions
+            options = roleOptions,
+            isError = role.isError
         )
         // Departemen
         DropdownMenuWithLabel(
             title = "Department",
-            value = departmentValue,
+            value = department.text,
             onValueChange = onDepartmentChange,
-            options = departmentOptions
+            options = departmentOptions,
+            isError = department.isError
         )
         // Phone Number
         InputTextWithLabel(
@@ -241,6 +257,8 @@ fun AccountsCreateContent(
                     fullname.isInvalid() -> onFullnameChange(fullname.copy(isError = true))
                     password.isInvalid() -> onPasswordChange(password.copy(isError = true))
                     phoneNumber.isInvalid() -> onPhoneNumberChange(phoneNumber.copy(isError = true))
+                    role.inInvalid(0) -> onRoleError(role.copy(isError = true))
+                    department.inInvalid(1) -> onDepartmentError(department.copy(isError = true))
                     else -> {
                         createUser()
                     }
