@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -27,10 +28,12 @@ import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.BuildConfig
+import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.components.ReusableDatePicker
 import com.anismhub.ticketsystem.utils.AndroidDownloader
 import com.anismhub.ticketsystem.utils.Resource
-import com.anismhub.ticketsystem.utils.toFormattedString
+import com.anismhub.ticketsystem.utils.isInvalid
+import com.anismhub.ticketsystem.utils.toLocalDate
 import java.time.LocalDate
 
 @Composable
@@ -40,21 +43,6 @@ fun ExportReportScreen(
 ) {
     val context = LocalContext.current
 
-    var hasPermission by remember {
-        mutableStateOf(
-            ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) == PackageManager.PERMISSION_GRANTED
-        )
-    }
-
-    val storagePermissionResultLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted ->
-            hasPermission = isGranted
-        }
-    )
 
     val baseUrl = BuildConfig.BASE_URL
     val exportReportState by viewModel.exportReport.collectAsStateWithLifecycle()
@@ -88,16 +76,60 @@ fun ExportReportScreen(
         }
     }
 
-    val initalDate = LocalDate.now().minusYears(2)
-    var startDate by remember { mutableStateOf<LocalDate?>(LocalDate.now()) }
-    var endDate by remember { mutableStateOf<LocalDate?>(null) }
+    var startDate by remember { mutableStateOf(InputTextState()) }
+    var endDate by remember { mutableStateOf(InputTextState()) }
+
+
+    ExportReportContent(
+        startDate = startDate,
+        onStartDateChanged = { startDate = it },
+        endDate = endDate,
+        onEndDateChanged = { endDate = it },
+        downloadFile = { start, end ->
+            val downloader = AndroidDownloader(context, baseUrl, start, end)
+            downloader.downloadFile(accessToken)
+        },
+        modifier = modifier
+    )
+
+}
+
+@Composable
+fun ExportReportContent(
+    startDate: InputTextState,
+    onStartDateChanged: (InputTextState) -> Unit,
+    endDate: InputTextState,
+    onEndDateChanged: (InputTextState) -> Unit,
+    downloadFile: (String, String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    var hasPermission by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        )
+    }
+
+    val storagePermissionResultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            hasPermission = isGranted
+        }
+    )
+    var startError by remember { mutableStateOf("Tanggal harus diisi") }
+    var endError by remember { mutableStateOf("Tanggal harus diisi") }
+
 
     Column(modifier = modifier.padding(16.dp)) {
         Text(text = "Tanggal Dari :")
         // Tanggal Dari DatePicker
         ReusableDatePicker(
-            initialDate = LocalDate.now(), // Preselect a date 1 year ago
-            onDateSelected = { startDate = it }
+            dateState = startDate,
+            onDateSelected = onStartDateChanged,
+            errorText = startError
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -105,20 +137,41 @@ fun ExportReportScreen(
         Text(text = "Tanggal Sampai :")
         // Tanggal Sampai DatePicker
         ReusableDatePicker(
-            minDateAllowed = startDate ?: LocalDate.now().minusYears(2),
-            onDateSelected = { endDate = it }
+            dateState = endDate,
+            minDateAllowed = startDate.value.toLocalDate("yyyy-MM-dd") ?: LocalDate.now()
+                .minusYears(2),
+            onDateSelected = onEndDateChanged,
+            errorText = endError
         )
 
         Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = {
-                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-                    storagePermissionResultLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                } else {
-                    val downloader = AndroidDownloader(context, baseUrl,
-                        startDate?.toFormattedString() ?: initalDate.toFormattedString(),
-                        endDate?.toFormattedString() ?: LocalDate.now().toFormattedString())
-                    downloader.downloadFile(accessToken)
+                when {
+                    Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q -> {
+                        storagePermissionResultLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    }
+                    startDate.isInvalid() -> {
+                        onStartDateChanged(startDate.copy(isError = true))
+                    }
+                    endDate.isInvalid() -> {
+                        onEndDateChanged(endDate.copy(isError = true))
+                    }
+                    startDate.value.toLocalDate("yyyy-MM-dd")!! > endDate.value.toLocalDate("yyyy-MM-dd")!! -> {
+                        onEndDateChanged(endDate.copy(isError = true))
+                        endError = "Tanggal akhir tidak boleh lebih awal dari tanggal awal"
+                    }
+                    else -> {
+                        downloadFile(
+                            startDate.value,
+                            endDate.value
+                        )
+                        Toast.makeText(
+                            context,
+                            "Start Date : ${startDate.value}, End Date : ${endDate.value}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             },
             shape = RoundedCornerShape(20),

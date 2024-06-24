@@ -14,6 +14,7 @@ import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 
 fun InputTextState.isInvalid(): Boolean {
     return this.value.isEmpty() || this.isError
@@ -32,8 +33,20 @@ fun String.toDateTime(
     return "$formattedDate $formattedTime"
 }
 
-fun LocalDate.toFormattedString(): String {
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+fun String.toLocalDate(
+    dateFormat: String = "dd/MM/yyyy"
+): LocalDate? {
+    return try {
+        val formatter = DateTimeFormatter.ofPattern(dateFormat)
+        LocalDate.parse(this, formatter)
+    } catch (e: DateTimeParseException) {
+        null
+    }
+}
+
+
+fun LocalDate.toFormattedString(dateFormat: String = "yyyy-MM-dd"): String {
+    val formatter = DateTimeFormatter.ofPattern(dateFormat)
     return this.format(formatter)
 }
 
