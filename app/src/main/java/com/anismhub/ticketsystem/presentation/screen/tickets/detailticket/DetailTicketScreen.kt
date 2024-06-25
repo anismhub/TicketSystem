@@ -66,7 +66,22 @@ fun DetailTicketScreen(
     val comment by viewModel.comments.collectAsStateWithLifecycle()
     val closeTicket by viewModel.closeTicket.collectAsStateWithLifecycle()
 
+    var detailData by remember {
+        mutableStateOf(
+            DetailTicketData(
+                1, "", "", "", "",
+                "", "", "", "", "",
+                "", "", emptyList(), emptyList()
+            )
+        )
+    }
+
     var isLoading by remember { mutableStateOf(false) }
+    var isOpen by remember { mutableStateOf(false) }
+    var isClosed by remember { mutableStateOf(false) }
+    var isAssigned by remember { mutableStateOf(false) }
+    var isKaryawan by remember { mutableStateOf(false) }
+    var isAdmin by remember { mutableStateOf(false) }
 
     var listTech by remember { mutableStateOf(emptyList<TechProfileData>()) }
 
@@ -94,26 +109,13 @@ fun DetailTicketScreen(
         }
 
         is Resource.Success -> {
+            detailData = resultData.data.data
+            isOpen = resultData.data.data.ticketStatus == "Open"
+            isClosed = resultData.data.data.ticketStatus == "Closed"
+            isAssigned = resultData.data.data.ticketAssignedTo != null
+            isKaryawan = localProfile!!.userRole == "Karyawan"
+            isAdmin = localProfile!!.userRole == "Administrator"
             isLoading = false
-            DetailTicketContent(
-                data = resultData.data.data,
-                listTech = listTech,
-                isClosed = resultData.data.data.ticketStatus == "Closed",
-                isAssigned = resultData.data.data.ticketAssignedTo != null,
-                isKaryawan = localProfile!!.userRole == "Karyawan",
-                isAdmin = localProfile!!.userRole == "Administrator",
-                assignTicket = {
-                    if (it != 0) viewModel.assignTicket(ticketId, it)
-                },
-                addComment = {
-                    viewModel.addComment(ticketId, it)
-                },
-                addResolution = {
-                    viewModel.closeTicket(ticketId, it)
-                },
-                isLoading = isLoading,
-                modifier = modifier
-            )
         }
 
         is Resource.Error -> {
@@ -193,8 +195,22 @@ fun DetailTicketScreen(
                 else -> {}
             }
         }
-
     }
+    DetailTicketContent(
+        data = detailData, listTech = listTech, isOpen = isOpen,
+        isClosed = isClosed, isAssigned = isAssigned, isKaryawan = isKaryawan,
+        isAdmin = isAdmin, isLoading = isLoading,
+        assignTicket = {
+            if (it != 0) viewModel.assignTicket(ticketId, it)
+        },
+        addComment = {
+            viewModel.addComment(ticketId, it)
+        },
+        addResolution = {
+            viewModel.closeTicket(ticketId, it)
+        },
+        modifier = modifier
+    )
 }
 
 @Composable
@@ -205,6 +221,7 @@ fun DetailTicketContent(
     addComment: (String) -> Unit,
     addResolution: (String) -> Unit,
     modifier: Modifier = Modifier,
+    isOpen: Boolean = false,
     isClosed: Boolean = false,
     isAssigned: Boolean = false,
     isKaryawan: Boolean = false,
@@ -218,10 +235,10 @@ fun DetailTicketContent(
 
     Box(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.TopCenter
     ) {
         if (isLoading) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
         Column(
             modifier = modifier
@@ -237,8 +254,7 @@ fun DetailTicketContent(
             ) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = "#${data.ticketId} ${data.ticketSubject}",
@@ -250,7 +266,7 @@ fun DetailTicketContent(
                         modifier = Modifier.align(Alignment.End)
                     )
                     Row {
-                        if (!isAssigned) {
+                        if (isOpen) {
                             Button(
                                 onClick = { assignTicket(selectedTeknisi?.userId ?: -1) },
                                 enabled = selectedTeknisi?.userId != null,
@@ -261,7 +277,7 @@ fun DetailTicketContent(
                         }
                         Spacer(modifier = Modifier.weight(0.1f))
                         if (isAdmin) {
-                            if (isAssigned) {
+                            if (isAssigned || isClosed) {
                                 Row(
                                     horizontalArrangement = Arrangement.End,
                                     verticalAlignment = Alignment.CenterVertically
@@ -272,7 +288,7 @@ fun DetailTicketContent(
                                     )
                                     Spacer(modifier = Modifier.width(12.dp))
                                     Text(
-                                        text = data.ticketAssignedTo ?: "Nama Teknisi",
+                                        text = data.ticketAssignedTo ?: "Belum Ada Teknisi",
                                         style = MyTypography.titleLarge
                                     )
                                 }
