@@ -63,7 +63,8 @@ interface ApiService {
     @FormUrlEncoded
     @POST("users/password")
     suspend fun changePassword(
-        @Field("password") password: String
+        @Field("currentPassword") currentPassword: String,
+        @Field("newPassword") newPassword: String
     ): ResponseDTO
 
     @FormUrlEncoded
