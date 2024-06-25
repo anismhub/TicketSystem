@@ -69,7 +69,8 @@ fun CommentDTO.toComment(): Comment {
         commentTime = commentTime,
         commentUserRole = commentUserRole,
         commentName = commentName,
-        commentContent = commentContent
+        commentContent = commentContent,
+        commentImage = commentImage
     )
 }
 

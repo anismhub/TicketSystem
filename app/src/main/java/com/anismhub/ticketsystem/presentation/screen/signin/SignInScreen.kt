@@ -185,7 +185,7 @@ fun SignInContent(
                     onPasswordChange(
                         password.copy(
                             value = newValue,
-                            isError = newValue.isEmpty() || newValue.length < 6
+                            isError = newValue.isEmpty()
                         )
                     )
                 },

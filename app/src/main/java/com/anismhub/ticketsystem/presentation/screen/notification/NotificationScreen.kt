@@ -80,10 +80,10 @@ fun NotificationContent(
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.TopCenter
     ) {
         if (isLoading) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
         Column(
             modifier = modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp),

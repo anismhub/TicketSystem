@@ -70,8 +70,8 @@ fun DetailTicketScreen(
         mutableStateOf(
             DetailTicketData(
                 1, "", "", "", "",
-                "", "", "", "", "",
-                "", "", emptyList(), emptyList()
+                "", "", "", "", "2024-06-25T06:31:47.509Z",
+                "2024-06-25T06:31:47.509Z", "", emptyList(), emptyList()
             )
         )
     }
