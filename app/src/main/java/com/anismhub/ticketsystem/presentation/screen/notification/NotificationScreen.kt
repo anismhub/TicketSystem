@@ -2,16 +2,22 @@ package com.anismhub.ticketsystem.presentation.screen.notification
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -31,59 +37,78 @@ fun NotificationScreen(
     viewModel: NotificationViewModel = hiltViewModel()
 ) {
     val notificationData by viewModel.notification.collectAsStateWithLifecycle()
+    var listNotification by remember { mutableStateOf(emptyList<NotificationData>()) }
+
+    var isLoading by remember { mutableStateOf(false) }
+
 
     when (val result = notificationData) {
         is Resource.Loading -> {
             Log.d("Loading", "Notification Loading : $result")
+            isLoading = true
         }
 
         is Resource.Success -> {
-            NotificationContent(
-                data = result.data.data,
-                navigateToDetail = {
-                    navigateToDetail("Detail Tiket", it)
-                },
-                modifier = modifier
-            )
+            listNotification = result.data.data
+            isLoading = false
         }
 
         is Resource.Error -> {
             Log.d("Error", "Notification Error: ${result.error}")
+            isLoading = false
         }
 
         else -> {}
     }
+
+    NotificationContent(
+        data = listNotification,
+        navigateToDetail = {
+            navigateToDetail("Detail Tiket", it)
+        },
+        modifier = modifier,
+        isLoading = isLoading
+    )
 }
 
 @Composable
 fun NotificationContent(
     data: List<NotificationData>,
     navigateToDetail: (ticketId: Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isLoading: Boolean = false
 ) {
-    Column(
-        modifier = modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = "Notifikasi",
-            style = MyTypography.headlineMedium.copy(fontWeight = FontWeight.Bold)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(bottom = 24.dp),
-            modifier = Modifier
-                .padding(top = 16.dp)
+        if (isLoading) {
+            CircularProgressIndicator()
+        }
+        Column(
+            modifier = modifier.padding(start = 24.dp, end = 24.dp, top = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            items(data, key = { it.notificationId }) {
-                NotificationCard(
-                    message = it.notificationContent,
-                    date = it.notificationCreateAt.toDateTime(),
-                    onClick = {
-                        navigateToDetail(it.notificationTicket)
-                    }
-                )
+            Text(
+                text = "Notifikasi",
+                style = MyTypography.headlineMedium.copy(fontWeight = FontWeight.Bold)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(bottom = 24.dp),
+                modifier = Modifier
+                    .padding(top = 16.dp)
+            ) {
+                items(data, key = { it.notificationId }) {
+                    NotificationCard(
+                        message = it.notificationContent,
+                        date = it.notificationCreateAt.toDateTime(),
+                        onClick = {
+                            navigateToDetail(it.notificationTicket)
+                        }
+                    )
+                }
             }
         }
     }
