@@ -239,10 +239,10 @@ fun AddTicketContent(
             onClick = {
                 when {
                     subject.isInvalid() -> onSubjectChange(subject.copy(isError = true))
-                    description.isInvalid() -> onDescriptionChange(description.copy(isError = true))
                     area.isInvalid(1) -> onAreaError(area.copy(isError = true))
                     priority.isInvalid(0) -> onPriorityError(priority.copy(isError = true))
                     category.isInvalid(1) -> onCategoryError(category.copy(isError = true))
+                    description.isInvalid() -> onDescriptionChange(description.copy(isError = true))
                     else -> {
                         createTicket()
                     }

@@ -254,10 +254,10 @@ fun AccountsCreateContent(
                 when {
                     username.isInvalid() -> onUsernameChange(username.copy(isError = true))
                     fullname.isInvalid() -> onFullnameChange(fullname.copy(isError = true))
-                    password.isInvalid() -> onPasswordChange(password.copy(isError = true))
-                    phoneNumber.isInvalid() -> onPhoneNumberChange(phoneNumber.copy(isError = true))
                     role.isInvalid(0) -> onRoleError(role.copy(isError = true))
                     department.isInvalid(1) -> onDepartmentError(department.copy(isError = true))
+                    password.isInvalid() -> onPasswordChange(password.copy(isError = true))
+                    phoneNumber.isInvalid() -> onPhoneNumberChange(phoneNumber.copy(isError = true))
                     else -> {
                         createUser()
                     }
