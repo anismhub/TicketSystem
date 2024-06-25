@@ -21,7 +21,7 @@ fun InputTextState.isInvalid(): Boolean {
     return this.value.isEmpty() || this.isError
 }
 
-fun DropdownMenuState.inInvalid(validIndex: Int): Boolean {
+fun DropdownMenuState.isInvalid(validIndex: Int): Boolean {
     return this.indexValue < validIndex || this.isError
 }
 

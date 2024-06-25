@@ -33,7 +33,6 @@ import com.anismhub.ticketsystem.presentation.common.roleOptions
 import com.anismhub.ticketsystem.presentation.components.DropdownMenuWithLabel
 import com.anismhub.ticketsystem.presentation.components.InputTextWithLabel
 import com.anismhub.ticketsystem.utils.Resource
-import com.anismhub.ticketsystem.utils.inInvalid
 import com.anismhub.ticketsystem.utils.isInvalid
 
 @Composable
@@ -255,8 +254,8 @@ fun AccountsUpdateContent(
                     username.isInvalid() -> onUsernameChange(username.copy(isError = true))
                     fullname.isInvalid() -> onFullnameChange(fullname.copy(isError = true))
                     phoneNumber.isInvalid() -> onPhoneChange(phoneNumber.copy(isError = true))
-                    role.inInvalid(0) -> onRoleError(role.copy(isError = true))
-                    department.inInvalid(1) -> onDepartmentError(department.copy(isError = true))
+                    role.isInvalid(0) -> onRoleError(role.copy(isError = true))
+                    department.isInvalid(1) -> onDepartmentError(department.copy(isError = true))
                     else -> updateUser()
                 }
 

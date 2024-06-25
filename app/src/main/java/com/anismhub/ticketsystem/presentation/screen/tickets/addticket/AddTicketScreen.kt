@@ -41,7 +41,6 @@ import com.anismhub.ticketsystem.presentation.components.InputTextWithLabel
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.presentation.theme.fontFamily
 import com.anismhub.ticketsystem.utils.Resource
-import com.anismhub.ticketsystem.utils.inInvalid
 import com.anismhub.ticketsystem.utils.isInvalid
 
 @Composable
@@ -241,9 +240,9 @@ fun AddTicketContent(
                 when {
                     subject.isInvalid() -> onSubjectChange(subject.copy(isError = true))
                     description.isInvalid() -> onDescriptionChange(description.copy(isError = true))
-                    area.inInvalid(1) -> onAreaError(area.copy(isError = true))
-                    priority.inInvalid(0) -> onPriorityError(priority.copy(isError = true))
-                    category.inInvalid(1) -> onCategoryError(category.copy(isError = true))
+                    area.isInvalid(1) -> onAreaError(area.copy(isError = true))
+                    priority.isInvalid(0) -> onPriorityError(priority.copy(isError = true))
+                    category.isInvalid(1) -> onCategoryError(category.copy(isError = true))
                     else -> {
                         createTicket()
                     }
