@@ -166,11 +166,13 @@ class AuthRepositoryImpl(
         }
     }
 
-    override fun postChangePassword(password: String): Flow<Resource<Response>> =
+    override fun postChangePassword(
+        currentPassword: String, newPassword: String
+    ): Flow<Resource<Response>> =
         flow {
             emit(Resource.Loading)
             try {
-                val response = apiService.changePassword(password = password)
+                val response = apiService.changePassword(currentPassword, newPassword)
                 emit(Resource.Success(response.toResponse()))
             } catch (e: Exception) {
                 if (e is HttpException) {

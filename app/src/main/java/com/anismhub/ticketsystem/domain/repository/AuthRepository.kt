@@ -45,7 +45,7 @@ interface AuthRepository {
         phoneNumber: String
     ): Flow<Resource<Response>>
 
-    fun postChangePassword(password: String): Flow<Resource<Response>>
+    fun postChangePassword(currentPassword: String, newPassword: String): Flow<Resource<Response>>
     fun getProfile(): Flow<Resource<Profile>>
 
     fun getProfileData(): Flow<ProfileData>
