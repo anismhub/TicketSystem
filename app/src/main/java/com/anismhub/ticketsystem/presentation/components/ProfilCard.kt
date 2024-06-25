@@ -57,7 +57,7 @@ fun ProfilCard(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.face),
+                        painter = painterResource(id = R.drawable.person),
                         contentDescription = "Nama Pengguna"
                     )
                     Spacer(modifier = Modifier.width(16.dp))
