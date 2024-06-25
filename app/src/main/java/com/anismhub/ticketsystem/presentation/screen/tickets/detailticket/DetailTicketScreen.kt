@@ -12,11 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -242,30 +239,27 @@ fun DetailTicketContent(
         }
         Column(
             modifier = modifier
-                .padding(top = 16.dp)
-                .padding(horizontal = 16.dp)
+                .padding(horizontal = 6.dp)
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Card(
-                colors = CardDefaults.cardColors(Color.Transparent),
-                shape = RoundedCornerShape(16.dp),
-                modifier = modifier.fillMaxWidth()
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
             ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "#${data.ticketId} ${data.ticketSubject}",
-                        style = MyTypography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
-                    )
-                    Text(
-                        text = data.ticketStatus,
-                        style = MyTypography.titleLarge,
-                        modifier = Modifier.align(Alignment.End)
-                    )
-                    Row {
+                Text(
+                    text = "#${data.ticketId} ${data.ticketSubject}",
+                    style = MyTypography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
+                )
+                Text(
+                    text = data.ticketStatus,
+                    style = MyTypography.titleLarge,
+                    modifier = Modifier.align(Alignment.End)
+                )
+                Row {
+                    if (isAdmin) {
                         if (isOpen) {
                             Button(
                                 onClick = { assignTicket(selectedTeknisi?.userId ?: -1) },
@@ -276,84 +270,98 @@ fun DetailTicketContent(
                             }
                         }
                         Spacer(modifier = Modifier.weight(0.1f))
-                        if (isAdmin) {
-                            if (isAssigned || isClosed) {
-                                Row(
-                                    horizontalArrangement = Arrangement.End,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.engineer),
-                                        contentDescription = "Teknisi"
-                                    )
-                                    Spacer(modifier = Modifier.width(12.dp))
-                                    Text(
-                                        text = data.ticketAssignedTo ?: "Belum Ada Teknisi",
-                                        style = MyTypography.titleLarge
-                                    )
-                                }
-                            } else {
-                                MyDropdownMenuTech(
-                                    value = selectedTeknisi?.userFullName ?: "Pilih Teknisi",
-                                    onValueChange = { selectedTeknisi = it },
-                                    listTech = listTech,
-                                    modifier = Modifier.weight(0.5f)
+                        if (isAssigned || isClosed) {
+                            Row(
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.engineer),
+                                    contentDescription = "Teknisi"
+                                )
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Text(
+                                    text = data.ticketAssignedTo ?: "Belum Ada Teknisi",
+                                    style = MyTypography.titleLarge
                                 )
                             }
                         } else {
-                            Text(text = data.ticketAssignedTo ?: "Belum ada teknisi")
+                            MyDropdownMenuTech(
+                                value = selectedTeknisi?.userFullName ?: "Pilih Teknisi",
+                                onValueChange = { selectedTeknisi = it },
+                                listTech = listTech,
+                                modifier = Modifier.weight(0.5f)
+                            )
                         }
+                    } else {
+                        Spacer(modifier = Modifier.weight(1f))
+                        Text(text = data.ticketAssignedTo ?: "Belum ada teknisi")
                     }
-                    DetailCard(
-                        ticketCreatedAt = data.ticketCreatedAt.toDateTime(),
-                        ticketUpdatedAt = data.ticketUpdateAt.toDateTime(),
-                        ticketCategory = data.ticketCategory,
-                        userFullName = data.ticketCreatedBy,
-                        departmentName = data.ticketDepartmentBy,
-                        ticketArea = data.ticketArea,
-                        ticketPriority = data.ticketPriority
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(text = "Deskripsi", style = MyTypography.titleMedium)
-                    Text(
-                        text = data.ticketDescription,
-                        textAlign = TextAlign.Justify,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp)
-                    )
                 }
             }
-            Text(
-                text = "Balasan", style = MyTypography.titleMedium,
-                modifier = Modifier
-                    .align(Alignment.Start)
-                    .padding(top = 12.dp)
+            DetailCard(
+                ticketCreatedAt = data.ticketCreatedAt.toDateTime(),
+                ticketUpdatedAt = data.ticketUpdateAt.toDateTime(),
+                ticketCategory = data.ticketCategory,
+                userFullName = data.ticketCreatedBy,
+                departmentName = data.ticketDepartmentBy,
+                ticketArea = data.ticketArea,
+                ticketPriority = data.ticketPriority
             )
-            if (data.comments.isNotEmpty()) {
-                data.comments.forEach {
-                    ReplyCard(
-                        name = it.commentName,
-                        date = it.commentTime.toDateTime(),
-                        content = it.commentContent,
-                        painter = if (it.commentUserRole == "Karyawan") painterResource(id = R.drawable.person) else painterResource(
-                            id = R.drawable.engineer
-                        )
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                }
-            }
-            if (data.resolution.isNotEmpty()) {
-                data.resolution.forEach {
-                    ReplyCard(
-                        name = it.resolutionResolvedBy,
-                        date = it.resolutionResolvedAt.toDateTime(),
-                        content = it.resolutionContent,
-                        containerColor = Color(0xFFD8EFD3)
-                    )
-                }
+            Spacer(modifier = Modifier.height(4.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            ) {
+                Text(
+                    text = "Deskripsi",
+                    style = MyTypography.titleMedium,
+                    modifier = Modifier.align(Alignment.Start)
+                )
+                Text(
+                    text = data.ticketDescription,
+                    textAlign = TextAlign.Justify,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
+                )
             }
 
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 8.dp)
+            ) {
+                Text(
+                    text = "Balasan", style = MyTypography.titleMedium,
+                    modifier = Modifier
+                        .align(Alignment.Start)
+                        .padding(top = 8.dp)
+                )
+                if (data.comments.isNotEmpty()) {
+                    data.comments.forEach {
+                        ReplyCard(
+                            name = it.commentName,
+                            date = it.commentTime.toDateTime(),
+                            content = it.commentContent,
+                            painter = if (it.commentUserRole == "Karyawan") painterResource(id = R.drawable.person) else
+                                painterResource(id = R.drawable.engineer)
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                    }
+                }
+                if (data.resolution.isNotEmpty()) {
+                    data.resolution.forEach {
+                        ReplyCard(
+                            name = it.resolutionResolvedBy,
+                            date = it.resolutionResolvedAt.toDateTime(),
+                            content = it.resolutionContent,
+                            containerColor = Color(0xFFD8EFD3)
+                        )
+                    }
+                }
+            }
             if (!isClosed) {
                 InputText(
                     value = replyText,
@@ -389,9 +397,7 @@ fun DetailTicketContent(
                     ) {
                         Text(text = "Balas Pesan", textAlign = TextAlign.Center)
                     }
-                    Spacer(modifier = Modifier.width(3.dp))
                     if (!isKaryawan) {
-                        Spacer(modifier = Modifier.width(3.dp))
                         Button(
                             onClick = { showDialog = true },
                         ) {
