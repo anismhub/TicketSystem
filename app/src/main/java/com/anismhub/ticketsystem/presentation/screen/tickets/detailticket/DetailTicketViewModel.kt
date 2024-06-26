@@ -1,5 +1,6 @@
 package com.anismhub.ticketsystem.presentation.screen.tickets.detailticket
 
+import android.net.Uri
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -78,9 +79,9 @@ class DetailTicketViewModel @Inject constructor(
         }
     }
 
-    fun addComment(ticketId: Int, comment: String) {
+    fun addComment(ticketId: Int, comment: String, file: Uri? = null) {
         viewModelScope.launch {
-            ticketRepository.addComment(ticketId, comment).collect {
+            ticketRepository.addComment(ticketId, comment, file).collect {
                 _comments.value = Event(it)
             }
         }

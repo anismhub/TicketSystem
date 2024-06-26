@@ -1,6 +1,10 @@
 package com.anismhub.ticketsystem.presentation.screen.tickets.detailticket
 
+import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,14 +14,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -43,6 +51,7 @@ import com.anismhub.ticketsystem.presentation.components.MyDropdownMenuTech
 import com.anismhub.ticketsystem.presentation.components.ReplyCard
 import com.anismhub.ticketsystem.presentation.theme.MyTypography
 import com.anismhub.ticketsystem.utils.Resource
+import com.anismhub.ticketsystem.utils.getImageUri
 import com.anismhub.ticketsystem.utils.toDateTime
 
 @Composable
@@ -62,6 +71,9 @@ fun DetailTicketScreen(
     val assignTicket by viewModel.assignTicket.collectAsStateWithLifecycle()
     val comment by viewModel.comments.collectAsStateWithLifecycle()
     val closeTicket by viewModel.closeTicket.collectAsStateWithLifecycle()
+    var imageUri: Uri? by remember {
+        mutableStateOf(null)
+    }
 
     var detailData by remember {
         mutableStateOf(
@@ -154,6 +166,7 @@ fun DetailTicketScreen(
                 }
 
                 is Resource.Success -> {
+                    imageUri = null
                     viewModel.getTicketById(ticketId)
                     Log.d("Comment Success", "Success: ${unhandled.data}: ")
                     isLoading = false
@@ -201,11 +214,13 @@ fun DetailTicketScreen(
             if (it != 0) viewModel.assignTicket(ticketId, it)
         },
         addComment = {
-            viewModel.addComment(ticketId, it)
+            viewModel.addComment(ticketId, it, imageUri)
         },
         addResolution = {
             viewModel.closeTicket(ticketId, it)
         },
+        imageUri = imageUri,
+        onImageUriChange = { imageUri = it },
         modifier = modifier
     )
 }
@@ -217,6 +232,8 @@ fun DetailTicketContent(
     assignTicket: (Int) -> Unit,
     addComment: (String) -> Unit,
     addResolution: (String) -> Unit,
+    imageUri: Uri?,
+    onImageUriChange: (Uri?) -> Unit,
     modifier: Modifier = Modifier,
     isOpen: Boolean = false,
     isClosed: Boolean = false,
@@ -229,6 +246,20 @@ fun DetailTicketContent(
     var showDialog by remember { mutableStateOf(false) }
     var enteredText by remember { mutableStateOf("") }
     var selectedTeknisi by remember { mutableStateOf<TechProfileData?>(null) }
+    var localImageUri: Uri? by remember { mutableStateOf(null) }
+    val context = LocalContext.current
+    val pickMediaLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            uri?.let {
+                onImageUriChange(uri)
+            }
+        }
+
+    val launcherIntentCamera = rememberLauncherForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { isSuccess ->
+        onImageUriChange(if (isSuccess) localImageUri else null)
+    }
 
     Box(
         modifier = modifier.fillMaxSize(),
@@ -381,6 +412,56 @@ fun DetailTicketContent(
                     minLines = 5,
                     singleLine = false,
                 )
+
+                imageUri?.let {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = "Image Attached", style = MyTypography.bodySmall)
+                        IconButton(onClick = { onImageUriChange(null) }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.close_24px),
+                                contentDescription = "Hapus gambar"
+                            )
+                        }
+                    }
+
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    TextButton(onClick = {
+                        localImageUri = getImageUri(context)
+                        launcherIntentCamera.launch(localImageUri!!)
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.camera),
+                            contentDescription = "Ambil gambar dari Kamera"
+                        )
+                        Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                        Text(text = "Kamera")
+                    }
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    TextButton(onClick = {
+                        pickMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.gallery),
+                            contentDescription = "Ambil gambar dari galeri"
+                        )
+                        Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                        Text(text = "Galeri")
+                    }
+                }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

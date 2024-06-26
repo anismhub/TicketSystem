@@ -9,14 +9,18 @@ import com.anismhub.ticketsystem.data.remote.dto.ResponseDTO
 import com.anismhub.ticketsystem.data.remote.dto.TechProfileDTO
 import com.anismhub.ticketsystem.data.remote.dto.TicketDTO
 import com.anismhub.ticketsystem.data.remote.dto.UsersDTO
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.QueryMap
@@ -118,11 +122,12 @@ interface ApiService {
         @Field("userId") userId: Int
     ): ResponseDTO
 
-    @FormUrlEncoded
+    @Multipart
     @POST("tickets/{ticketId}/comments")
     suspend fun addComment(
         @Path("ticketId") ticketId: Int,
-        @Field("content") content: String,
+        @Part("content") content: RequestBody,
+        @Part file: MultipartBody.Part? = null
     ): ResponseDTO
 
     @FormUrlEncoded

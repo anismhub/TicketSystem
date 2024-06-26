@@ -81,8 +81,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTicketRepository(apiService: ApiService): TicketRepository =
-        TicketRepositoryImpl(apiService = apiService)
+    fun provideTicketRepository(
+        apiService: ApiService,
+        @ApplicationContext context: Context
+    ): TicketRepository =
+        TicketRepositoryImpl(apiService = apiService, context = context)
 
     @Provides
     @Singleton
