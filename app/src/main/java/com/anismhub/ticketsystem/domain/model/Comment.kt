@@ -5,5 +5,5 @@ data class Comment(
     val commentUserRole: String,
     val commentTime: String,
     val commentContent: String,
-    val commentImage: String
+    val commentImage: String?
 )

@@ -12,5 +12,5 @@ data class CommentDTO(
     @field:SerializedName("commentContent")
     val commentContent: String,
     @field:SerializedName("commentImage")
-    val commentImage: String
+    val commentImage: String?
 )
