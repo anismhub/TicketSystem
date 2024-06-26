@@ -51,9 +51,8 @@ fun MainScreen(
         },
         floatingActionButton = {
             if (currentRoute == "home") {
-                if (localProfile!!.userRole == "Karyawan") {
-                    CreateFAB { navigateToCreate()
-                    }
+                if (localProfile!!.userRole != "Teknisi") {
+                    CreateFAB { navigateToCreate() }
                 }
             }
         }
