@@ -377,7 +377,8 @@ fun DetailTicketContent(
                             date = it.commentTime.toDateTime(),
                             content = it.commentContent,
                             painter = if (it.commentUserRole == "Karyawan") painterResource(id = R.drawable.person) else
-                                painterResource(id = R.drawable.engineer)
+                                painterResource(id = R.drawable.engineer),
+                            imageUrl = it.commentImage
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                     }

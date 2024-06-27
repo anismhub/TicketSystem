@@ -3,14 +3,17 @@ package com.anismhub.ticketsystem.presentation.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +34,7 @@ fun ReplyCard(
     modifier: Modifier = Modifier,
     painter: Painter = painterResource(id = R.drawable.engineer),
     containerColor: Color = Color.Unspecified,
+    imageUrl: String? = null
 ) {
     Card(
         border = ButtonDefaults.outlinedButtonBorder,
@@ -59,6 +63,16 @@ fun ReplyCard(
                 Text(text = date, style = MyTypography.bodySmall)
             }
             Text(text = content, minLines = 3, style = MyTypography.bodyMedium)
+            imageUrl?.let {
+                TextButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.image),
+                        contentDescription = "Lihat Gambar"
+                    )
+                    Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                    Text(text = "Lihat Gambar")
+                }
+            }
         }
     }
 }
