@@ -14,6 +14,7 @@ import com.anismhub.ticketsystem.presentation.screen.settings.changepassword.Cha
 import com.anismhub.ticketsystem.presentation.screen.settings.exportreport.ExportReportScreen
 import com.anismhub.ticketsystem.presentation.screen.tickets.addticket.AddTicketScreen
 import com.anismhub.ticketsystem.presentation.screen.tickets.detailticket.DetailTicketScreen
+import com.anismhub.ticketsystem.presentation.screen.tickets.detailticket.ImageCommentScreen
 
 
 fun NavGraphBuilder.ticketNavGraph(
@@ -29,7 +30,13 @@ fun NavGraphBuilder.ticketNavGraph(
             arguments = listOf(navArgument("ticketId") { type = NavType.IntType })
         ) {
             val ticketId = it.arguments?.getInt("ticketId") ?: -1
-            DetailTicketScreen(ticketId = ticketId, onNavUp = { navController.navigateUp() })
+            DetailTicketScreen(
+                ticketId = ticketId,
+                onNavUp = { navController.navigateUp() },
+                navigateToImageComment = { imageUrl ->
+                    navController.navigate(TicketNav.imageComment.createRoute(imageUrl))
+                }
+            )
         }
         composable(route = TicketNav.Create.route) {
             AddTicketScreen(
@@ -68,6 +75,16 @@ fun NavGraphBuilder.ticketNavGraph(
         composable(route = TicketNav.ChangePassword.route) {
             ChangePasswordScreen()
             onTitleChange("Ubah Password")
+        }
+        composable(
+            route = TicketNav.imageComment.route,
+            arguments = listOf(navArgument("imageUrl") { type = NavType.StringType })
+        ) {
+            val imageUrl = it.arguments?.getString("imageUrl") ?: ""
+            ImageCommentScreen(
+                commentImage = imageUrl
+            )
+            onTitleChange("Gambar")
         }
     }
 }

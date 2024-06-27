@@ -34,7 +34,8 @@ fun ReplyCard(
     modifier: Modifier = Modifier,
     painter: Painter = painterResource(id = R.drawable.engineer),
     containerColor: Color = Color.Unspecified,
-    imageUrl: String? = null
+    commentImage: String? = null,
+    navigateToImageComment: (imageUrl: String) -> Unit = {}
 ) {
     Card(
         border = ButtonDefaults.outlinedButtonBorder,
@@ -63,8 +64,8 @@ fun ReplyCard(
                 Text(text = date, style = MyTypography.bodySmall)
             }
             Text(text = content, minLines = 3, style = MyTypography.bodyMedium)
-            imageUrl?.let {
-                TextButton(onClick = { /*TODO*/ }) {
+            commentImage?.let {
+                TextButton(onClick = { navigateToImageComment(it) }) {
                     Icon(
                         painter = painterResource(id = R.drawable.image),
                         contentDescription = "Lihat Gambar"

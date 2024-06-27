@@ -13,4 +13,7 @@ sealed class TicketNav(val route: String) {
         fun createRoute(userId: Int) = "update_account/$userId"
     }
     data object ChangePassword : TicketNav("change_password")
+    data object imageComment : TicketNav("image_comment/{imageUrl}") {
+        fun createRoute(imageUrl: String) = "image_comment/$imageUrl"
+    }
 }

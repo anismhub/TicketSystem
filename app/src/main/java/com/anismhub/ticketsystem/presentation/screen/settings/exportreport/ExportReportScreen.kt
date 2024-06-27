@@ -119,7 +119,7 @@ fun ExportReportContent(
             hasPermission = isGranted
         }
     )
-    var startError by remember { mutableStateOf("Tanggal harus diisi") }
+    val startError by remember { mutableStateOf("Tanggal harus diisi") }
     var endError by remember { mutableStateOf("Tanggal harus diisi") }
 
 

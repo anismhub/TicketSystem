@@ -58,6 +58,7 @@ import com.anismhub.ticketsystem.utils.toDateTime
 fun DetailTicketScreen(
     ticketId: Int,
     onNavUp: () -> Unit,
+    navigateToImageComment: (imageUrl: String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DetailTicketViewModel = hiltViewModel()
 ) {
@@ -221,6 +222,7 @@ fun DetailTicketScreen(
         },
         imageUri = imageUri,
         onImageUriChange = { imageUri = it },
+        navigateToImageComment = navigateToImageComment,
         modifier = modifier
     )
 }
@@ -234,6 +236,7 @@ fun DetailTicketContent(
     addResolution: (String) -> Unit,
     imageUri: Uri?,
     onImageUriChange: (Uri?) -> Unit,
+    navigateToImageComment: (imageUrl: String) -> Unit,
     modifier: Modifier = Modifier,
     isOpen: Boolean = false,
     isClosed: Boolean = false,
@@ -378,7 +381,8 @@ fun DetailTicketContent(
                             content = it.commentContent,
                             painter = if (it.commentUserRole == "Karyawan") painterResource(id = R.drawable.person) else
                                 painterResource(id = R.drawable.engineer),
-                            imageUrl = it.commentImage
+                            commentImage = it.commentImage,
+                            navigateToImageComment = navigateToImageComment
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                     }
