@@ -22,13 +22,6 @@ class SignInViewModel @Inject constructor(
         MutableStateFlow(Event(Resource.None))
     val loginResource: StateFlow<Event<Resource<Login>>> = _loginResource
 
-    private val _loginState: MutableStateFlow<Boolean> = MutableStateFlow(false)
-    val loginState: StateFlow<Boolean> = _loginState
-
-    init {
-        getLoginState()
-    }
-
     fun login(username: String, password: String) {
         viewModelScope.launch {
             authRepository.login(
@@ -43,15 +36,6 @@ class SignInViewModel @Inject constructor(
     fun saveLoginData(loginData: LoginData) {
         viewModelScope.launch {
             authRepository.saveLoginData(loginData = loginData)
-        }
-        getLoginState()
-    }
-
-    private fun getLoginState() {
-        viewModelScope.launch {
-            authRepository.getLoginState().collect {
-                _loginState.value = it
-            }
         }
     }
 

@@ -3,7 +3,6 @@ package com.anismhub.ticketsystem.presentation.screen.settings.exportreport
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,12 +25,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.BuildConfig
 import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.components.ReusableDatePicker
 import com.anismhub.ticketsystem.utils.AndroidDownloader
-import com.anismhub.ticketsystem.utils.Resource
 import com.anismhub.ticketsystem.utils.isInvalid
 import com.anismhub.ticketsystem.utils.toLocalDate
 import java.time.LocalDate
@@ -45,37 +42,7 @@ fun ExportReportScreen(
 
 
     val baseUrl = BuildConfig.BASE_URL
-    val exportReportState by viewModel.exportReport.collectAsStateWithLifecycle()
     val accessToken by viewModel.accessToken
-
-    exportReportState.let {
-        if (!it.hasBeenHandled) {
-            when (val unhandled = it.getContentIfNotHandled()) {
-                is Resource.Loading -> {
-                    // Handle loading state
-                    Log.d("ExportReportScreen", "Loading...")
-                }
-
-                is Resource.Success -> {
-//                    val response = unhandled.data
-//                    if (response != null) {
-//                        handleFileResponse(
-//                            context,
-//                            response
-//                        ) // Define this function to save the file
-//                    }
-                }
-
-                is Resource.Error -> {
-                    Log.e("ExportReportScreen", "Error: ${unhandled.error}")
-                    // Handle error state
-                }
-
-                else -> {}
-            }
-        }
-    }
-
     var startDate by remember { mutableStateOf(InputTextState()) }
     var endDate by remember { mutableStateOf(InputTextState()) }
 
@@ -148,19 +115,23 @@ fun ExportReportContent(
         Button(
             onClick = {
                 when {
-                    Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q -> {
+                    Build.VERSION.SDK_INT < Build.VERSION_CODES.Q -> {
                         storagePermissionResultLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     }
+
                     startDate.isInvalid() -> {
                         onStartDateChanged(startDate.copy(isError = true))
                     }
+
                     endDate.isInvalid() -> {
                         onEndDateChanged(endDate.copy(isError = true))
                     }
+
                     startDate.value.toLocalDate("yyyy-MM-dd")!! > endDate.value.toLocalDate("yyyy-MM-dd")!! -> {
                         onEndDateChanged(endDate.copy(isError = true))
                         endError = "Tanggal akhir tidak boleh lebih awal dari tanggal awal"
                     }
+
                     else -> {
                         downloadFile(
                             startDate.value,

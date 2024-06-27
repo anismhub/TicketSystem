@@ -34,7 +34,7 @@ fun NavGraphBuilder.ticketNavGraph(
                 ticketId = ticketId,
                 onNavUp = { navController.navigateUp() },
                 navigateToImageComment = { imageUrl ->
-                    navController.navigate(TicketNav.imageComment.createRoute(imageUrl))
+                    navController.navigate(TicketNav.ImageComment.createRoute(imageUrl))
                 }
             )
         }
@@ -77,7 +77,7 @@ fun NavGraphBuilder.ticketNavGraph(
             onTitleChange("Ubah Password")
         }
         composable(
-            route = TicketNav.imageComment.route,
+            route = TicketNav.ImageComment.route,
             arguments = listOf(navArgument("imageUrl") { type = NavType.StringType })
         ) {
             val imageUrl = it.arguments?.getString("imageUrl") ?: ""

@@ -102,7 +102,7 @@ fun AccountsUpdateScreen(
                 fullname = fullname.copy(value = resultData.data.data.userFullName)
                 phoneNumber = phoneNumber.copy(value = resultData.data.data.userPhone)
                 selectedRole =
-                    selectedRole.copy(resultData.data.data.userRole, roleOptions.indexOfFirst {
+                    selectedRole.copy(text = resultData.data.data.userRole, indexValue = roleOptions.indexOfFirst {
                         it == resultData.data.data.userRole
                     })
                 selectedRoleIndex = roleOptions.indexOfFirst {
@@ -112,8 +112,8 @@ fun AccountsUpdateScreen(
                     it.departmentName == resultData.data.data.departmentName
                 }
                 selectedDepartment = selectedDepartment.copy(
-                    resultData.data.data.departmentName,
-                    selectedDepartmentIndex + 1
+                    text = resultData.data.data.departmentName,
+                    indexValue = selectedDepartmentIndex + 1
                 )
             }
 
@@ -240,7 +240,7 @@ fun AccountsUpdateContent(
             textState = phoneNumber,
             onValueChange = onPhoneChange
         ) {
-            IconButton(onClick = { onPhoneChange(phoneNumber.copy("", true)) }) {
+            IconButton(onClick = { onPhoneChange(phoneNumber.copy(value = "", isError = true)) }) {
                 Icon(
                     painter = painterResource(id = R.drawable.close_24px),
                     contentDescription = ""

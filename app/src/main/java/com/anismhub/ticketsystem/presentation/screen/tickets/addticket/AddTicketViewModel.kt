@@ -2,9 +2,7 @@ package com.anismhub.ticketsystem.presentation.screen.tickets.addticket
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.anismhub.ticketsystem.domain.model.Response
-import com.anismhub.ticketsystem.domain.model.Ticket
 import com.anismhub.ticketsystem.domain.repository.TicketRepository
 import com.anismhub.ticketsystem.utils.Event
 import com.anismhub.ticketsystem.utils.Resource
@@ -36,7 +34,7 @@ class AddTicketViewModel @Inject constructor(
                 ticketPriority = ticketPriority,
                 ticketArea = ticketArea,
                 ticketCategory = ticketCategory
-            ).collect{
+            ).collect {
                 _addTicket.value = Event(it)
             }
         }

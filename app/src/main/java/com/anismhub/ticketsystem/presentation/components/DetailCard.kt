@@ -42,6 +42,7 @@ fun DetailCard(
             color = MaterialTheme.colorScheme.outline
         ),
         shape = RoundedCornerShape(16.dp),
+        modifier = modifier
     ) {
         Column {
             Row(

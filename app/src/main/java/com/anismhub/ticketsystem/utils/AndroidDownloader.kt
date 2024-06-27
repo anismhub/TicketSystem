@@ -11,7 +11,7 @@ interface Downloader {
 
 class AndroidDownloader(
     context: Context, baseUrl: String, startDate: String, endDate: String
-): Downloader {
+) : Downloader {
     private val downloadManager = context.getSystemService(DownloadManager::class.java)
     private val url = "${baseUrl}tickets/export?startDate=${startDate}&endDate=${endDate}"
 
