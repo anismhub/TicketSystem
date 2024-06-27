@@ -364,13 +364,13 @@ fun DetailTicketContent(
                     .fillMaxWidth()
                     .padding(horizontal = 8.dp)
             ) {
-                Text(
-                    text = "Balasan", style = MyTypography.titleMedium,
-                    modifier = Modifier
-                        .align(Alignment.Start)
-                        .padding(top = 8.dp)
-                )
                 if (data.comments.isNotEmpty()) {
+                    Text(
+                        text = "Balasan", style = MyTypography.titleMedium,
+                        modifier = Modifier
+                            .align(Alignment.Start)
+                            .padding(top = 8.dp)
+                    )
                     data.comments.forEach {
                         ReplyCard(
                             name = it.commentName,
@@ -394,72 +394,90 @@ fun DetailTicketContent(
                 }
             }
             if (!isClosed) {
-                InputText(
-                    value = replyText,
-                    onChange = { newValue ->
-                        replyText = newValue
-                    },
-                    trailingIcon = {
-                        if (replyText.isNotEmpty()) {
-                            IconButton(onClick = { replyText = "" }) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Balas", style = MyTypography.titleMedium,
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                        )
+                        Row(
+                            verticalAlignment = Alignment.Bottom,
+                        ) {
+                            TextButton(onClick = {
+                                localImageUri = getImageUri(context)
+                                launcherIntentCamera.launch(localImageUri!!)
+                            }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.camera),
+                                    contentDescription = "Ambil gambar dari Kamera"
+                                )
+                                Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                                Text(text = "Kamera")
+                            }
+
+                            Spacer(modifier = Modifier.width(4.dp))
+
+                            TextButton(onClick = {
+                                pickMediaLauncher.launch(
+                                    PickVisualMediaRequest(
+                                        ActivityResultContracts.PickVisualMedia.ImageOnly
+                                    )
+                                )
+                            }) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.gallery),
+                                    contentDescription = "Ambil gambar dari galeri"
+                                )
+                                Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
+                                Text(text = "Galeri")
+                            }
+                        }
+                    }
+
+                    InputText(
+                        value = replyText,
+                        onChange = { newValue ->
+                            replyText = newValue
+                        },
+                        trailingIcon = {
+                            if (replyText.isNotEmpty()) {
+                                IconButton(onClick = { replyText = "" }) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.close_24px),
+                                        contentDescription = ""
+                                    )
+                                }
+                            }
+                        },
+                        minLines = 4,
+                        singleLine = false,
+                    )
+
+                    imageUri?.let {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 8.dp, bottom = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = "Lampiran gambar", style = MyTypography.bodySmall)
+                            IconButton(onClick = { onImageUriChange(null) }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.close_24px),
-                                    contentDescription = ""
+                                    contentDescription = "Hapus gambar"
                                 )
                             }
                         }
-                    },
-                    minLines = 5,
-                    singleLine = false,
-                )
 
-                imageUri?.let {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(text = "Image Attached", style = MyTypography.bodySmall)
-                        IconButton(onClick = { onImageUriChange(null) }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.close_24px),
-                                contentDescription = "Hapus gambar"
-                            )
-                        }
-                    }
-
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextButton(onClick = {
-                        localImageUri = getImageUri(context)
-                        launcherIntentCamera.launch(localImageUri!!)
-                    }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.camera),
-                            contentDescription = "Ambil gambar dari Kamera"
-                        )
-                        Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                        Text(text = "Kamera")
-                    }
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    TextButton(onClick = {
-                        pickMediaLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-                    }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.gallery),
-                            contentDescription = "Ambil gambar dari galeri"
-                        )
-                        Spacer(modifier = Modifier.size(ButtonDefaults.IconSpacing))
-                        Text(text = "Galeri")
                     }
                 }
                 Row(
