@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -37,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -44,6 +46,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.anismhub.ticketsystem.R
 import com.anismhub.ticketsystem.domain.model.DetailTicketData
 import com.anismhub.ticketsystem.domain.model.TechProfileData
+import com.anismhub.ticketsystem.presentation.common.InputTextState
 import com.anismhub.ticketsystem.presentation.components.CustomDialog
 import com.anismhub.ticketsystem.presentation.components.DetailCard
 import com.anismhub.ticketsystem.presentation.components.InputText
@@ -92,6 +95,7 @@ fun DetailTicketScreen(
     var isAssigned by remember { mutableStateOf(false) }
     var isKaryawan by remember { mutableStateOf(false) }
     var isAdmin by remember { mutableStateOf(false) }
+    var replyMessage by remember { mutableStateOf(InputTextState()) }
 
     var listTech by remember { mutableStateOf(emptyList<TechProfileData>()) }
 
@@ -171,6 +175,7 @@ fun DetailTicketScreen(
                     viewModel.getTicketById(ticketId)
                     Log.d("Comment Success", "Success: ${unhandled.data}: ")
                     isLoading = false
+                    replyMessage = InputTextState()
                 }
 
                 is Resource.Error -> {
@@ -210,7 +215,8 @@ fun DetailTicketScreen(
     DetailTicketContent(
         data = detailData, listTech = listTech, isOpen = isOpen,
         isClosed = isClosed, isAssigned = isAssigned, isKaryawan = isKaryawan,
-        isAdmin = isAdmin, isLoading = isLoading,
+        isAdmin = isAdmin, isLoading = isLoading, replyMessage = replyMessage,
+        onReplyChange = { replyMessage = it },
         assignTicket = {
             if (it != 0) viewModel.assignTicket(ticketId, it)
         },
@@ -230,6 +236,8 @@ fun DetailTicketScreen(
 @Composable
 fun DetailTicketContent(
     data: DetailTicketData,
+    replyMessage: InputTextState,
+    onReplyChange: (InputTextState) -> Unit,
     listTech: List<TechProfileData>,
     assignTicket: (Int) -> Unit,
     addComment: (String) -> Unit,
@@ -245,7 +253,6 @@ fun DetailTicketContent(
     isAdmin: Boolean = false,
     isLoading: Boolean = false,
 ) {
-    var replyText by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
     var enteredText by remember { mutableStateOf("") }
     var selectedTeknisi by remember { mutableStateOf<TechProfileData?>(null) }
@@ -374,7 +381,7 @@ fun DetailTicketContent(
                             .align(Alignment.Start)
                             .padding(top = 8.dp)
                     )
-                    data.comments.forEach {
+                    data.comments.sortedBy { it.commentTime }.forEach {
                         ReplyCard(
                             name = it.commentName,
                             date = it.commentTime.toDateTime(),
@@ -449,13 +456,23 @@ fun DetailTicketContent(
                     }
 
                     InputText(
-                        value = replyText,
+                        value = replyMessage.value,
                         onChange = { newValue ->
-                            replyText = newValue
+                            onReplyChange(
+                                replyMessage.copy(
+                                    value = newValue
+                                )
+                            )
                         },
                         trailingIcon = {
-                            if (replyText.isNotEmpty()) {
-                                IconButton(onClick = { replyText = "" }) {
+                            if (replyMessage.value.isNotEmpty()) {
+                                IconButton(onClick = {
+                                    onReplyChange(
+                                        replyMessage.copy(
+                                            value = ""
+                                        )
+                                    )
+                                }) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.close_24px),
                                         contentDescription = ""
@@ -465,6 +482,9 @@ fun DetailTicketContent(
                         },
                         minLines = 4,
                         singleLine = false,
+                        keyboardOption = KeyboardOptions(
+                            imeAction = ImeAction.Done
+                        )
                     )
 
                     imageUri?.let {
@@ -494,8 +514,8 @@ fun DetailTicketContent(
                 ) {
                     Button(
                         onClick = {
-                            if (replyText.trim().isNotEmpty()) {
-                                addComment(replyText)
+                            if (replyMessage.value.trim().isNotEmpty()) {
+                                addComment(replyMessage.value)
                             }
                         },
                     ) {
