@@ -305,7 +305,7 @@ fun ReusableDatePicker(
                 )
             },
             placeholder = {
-                Text(text = "yyyy-MM-dd")
+                Text(text = "Pilih Tanggal")
             },
             isError = dateState.isError,
             trailingIcon = {
@@ -343,14 +343,11 @@ fun ReusableDatePicker(
                                         isError = false
                                     )
                                 )
-//                                onDateSelected(selectedDate)
-//                                dateState = selectedDate.format(formatter)
-//                                isError = false
                                 showDatePicker = false
                             } else {
                                 Toast.makeText(
                                     context,
-                                    "Selected date must be after $minDateAllowed",
+                                    "Tanggal yang dipilih harus setelah $minDateAllowed",
                                     Toast.LENGTH_SHORT
                                 ).show()
                                 onDateSelected(dateState.copy(isError = true))
