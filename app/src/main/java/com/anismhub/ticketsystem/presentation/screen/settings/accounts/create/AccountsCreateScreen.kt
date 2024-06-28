@@ -143,7 +143,7 @@ fun AccountsCreateContent(
     onPasswordVisibilityChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
+    var passwordErrorText by remember { mutableStateOf("Password tidak boleh kurang dari 6 karakter") }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -232,8 +232,16 @@ fun AccountsCreateContent(
         // Password
         InputTextWithLabel(
             title = "Password",
+            errorText = passwordErrorText,
             textState = password,
-            onValueChange = onPasswordChange,
+            onValueChange = {
+                onPasswordChange(
+                    password.copy(
+                        isError = it.value.length < 6,
+                        value = it.value
+                    )
+                )
+            },
             keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
@@ -256,8 +264,12 @@ fun AccountsCreateContent(
                     fullname.isInvalid() -> onFullnameChange(fullname.copy(isError = true))
                     role.isInvalid(0) -> onRoleError(role.copy(isError = true))
                     department.isInvalid(1) -> onDepartmentError(department.copy(isError = true))
-                    password.isInvalid() -> onPasswordChange(password.copy(isError = true))
                     phoneNumber.isInvalid() -> onPhoneNumberChange(phoneNumber.copy(isError = true))
+                    password.isInvalid() -> {
+                        onPasswordChange(password.copy(isError = true))
+                        passwordErrorText = "Password tidak boleh kosong atau kurang dari 6 karakter"
+                    }
+
                     else -> {
                         createUser()
                     }
