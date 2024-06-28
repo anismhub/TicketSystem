@@ -11,6 +11,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -126,15 +128,27 @@ fun ChangePasswordContent(
     isError: Boolean = false,
     errorText: String
 ) {
-    var passwordErrorText by remember { mutableStateOf("Password harus diisi") }
-    var passwordConfirmationErrorText by remember { mutableStateOf("Konfirmasi Password harus diisi") }
+    var currentPasswordErrorText by remember { mutableStateOf("Password sekarang harus diisi") }
+    var passwordErrorText by remember { mutableStateOf("Password kurang dari 6 karakter") }
+    var passwordConfirmationErrorText by remember { mutableStateOf("Konfirmasi Password tidak cocok") }
 
     Column(modifier = modifier.padding(16.dp)) {
         InputTextWithLabel(
             title = "Password Sekarang",
+            errorText = currentPasswordErrorText,
             textState = currentPassword,
-            onValueChange = onCurrentPasswordChange,
-            keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password),
+            onValueChange = {
+                onCurrentPasswordChange(
+                    currentPassword.copy(
+                        isError = it.value.length < 6,
+                        value = it.value
+                    )
+                )
+            },
+            keyboardOption = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Next
+            ),
             visualTransformation = if (currentPasswordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 val icon =
@@ -154,7 +168,10 @@ fun ChangePasswordContent(
             errorText = passwordErrorText,
             textState = password,
             onValueChange = onPasswordChange,
-            keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password),
+            keyboardOption = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Next
+            ),
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 val icon =
@@ -173,8 +190,18 @@ fun ChangePasswordContent(
             title = "Konfirmasi Password Baru",
             errorText = passwordConfirmationErrorText,
             textState = passwordConfirmation,
-            onValueChange = onPasswordConfirmationChange,
-            keyboardOption = KeyboardOptions(keyboardType = KeyboardType.Password),
+            onValueChange = {
+                onPasswordConfirmationChange(
+                    passwordConfirmation.copy(
+                        isError = it.value.length < 6 || it.value != password.value,
+                        value = it.value
+                    )
+                )
+            },
+            keyboardOption = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Done
+            ),
             visualTransformation = if (passwordConfirmationVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 val icon =
@@ -199,6 +226,7 @@ fun ChangePasswordContent(
             isError -> {
                 Text(
                     text = errorText,
+                    color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             }
@@ -207,25 +235,21 @@ fun ChangePasswordContent(
             onClick = {
                 when {
                     currentPassword.isInvalid() -> {
-                        onPasswordChange(password.copy(isError = true))
-                        passwordErrorText = "Password sekarang harus diisi"
+                        onCurrentPasswordChange(password.copy(isError = true))
+                        currentPasswordErrorText = "Password sekarang harus diisi"
                     }
 
                     password.isInvalid() -> {
                         onPasswordChange(password.copy(isError = true))
-                        passwordErrorText = "Password harus diisi"
-                    }
-
-                    password.value.length < 6 -> {
-                        onPasswordChange(password.copy(isError = true))
-                        passwordErrorText = "Password minimal 6 karakter"
+                        passwordErrorText = "Password Baru harus diisi atau kurang dari 6 karakter"
                     }
 
                     passwordConfirmation.isInvalid() -> {
                         onPasswordConfirmationChange(
                             passwordConfirmation.copy(isError = true)
                         )
-                        passwordConfirmationErrorText = "Konfirmasi Password harus diisi"
+                        passwordConfirmationErrorText =
+                            "Konfirmasi Password harus diisi atau tidak cocok"
                     }
 
 
@@ -243,7 +267,7 @@ fun ChangePasswordContent(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(0.6f)
-                .padding(bottom = 8.dp)
+                .padding(vertical = 8.dp)
         ) {
             Text(text = "Ganti Password")
         }
