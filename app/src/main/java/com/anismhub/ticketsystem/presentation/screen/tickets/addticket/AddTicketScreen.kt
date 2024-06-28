@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -125,7 +127,6 @@ fun AddTicketScreen(
         onCategoryError = { selectedTypeTicket = it },
         description = description,
         onDescriptionChange = { description = it },
-
         modifier = modifier
     )
 
@@ -214,6 +215,9 @@ fun AddTicketContent(
             title = "Deskripsi",
             textState = description,
             onValueChange = onDescriptionChange,
+            keyboardOption = KeyboardOptions(
+                imeAction = ImeAction.Done
+            ),
             trailingIcon = {
                 IconButton(onClick = {
                     onDescriptionChange(
@@ -229,7 +233,7 @@ fun AddTicketContent(
                     )
                 }
             },
-            minLines = 7,
+            minLines = 4,
             singleLine = false
         )
 
