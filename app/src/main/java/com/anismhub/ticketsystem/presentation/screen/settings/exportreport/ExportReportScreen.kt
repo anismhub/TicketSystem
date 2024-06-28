@@ -139,7 +139,7 @@ fun ExportReportContent(
                         )
                         Toast.makeText(
                             context,
-                            "Start Date : ${startDate.value}, End Date : ${endDate.value}",
+                            "Mengekspor laporan...",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
