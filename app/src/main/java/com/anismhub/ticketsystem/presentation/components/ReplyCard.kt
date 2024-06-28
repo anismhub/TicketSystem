@@ -63,7 +63,11 @@ fun ReplyCard(
                 }
                 Text(text = date, style = MyTypography.bodySmall)
             }
-            Text(text = content, minLines = 3, style = MyTypography.bodyMedium)
+            Text(
+                text = content,
+                style = MyTypography.bodyMedium,
+                modifier = Modifier.padding(bottom = 12.dp)
+            )
             commentImage?.let {
                 TextButton(onClick = { navigateToImageComment(it) }) {
                     Icon(
