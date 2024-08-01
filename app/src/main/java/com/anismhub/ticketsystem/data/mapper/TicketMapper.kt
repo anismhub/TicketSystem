@@ -22,7 +22,9 @@ fun List<TicketDataDTO>.toListTicketData(): List<TicketData> {
             ticketSubject = ticketDataDTO.ticketSubject,
             ticketPriority = ticketDataDTO.ticketPriority,
             ticketStatus = ticketDataDTO.ticketStatus,
-            ticketCreatedAt = ticketDataDTO.ticketCreatedAt
+            ticketCreatedAt = ticketDataDTO.ticketCreatedAt,
+            ticketAreaCode = ticketDataDTO.ticketAreaCode,
+            ticketCategoryCode = ticketDataDTO.ticketCategoryCode
         )
     }
 }
@@ -47,7 +49,9 @@ fun DetailTicketDataDTO.toDetailTicketData(): DetailTicketData {
         ticketPriority = ticketPriority,
         ticketStatus = ticketStatus,
         ticketCategory = ticketCategory,
+        ticketCategoryCode = ticketCategoryCode,
         ticketArea = ticketArea,
+        ticketAreaCode = ticketAreaCode,
         ticketCreatedBy = ticketCreatedBy,
         ticketDepartmentBy = ticketDepartmentBy,
         ticketCreatedAt = ticketCreatedAt,

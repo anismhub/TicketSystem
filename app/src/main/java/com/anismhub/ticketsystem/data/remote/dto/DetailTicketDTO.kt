@@ -35,8 +35,14 @@ data class DetailTicketDataDTO(
     @field:SerializedName("ticketCategory")
     val ticketCategory: String,
 
+    @field:SerializedName("ticketCategoryCode")
+    val ticketCategoryCode: String,
+
     @field:SerializedName("ticketArea")
     val ticketArea: String,
+
+    @field:SerializedName("ticketAreaCode")
+    val ticketAreaCode: String,
 
     @field:SerializedName("ticketCreatedBy")
     val ticketCreatedBy: String,

@@ -26,22 +26,26 @@ interface TicketRepository {
         ticketDescription: String,
         ticketPriority: String,
         ticketArea: Int,
-        ticketCategory: Int
+        ticketCategory: Int,
+        ticketCode: String
     ): Flow<Resource<Response>>
 
     fun assignTicket(
         ticketId: Int,
-        userId: Int
+        userId: Int,
+        ticketCode: String
     ): Flow<Resource<Response>>
 
     fun addComment(
         ticketId: Int,
         comment: String,
-        file: Uri? = null
+        file: Uri? = null,
+        code: String
     ): Flow<Resource<Response>>
 
     fun closeTicket(
         ticketId: Int,
-        resolusi: String
+        resolusi: String,
+        ticketCode: String
     ): Flow<Resource<Response>>
 }

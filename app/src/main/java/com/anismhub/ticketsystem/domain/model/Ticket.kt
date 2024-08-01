@@ -12,5 +12,7 @@ data class TicketData(
     val ticketSubject: String,
     val ticketPriority: String,
     val ticketStatus: String,
-    val ticketCreatedAt: String
+    val ticketCreatedAt: String,
+    val ticketAreaCode: String,
+    val ticketCategoryCode: String
 )

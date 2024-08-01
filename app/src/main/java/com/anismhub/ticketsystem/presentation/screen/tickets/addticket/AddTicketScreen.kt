@@ -90,7 +90,8 @@ fun AddTicketScreen(
                 ticketDescription = description.value,
                 ticketArea = selectedArea.indexValue,
                 ticketPriority = selectedPriority.text,
-                ticketCategory = selectedTypeTicket.indexValue
+                ticketCategory = selectedTypeTicket.indexValue,
+                ticketCode = "${typeTicketOptions[selectedTypeTicketIndex].substring(0,3)}-${areaOptions[selectedAreaIndex].substring(0,3)}"
             )
         },
         subject = subject,

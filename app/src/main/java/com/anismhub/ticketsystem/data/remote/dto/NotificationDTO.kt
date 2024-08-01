@@ -27,5 +27,8 @@ data class NotificationDataDTO(
     val notificationContent: String,
 
     @field:SerializedName("notificationCreateAt")
-    val notificationCreateAt: String
+    val notificationCreateAt: String,
+
+    @field:SerializedName("notificationTicketCode")
+    val notificationTicketCode: String
 )

@@ -11,5 +11,6 @@ data class NotificationData(
     val notificationId: Int,
     val notificationTicket: Int,
     val notificationContent: String,
-    val notificationCreateAt: String
+    val notificationCreateAt: String,
+    val notificationTicketCode: String
 )

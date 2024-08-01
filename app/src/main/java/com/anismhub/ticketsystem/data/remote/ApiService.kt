@@ -100,7 +100,8 @@ interface ApiService {
         @Field("ticketDescription") ticketDescription: String,
         @Field("ticketPriority") ticketPriority: String,
         @Field("ticketArea") ticketArea: Int,
-        @Field("ticketCategory") ticketCategory: Int
+        @Field("ticketCategory") ticketCategory: Int,
+        @Field("ticketCode") ticketCode: String
     ): ResponseDTO
 
     @Streaming
@@ -119,7 +120,8 @@ interface ApiService {
     @POST("tickets/{ticketId}/assign")
     suspend fun assignTicket(
         @Path("ticketId") ticketId: Int,
-        @Field("userId") userId: Int
+        @Field("userId") userId: Int,
+        @Field("ticketCode") ticketCode: String
     ): ResponseDTO
 
     @Multipart
@@ -127,7 +129,8 @@ interface ApiService {
     suspend fun addComment(
         @Path("ticketId") ticketId: Int,
         @Part("content") content: RequestBody,
-        @Part file: MultipartBody.Part? = null
+        @Part file: MultipartBody.Part? = null,
+        @Part("ticketCode") ticketCode: RequestBody
     ): ResponseDTO
 
     @FormUrlEncoded
@@ -135,6 +138,7 @@ interface ApiService {
     suspend fun closeTicket(
         @Path("ticketId") ticketId: Int,
         @Field("content") content: String,
+        @Field("ticketCode") ticketCode: String
     ): ResponseDTO
 
     @FormUrlEncoded

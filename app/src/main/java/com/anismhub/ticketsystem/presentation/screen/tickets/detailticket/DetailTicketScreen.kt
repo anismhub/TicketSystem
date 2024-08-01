@@ -83,7 +83,7 @@ fun DetailTicketScreen(
         mutableStateOf(
             DetailTicketData(
                 1, "", "", "", "",
-                "", "", "", "", "2024-06-25T06:31:47.509Z",
+                "", "", "", "", "", "", "2024-06-25T06:31:47.509Z",
                 "2024-06-25T06:31:47.509Z", "", emptyList(), emptyList()
             )
         )
@@ -218,13 +218,13 @@ fun DetailTicketScreen(
         isAdmin = isAdmin, isLoading = isLoading, replyMessage = replyMessage,
         onReplyChange = { replyMessage = it },
         assignTicket = {
-            if (it != 0) viewModel.assignTicket(ticketId, it)
+            if (it != 0) viewModel.assignTicket(ticketId, it, "${detailData.ticketCategoryCode}-${detailData.ticketAreaCode}")
         },
         addComment = {
-            viewModel.addComment(ticketId, it, imageUri)
+            viewModel.addComment(ticketId, it, imageUri, "${detailData.ticketCategoryCode}-${detailData.ticketAreaCode}")
         },
         addResolution = {
-            viewModel.closeTicket(ticketId, it)
+            viewModel.closeTicket(ticketId, it, "${detailData.ticketCategoryCode}-${detailData.ticketAreaCode}")
         },
         imageUri = imageUri,
         onImageUriChange = { imageUri = it },
@@ -291,7 +291,7 @@ fun DetailTicketContent(
                     .padding(8.dp)
             ) {
                 Text(
-                    text = "#${data.ticketId} ${data.ticketSubject}",
+                    text = "#${data.ticketCategoryCode}-${data.ticketAreaCode}-${data.ticketId} ${data.ticketSubject}",
                     style = MyTypography.titleLarge.copy(fontWeight = FontWeight.SemiBold)
                 )
                 Text(

@@ -96,6 +96,7 @@ fun NotificationDataDTO.toNotificationData(): NotificationData {
         notificationId = notificationId,
         notificationTicket = notificationTicket,
         notificationContent = notificationContent,
-        notificationCreateAt = notificationCreateAt
+        notificationCreateAt = notificationCreateAt,
+        notificationTicketCode = notificationTicketCode
     )
 }

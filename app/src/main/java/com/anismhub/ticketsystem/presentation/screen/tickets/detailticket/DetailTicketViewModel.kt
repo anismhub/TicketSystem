@@ -71,25 +71,25 @@ class DetailTicketViewModel @Inject constructor(
         }
     }
 
-    fun assignTicket(ticketId: Int, userId: Int) {
+    fun assignTicket(ticketId: Int, userId: Int, ticketCode: String) {
         viewModelScope.launch {
-            ticketRepository.assignTicket(ticketId, userId).collect {
+            ticketRepository.assignTicket(ticketId, userId, ticketCode).collect {
                 _assignTicket.value = Event(it)
             }
         }
     }
 
-    fun addComment(ticketId: Int, comment: String, file: Uri? = null) {
+    fun addComment(ticketId: Int, comment: String, file: Uri? = null, ticketCode: String) {
         viewModelScope.launch {
-            ticketRepository.addComment(ticketId, comment, file).collect {
+            ticketRepository.addComment(ticketId, comment, file, ticketCode).collect {
                 _comments.value = Event(it)
             }
         }
     }
 
-    fun closeTicket(ticketId: Int, resolusi: String) {
+    fun closeTicket(ticketId: Int, resolusi: String, ticketCode: String) {
         viewModelScope.launch {
-            ticketRepository.closeTicket(ticketId, resolusi).collect {
+            ticketRepository.closeTicket(ticketId, resolusi, ticketCode).collect {
                 _closeTicket.value = Event(it)
             }
         }

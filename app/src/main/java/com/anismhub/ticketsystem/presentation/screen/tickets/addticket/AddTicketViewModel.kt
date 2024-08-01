@@ -25,7 +25,8 @@ class AddTicketViewModel @Inject constructor(
         ticketDescription: String,
         ticketPriority: String,
         ticketArea: Int,
-        ticketCategory: Int
+        ticketCategory: Int,
+        ticketCode: String
     ) {
         viewModelScope.launch {
             ticketRepository.addTicket(
@@ -33,7 +34,8 @@ class AddTicketViewModel @Inject constructor(
                 ticketDescription = ticketDescription,
                 ticketPriority = ticketPriority,
                 ticketArea = ticketArea,
-                ticketCategory = ticketCategory
+                ticketCategory = ticketCategory,
+                ticketCode = ticketCode
             ).collect {
                 _addTicket.value = Event(it)
             }

@@ -138,7 +138,8 @@ class TicketRepositoryImpl(
         ticketDescription: String,
         ticketPriority: String,
         ticketArea: Int,
-        ticketCategory: Int
+        ticketCategory: Int,
+        ticketCode: String
     ): Flow<Resource<Response>> = flow {
         emit(Resource.Loading)
         try {
@@ -147,7 +148,8 @@ class TicketRepositoryImpl(
                 ticketDescription = ticketDescription,
                 ticketPriority = ticketPriority,
                 ticketArea = ticketArea,
-                ticketCategory = ticketCategory
+                ticketCategory = ticketCategory,
+                ticketCode = ticketCode
             )
             emit(Resource.Success(response.toResponse()))
         } catch (e: Exception) {
@@ -161,10 +163,10 @@ class TicketRepositoryImpl(
         }
     }
 
-    override fun assignTicket(ticketId: Int, userId: Int): Flow<Resource<Response>> = flow {
+    override fun assignTicket(ticketId: Int, userId: Int, ticketCode: String): Flow<Resource<Response>> = flow {
         emit(Resource.Loading)
         try {
-            val response = apiService.assignTicket(ticketId = ticketId, userId = userId)
+            val response = apiService.assignTicket(ticketId = ticketId, userId = userId, ticketCode = ticketCode)
             emit(Resource.Success(response.toResponse()))
         } catch (e: Exception) {
             if (e is HttpException) {
@@ -177,12 +179,13 @@ class TicketRepositoryImpl(
         }
     }
 
-    override fun addComment(ticketId: Int, comment: String, file: Uri?): Flow<Resource<Response>> =
+    override fun addComment(ticketId: Int, comment: String, file: Uri?, code: String): Flow<Resource<Response>> =
         flow {
             emit(Resource.Loading)
             try {
                 var filePart: MultipartBody.Part? = null
                 val requestBody = comment.toRequestBody("text/plain".toMediaType())
+                val ticketCode = code.toRequestBody("text/plain".toMediaType())
                 file?.let {
                     val imageFile = uriToFile(it, context).reduceFileImageAsync()
                     val fileBody = imageFile.asRequestBody("image/jpeg".toMediaType())
@@ -191,7 +194,8 @@ class TicketRepositoryImpl(
                 val response = apiService.addComment(
                     ticketId = ticketId,
                     content = requestBody,
-                    file = filePart
+                    file = filePart,
+                    ticketCode = ticketCode
                 )
                 emit(Resource.Success(response.toResponse()))
             } catch (e: Exception) {
@@ -205,12 +209,13 @@ class TicketRepositoryImpl(
             }
         }
 
-    override fun closeTicket(ticketId: Int, resolusi: String): Flow<Resource<Response>> = flow {
+    override fun closeTicket(ticketId: Int, resolusi: String, ticketCode: String): Flow<Resource<Response>> = flow {
         emit(Resource.Loading)
         try {
             val response = apiService.closeTicket(
                 ticketId = ticketId,
-                content = resolusi
+                content = resolusi,
+                ticketCode = ticketCode
             )
             emit(Resource.Success(response.toResponse()))
         } catch (e: Exception) {

@@ -32,6 +32,7 @@ fun TicketItem(
     date: String,
     priority: String,
     status: String,
+    code: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -66,7 +67,7 @@ fun TicketItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Tiket#$number", style = MyTypography.bodyLarge
+                    text = "#$code-$number", style = MyTypography.bodyLarge
                 )
                 Text(
                     text = date, style = MyTypography.bodySmall
@@ -116,6 +117,6 @@ fun TicketItem(
 @Composable
 private fun TicketItemPreview() {
     TicketSystemTheme {
-        TicketItem(1, "Title", "Date", "Level", "Status", {})
+        TicketItem(1, "Title", "Date", "Level", "Status", "INT-ADM", {})
     }
 }

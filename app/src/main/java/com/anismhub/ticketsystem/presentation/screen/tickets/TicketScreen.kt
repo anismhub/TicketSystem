@@ -182,6 +182,7 @@ fun TicketContent(
                                 date = it.ticketCreatedAt.toDateTime(),
                                 priority = it.ticketPriority,
                                 status = it.ticketStatus,
+                                code = "${it.ticketCategoryCode}-${it.ticketAreaCode}",
                                 onClick = { navigateToDetailTicket("Detail Tiket", it.ticketId) }
                             )
                         }
@@ -197,6 +198,7 @@ fun TicketContent(
                                 date = it.ticketCreatedAt.toDateTime(),
                                 priority = it.ticketPriority,
                                 status = it.ticketStatus,
+                                code = "${it.ticketCategoryCode}-${it.ticketAreaCode}",
                                 onClick = { navigateToDetailTicket("Detail Tiket", it.ticketId) }
                             )
                         }
@@ -212,6 +214,7 @@ fun TicketContent(
                                 date = it.ticketCreatedAt.toDateTime(),
                                 priority = it.ticketPriority,
                                 status = it.ticketStatus,
+                                code = "${it.ticketCategoryCode}-${it.ticketAreaCode}",
                                 onClick = { navigateToDetailTicket("Detail Tiket", it.ticketId) }
                             )
                         }
