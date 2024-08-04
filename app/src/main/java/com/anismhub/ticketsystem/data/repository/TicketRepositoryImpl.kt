@@ -209,12 +209,11 @@ class TicketRepositoryImpl(
             }
         }
 
-    override fun closeTicket(ticketId: Int, resolusi: String, ticketCode: String): Flow<Resource<Response>> = flow {
+    override fun closeTicket(ticketId: Int, ticketCode: String): Flow<Resource<Response>> = flow {
         emit(Resource.Loading)
         try {
             val response = apiService.closeTicket(
                 ticketId = ticketId,
-                content = resolusi,
                 ticketCode = ticketCode
             )
             emit(Resource.Success(response.toResponse()))

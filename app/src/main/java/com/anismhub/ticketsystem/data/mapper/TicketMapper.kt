@@ -57,8 +57,7 @@ fun DetailTicketDataDTO.toDetailTicketData(): DetailTicketData {
         ticketCreatedAt = ticketCreatedAt,
         ticketUpdateAt = ticketUpdatedAt,
         ticketAssignedTo = ticketAssignedTo,
-        comments = comments.map { it.toComment() },
-        resolution = resolution.map { it.toResolution() }
+        comments = comments.map { it.toComment() }
     )
 }
 

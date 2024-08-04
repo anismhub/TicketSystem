@@ -87,9 +87,9 @@ class DetailTicketViewModel @Inject constructor(
         }
     }
 
-    fun closeTicket(ticketId: Int, resolusi: String, ticketCode: String) {
+    fun closeTicket(ticketId: Int, ticketCode: String) {
         viewModelScope.launch {
-            ticketRepository.closeTicket(ticketId, resolusi, ticketCode).collect {
+            ticketRepository.closeTicket(ticketId, ticketCode).collect {
                 _closeTicket.value = Event(it)
             }
         }

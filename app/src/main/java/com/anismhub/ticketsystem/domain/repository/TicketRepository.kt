@@ -45,7 +45,6 @@ interface TicketRepository {
 
     fun closeTicket(
         ticketId: Int,
-        resolusi: String,
         ticketCode: String
     ): Flow<Resource<Response>>
 }

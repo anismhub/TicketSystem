@@ -137,7 +137,6 @@ interface ApiService {
     @POST("tickets/{ticketId}/close")
     suspend fun closeTicket(
         @Path("ticketId") ticketId: Int,
-        @Field("content") content: String,
         @Field("ticketCode") ticketCode: String
     ): ResponseDTO
 

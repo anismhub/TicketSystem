@@ -27,10 +27,9 @@ fun CustomDialog(
     showDialog: Boolean,
     onDismiss: () -> Unit,
     title: String? = null,
-    content: @Composable (ColumnScope.() -> Unit)? = null,
     confirmButton: @Composable (() -> Unit)? = null,
     dismissButton: @Composable (() -> Unit)? = null,
-    textInput: Pair<String, (String) -> Unit>? = null // Add this for text input
+    content: @Composable (ColumnScope.() -> Unit)? = null,
 ) {
     if (showDialog) {
         Dialog(onDismissRequest = onDismiss) {
@@ -56,28 +55,6 @@ fun CustomDialog(
                     // Content (optional)
                     content?.let {
                         it()
-                    }
-
-                    // Text Input (optional)
-                    textInput?.let { (label, onValueChange) ->
-                        var text by remember {
-                            mutableStateOf(
-                                ""
-                            )
-                        }
-                        OutlinedTextField(
-                            value = text,
-                            onValueChange = {
-                                text = it
-                                onValueChange(it)
-                            },
-                            label = { Text(label) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                            minLines = 4
-                        )
                     }
 
                     // Buttons (arranged horizontally)

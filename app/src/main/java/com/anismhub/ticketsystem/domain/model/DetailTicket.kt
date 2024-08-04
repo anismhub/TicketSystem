@@ -22,6 +22,5 @@ data class DetailTicketData(
     val ticketCreatedAt: String,
     val ticketUpdateAt: String,
     val ticketAssignedTo: String? = null,
-    val comments: List<Comment>,
-    val resolution: List<Resolution>
+    val comments: List<Comment>
 )

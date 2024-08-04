@@ -84,7 +84,7 @@ fun DetailTicketScreen(
             DetailTicketData(
                 1, "", "", "", "",
                 "", "", "", "", "", "", "2024-06-25T06:31:47.509Z",
-                "2024-06-25T06:31:47.509Z", "", emptyList(), emptyList()
+                "2024-06-25T06:31:47.509Z", "", emptyList()
             )
         )
     }
@@ -218,13 +218,25 @@ fun DetailTicketScreen(
         isAdmin = isAdmin, isLoading = isLoading, replyMessage = replyMessage,
         onReplyChange = { replyMessage = it },
         assignTicket = {
-            if (it != 0) viewModel.assignTicket(ticketId, it, "${detailData.ticketCategoryCode}-${detailData.ticketAreaCode}")
+            if (it != 0) viewModel.assignTicket(
+                ticketId,
+                it,
+                "${detailData.ticketCategoryCode}-${detailData.ticketAreaCode}"
+            )
         },
         addComment = {
-            viewModel.addComment(ticketId, it, imageUri, "${detailData.ticketCategoryCode}-${detailData.ticketAreaCode}")
+            viewModel.addComment(
+                ticketId,
+                it,
+                imageUri,
+                "${detailData.ticketCategoryCode}-${detailData.ticketAreaCode}"
+            )
         },
-        addResolution = {
-            viewModel.closeTicket(ticketId, it, "${detailData.ticketCategoryCode}-${detailData.ticketAreaCode}")
+        closeTicket = {
+            viewModel.closeTicket(
+                ticketId,
+                "${detailData.ticketCategoryCode}-${detailData.ticketAreaCode}"
+            )
         },
         imageUri = imageUri,
         onImageUriChange = { imageUri = it },
@@ -241,7 +253,7 @@ fun DetailTicketContent(
     listTech: List<TechProfileData>,
     assignTicket: (Int) -> Unit,
     addComment: (String) -> Unit,
-    addResolution: (String) -> Unit,
+    closeTicket: () -> Unit,
     imageUri: Uri?,
     onImageUriChange: (Uri?) -> Unit,
     navigateToImageComment: (imageUrl: String) -> Unit,
@@ -254,7 +266,6 @@ fun DetailTicketContent(
     isLoading: Boolean = false,
 ) {
     var showDialog by remember { mutableStateOf(false) }
-    var enteredText by remember { mutableStateOf("") }
     var selectedTeknisi by remember { mutableStateOf<TechProfileData?>(null) }
     var localImageUri: Uri? by remember { mutableStateOf(null) }
     val context = LocalContext.current
@@ -394,16 +405,6 @@ fun DetailTicketContent(
                         Spacer(modifier = Modifier.height(4.dp))
                     }
                 }
-                if (data.resolution.isNotEmpty()) {
-                    data.resolution.forEach {
-                        ReplyCard(
-                            name = it.resolutionResolvedBy,
-                            date = it.resolutionResolvedAt.toDateTime(),
-                            content = it.resolutionContent,
-                            containerColor = Color(0xFFD8EFD3)
-                        )
-                    }
-                }
             }
             if (!isClosed) {
                 Column(
@@ -521,7 +522,7 @@ fun DetailTicketContent(
                     ) {
                         Text(text = "Balas Pesan", textAlign = TextAlign.Center)
                     }
-                    if (!isKaryawan) {
+                    if (isKaryawan) {
                         Button(
                             onClick = { showDialog = true },
                         ) {
@@ -536,20 +537,21 @@ fun DetailTicketContent(
     CustomDialog(
         showDialog = showDialog,
         onDismiss = { showDialog = false },
-        title = "Resolusi Tiket",
-        textInput = Pair("Resolusi") { enteredText = it }, // Add text input
+        title = "Tutup Tiket",
         confirmButton = {
             Button(onClick = {
-                addResolution(enteredText)
+                closeTicket()
                 showDialog = false
             }) {
-                Text("Tutup Tiket")
+                Text(text = "Tutup")
             }
         },
-        dismissButton = { // Add a dismiss button
+        dismissButton = {
             Button(onClick = { showDialog = false }) {
                 Text("Batal")
             }
         }
-    )
+    ) {
+        Text(text = "Apakah anda yakin akan menutup tiket ini?")
+    }
 }
