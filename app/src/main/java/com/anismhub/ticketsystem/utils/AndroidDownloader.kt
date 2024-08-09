@@ -4,16 +4,17 @@ import android.app.DownloadManager
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import android.util.Log
 
 interface Downloader {
     fun downloadFile(token: String): Long
 }
 
 class AndroidDownloader(
-    context: Context, baseUrl: String, startDate: String, endDate: String
+    context: Context,
+    private val url: String
 ) : Downloader {
     private val downloadManager = context.getSystemService(DownloadManager::class.java)
-    private val url = "${baseUrl}tickets/export?startDate=${startDate}&endDate=${endDate}"
 
     override fun downloadFile(token: String): Long {
         val request = DownloadManager.Request(Uri.parse(url))

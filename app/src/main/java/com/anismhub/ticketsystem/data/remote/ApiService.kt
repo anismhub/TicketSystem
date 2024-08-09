@@ -2,6 +2,7 @@ package com.anismhub.ticketsystem.data.remote
 
 import com.anismhub.ticketsystem.data.remote.dto.DepartmentsDTO
 import com.anismhub.ticketsystem.data.remote.dto.DetailTicketDTO
+import com.anismhub.ticketsystem.data.remote.dto.ExportDTO
 import com.anismhub.ticketsystem.data.remote.dto.LoginDTO
 import com.anismhub.ticketsystem.data.remote.dto.NotificationDTO
 import com.anismhub.ticketsystem.data.remote.dto.ProfileDTO
@@ -11,8 +12,6 @@ import com.anismhub.ticketsystem.data.remote.dto.TicketDTO
 import com.anismhub.ticketsystem.data.remote.dto.UsersDTO
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.ResponseBody
-import retrofit2.Response
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -24,7 +23,6 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 import retrofit2.http.QueryMap
-import retrofit2.http.Streaming
 
 interface ApiService {
 
@@ -104,13 +102,6 @@ interface ApiService {
         @Field("ticketCode") ticketCode: String
     ): ResponseDTO
 
-    @Streaming
-    @GET("tickets/export")
-    suspend fun exportTickets(
-        @Query("startDate") startDate: String,
-        @Query("endDate") endDate: String
-    ): Response<ResponseBody>
-
     @GET("tickets/{ticketId}")
     suspend fun ticketById(
         @Path("ticketId") ticketId: Int
@@ -155,4 +146,11 @@ interface ApiService {
 
     @GET("users/notification")
     suspend fun getNotification(): NotificationDTO
+
+    @FormUrlEncoded
+    @POST("tickets/export")
+    suspend fun exportReport(
+        @Field("startDate") startDate: String,
+        @Field("endDate") endDate: String
+    ): ExportDTO
 }

@@ -6,7 +6,9 @@ import com.anismhub.ticketsystem.data.mapper.toDetailTicket
 import com.anismhub.ticketsystem.data.mapper.toResponse
 import com.anismhub.ticketsystem.data.mapper.toTicket
 import com.anismhub.ticketsystem.data.remote.ApiService
+import com.anismhub.ticketsystem.domain.mapper.toExport
 import com.anismhub.ticketsystem.domain.model.DetailTicket
+import com.anismhub.ticketsystem.domain.model.Export
 import com.anismhub.ticketsystem.domain.model.Response
 import com.anismhub.ticketsystem.domain.model.Ticket
 import com.anismhub.ticketsystem.domain.repository.TicketRepository
@@ -20,32 +22,12 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.ResponseBody
 import retrofit2.HttpException
-import retrofit2.Response as retrofitResponse
 
 class TicketRepositoryImpl(
     private val apiService: ApiService,
     private val context: Context
 ) : TicketRepository {
-    override fun exportReport(
-        startDate: String,
-        endDate: String
-    ): Flow<Resource<retrofitResponse<ResponseBody>>> = flow {
-        emit(Resource.Loading)
-        try {
-            val response = apiService.exportTickets(startDate, endDate)
-            emit(Resource.Success(response))
-        } catch (e: Exception) {
-            if (e is HttpException) {
-                val jsonInString = e.response()?.errorBody()?.string()
-                val errorBody = Gson().fromJson(jsonInString, Response::class.java)
-                emit(Resource.Error(errorBody.message))
-            } else {
-                emit(Resource.Error(e.message.toString()))
-            }
-        }
-    }
 
     override fun getOpenTickets(status: String, search: String?): Flow<Resource<Ticket>> = flow {
         emit(Resource.Loading)
@@ -163,10 +145,18 @@ class TicketRepositoryImpl(
         }
     }
 
-    override fun assignTicket(ticketId: Int, userId: Int, ticketCode: String): Flow<Resource<Response>> = flow {
+    override fun assignTicket(
+        ticketId: Int,
+        userId: Int,
+        ticketCode: String
+    ): Flow<Resource<Response>> = flow {
         emit(Resource.Loading)
         try {
-            val response = apiService.assignTicket(ticketId = ticketId, userId = userId, ticketCode = ticketCode)
+            val response = apiService.assignTicket(
+                ticketId = ticketId,
+                userId = userId,
+                ticketCode = ticketCode
+            )
             emit(Resource.Success(response.toResponse()))
         } catch (e: Exception) {
             if (e is HttpException) {
@@ -179,7 +169,12 @@ class TicketRepositoryImpl(
         }
     }
 
-    override fun addComment(ticketId: Int, comment: String, file: Uri?, code: String): Flow<Resource<Response>> =
+    override fun addComment(
+        ticketId: Int,
+        comment: String,
+        file: Uri?,
+        code: String
+    ): Flow<Resource<Response>> =
         flow {
             emit(Resource.Loading)
             try {
@@ -217,6 +212,25 @@ class TicketRepositoryImpl(
                 ticketCode = ticketCode
             )
             emit(Resource.Success(response.toResponse()))
+        } catch (e: Exception) {
+            if (e is HttpException) {
+                val jsonInString = e.response()?.errorBody()?.string()
+                val errorBody = Gson().fromJson(jsonInString, Response::class.java)
+                emit(Resource.Error(errorBody.message))
+            } else {
+                emit(Resource.Error(e.message.toString()))
+            }
+        }
+    }
+
+    override fun exportReport(startDate: String, endDate: String): Flow<Resource<Export>> = flow {
+        emit(Resource.Loading)
+        try {
+            val response = apiService.exportReport(
+                startDate = startDate,
+                endDate = endDate
+            )
+            emit(Resource.Success(response.toExport()))
         } catch (e: Exception) {
             if (e is HttpException) {
                 val jsonInString = e.response()?.errorBody()?.string()

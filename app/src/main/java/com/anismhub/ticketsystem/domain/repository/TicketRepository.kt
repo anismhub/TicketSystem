@@ -2,18 +2,13 @@ package com.anismhub.ticketsystem.domain.repository
 
 import android.net.Uri
 import com.anismhub.ticketsystem.domain.model.DetailTicket
+import com.anismhub.ticketsystem.domain.model.Export
 import com.anismhub.ticketsystem.domain.model.Response
 import com.anismhub.ticketsystem.domain.model.Ticket
 import com.anismhub.ticketsystem.utils.Resource
 import kotlinx.coroutines.flow.Flow
-import okhttp3.ResponseBody
-import retrofit2.Response as RetrofitResponse
 
 interface TicketRepository {
-    fun exportReport(
-        startDate: String,
-        endDate: String
-    ): Flow<Resource<RetrofitResponse<ResponseBody>>>
 
     fun getOpenTickets(status: String, search: String? = null): Flow<Resource<Ticket>>
     fun getOnProgressTickets(status: String, search: String? = null): Flow<Resource<Ticket>>
@@ -47,4 +42,9 @@ interface TicketRepository {
         ticketId: Int,
         ticketCode: String
     ): Flow<Resource<Response>>
+
+    fun exportReport(
+        startDate: String,
+        endDate: String
+    ): Flow<Resource<Export>>
 }

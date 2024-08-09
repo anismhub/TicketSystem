@@ -1,6 +1,7 @@
 package com.anismhub.ticketsystem.presentation.components
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -322,7 +323,8 @@ fun ReusableDatePicker(
                 }
             },
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .clickable { showDatePicker = true },
             readonly = true
         )
 
